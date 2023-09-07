@@ -1,0 +1,9 @@
+!<thin>
+//                                              50        `
+watchdog_core.o/
+watchdog_dev.o/
+bcm96xxx_wdt.o/
+
+/0             /0           0     0     644     8840      `
+/17             0           0     0     644     12304     `
+/33             0           0     0     644     6308      `

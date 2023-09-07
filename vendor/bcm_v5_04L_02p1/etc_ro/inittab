@@ -1,0 +1,7 @@
+ttyAMA0::askfirst:-/bin/sh
+ttyAMA0:linux:/bin/sh
+
+::sysinit:/etc_ro/init.d/rcS
+
+
+

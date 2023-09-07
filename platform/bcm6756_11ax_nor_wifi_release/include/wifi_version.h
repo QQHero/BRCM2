@@ -1,0 +1,11 @@
+#ifndef __WIFI_VERSION_INCLUDE_H__ 
+#define __WIFI_VERSION_INCLUDE_H__ 
+#define _WIFI_SVN_REVISION_ ""
+#define _WIFI_SVN_LAST_CHANGED_REV_ ""
+#define _WIFI_SVN_URL_ ""
+#define _WIFI_SVN_LAST_CHANGED_AUTHOR_ ""
+#define _WIFI_SVN_LAST_CHANGED_DATE_ ""
+#define _WIFI_GIT_VERSION_ "6539bf43f"
+#define _WIFI_BUILD_TIME_ "2023-02-22 23:11:55"
+#define _WIFI_BUILD_USER_ "root"
+#endif

@@ -1,0 +1,68 @@
+!<thin>
+//                                              468       `
+component.o/
+core.o/
+bus.o/
+dd.o/
+syscore.o/
+driver.o/
+class.o/
+platform.o/
+cpu.o/
+firmware.o/
+init.o/
+map.o/
+devres.o/
+attribute_container.o/
+transport_class.o/
+topology.o/
+container.o/
+property.o/
+cacheinfo.o/
+devcon.o/
+iof_drv.o/
+devtmpfs.o/
+power/clock_ops.o/
+firmware_loader/fallback_table.o/
+module.o/
+regmap/regmap.o/
+regmap/regcache.o/
+regmap/regcache-rbtree.o/
+regmap/regcache-flat.o/
+regmap/regmap-debugfs.o/
+regmap/regmap-mmio.o/
+pinctrl.o/
+platform-msi.o/
+/0              0           0     0     644     11168     `
+/13             0           0     0     644     50468     `
+/21             0           0     0     644     22568     `
+/28             0           0     0     644     16856     `
+/34             0           0     0     644     2692      `
+/45             0           0     0     644     5808      `
+/55             0           0     0     644     12936     `
+/64             0           0     0     644     21820     `
+/76             0           0     0     644     9004      `
+/83             0           0     0     644     1840      `
+/95             0           0     0     644     1580      `
+/103            0           0     0     644     2620      `
+/110            0           0     0     644     16016     `
+/120            0           0     0     644     7600      `
+/143            0           0     0     644     6092      `
+/162            0           0     0     644     3660      `
+/174            0           0     0     644     2260      `
+/187            0           0     0     644     26204     `
+/199            0           0     0     644     11492     `
+/212            0           0     0     644     3500      `
+/222            0           0     0     644     2352      `
+/233            0           0     0     644     8500      `
+/245            0           0     0     644     2508      `
+/264            0           0     0     644     768       `
+/298            0           0     0     644     2432      `
+/308            0           0     0     644     38988     `
+/325            0           0     0     644     10472     `
+/344            0           0     0     644     6184      `
+/370           /0           0     0     644     1864      `
+/394            0           0     0     644     12696     `
+/419            0           0     0     644     5528      `
+/441            0           0     0     644     1800      `
+/452            0           0     0     644     6012      `

@@ -1,0 +1,11 @@
+
+menuconfig TENDA_PRIVATE
+    bool "Tenda Private modules"
+    default y
+
+source "net/tenda/km/Kconfig"
+
+source "net/tenda/bsp/Kconfig"
+
+source "net/tenda/wifi/Kconfig"
+

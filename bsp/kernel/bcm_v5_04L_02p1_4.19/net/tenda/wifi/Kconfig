@@ -1,0 +1,117 @@
+menuconfig TENDA_PRIVATE_WLAN
+    depends on TENDA_PRIVATE
+    bool "Tenda Private wlan modules"
+    default y
+
+config TENDA_WLAN_REPEATER
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support wisp and apclient"
+    default y
+
+config TENDA_WLAN_TUNNEL
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support TUNNEL"
+    default n
+
+config TENDA_WLAN_PREBE_LIMIT
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support probe broadcast limit"
+    default y
+
+config TENDA_WLAN_RSSI_LIMIT
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support rssi limit"
+    default n
+
+config TENDA_WLAN_ED_LOWBOUND_AVOID
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support EDCCA lowbound abnormal avoid"
+    default n
+
+config TENDA_ADAPTVTY_CONTROL
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support adaptivity control"
+    default n
+
+config TENDA_UCC_CONTROL
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support Uniform country code"
+    default n
+
+config TENDA_STA_REPORT
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support sta report"
+    default y
+
+config TENDA_WLAN_NODE_ROAMING
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support Node roaming"
+    default y
+
+config TENDA_XMESH_HB_ENABLE
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support xmesh heartbeat"
+    default n
+
+config TENDA_REPEATER_STATUS
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support repeater status"
+    default n
+
+config TENDA_FOLLOW_NETTYPE
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support repeater follow nettype"
+    default y
+
+config TENDA_SCAN_PRIORITY
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support repeater scan priority"
+    default y
+
+config TENDA_WLAN_AUTOHIDE_SSID
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support autohide SSID"
+    default n
+
+config TENDA_WLAN_ZIP_IMAGE
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support to zip wireless modules"
+    default n
+    
+config TENDA_WRITE_CFM_FILE
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support write to file"
+    default n
+
+config TENDA_DFS_EVADE_DEFAULT
+    depends on TENDA_PRIVATE_WLAN
+    bool "support radar evade to band1 for Tenda repeater product whose chanlist is band1 defaultly "
+    default n
+
+config COUNTRY_SPEC_FULLSCAN
+    depends on TENDA_PRIVATE_WLAN
+    bool "Set US/1 as a spec_region for repeaters of Tenda to do full_channel_scan"
+    default n
+
+config TENDA_WLAN_WL_DEBUG_MINI
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support WL Debug only error assoc and scan..."
+    default n
+
+config PRIVATE_IE_ENCRYPT
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support private ie encryption and decryption"
+    default n
+config TENDA_GAME_SPEEDUP
+     depends on TENDA_PRIVATE_WLAN
+     bool "Support speed up tencent game data TX"
+     default n
+
+config TENDA_WLAN_COUNTRY_DIV_CHANNEL
+    depends on TENDA_PRIVATE_WLAN
+    bool "In the country code, the 5G channel is divided into high and low channels"
+    default n
+config TENDA_DFS_SUPPORT
+    depends on TENDA_PRIVATE_WLAN
+    bool "Support DFS channel"
+    default n

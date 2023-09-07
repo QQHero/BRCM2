@@ -1,0 +1,16 @@
+kernel/net/netfilter/nf_conntrack_irc.ko
+kernel/net/netfilter/nf_conntrack_sip.ko
+kernel/net/netfilter/nf_conntrack_tftp.ko
+kernel/net/netfilter/nf_nat_irc.ko
+kernel/net/netfilter/nf_nat_sip.ko
+kernel/net/netfilter/nf_nat_tftp.ko
+kernel/net/netfilter/nf_tables.ko
+kernel/net/netfilter/xt_NETMAP.ko
+kernel/net/netfilter/xt_addrtype.ko
+kernel/net/netfilter/xt_comment.ko
+kernel/net/netfilter/xt_sctp.ko
+kernel/net/ipv4/netfilter/ipt_REJECT.ko
+kernel/net/ipv4/tcp_bic.ko
+kernel/net/ipv4/tcp_westwood.ko
+kernel/net/ipv4/tcp_htcp.ko
+kernel/net/wireless/cfg80211.ko

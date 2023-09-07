@@ -1,0 +1,11 @@
+!<thin>
+//                                              512       `
+/media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/bp_funcs.o/
+/media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/boardparms_chip.o/
+/media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/pinmux_table_6756.o/
+/media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/boardparms_6756.o/
+
+/0              0           0     0     644     49180     `
+/122            0           0     0     644     984       `
+/251            0           0     0     644     1040      `
+/382            0           0     0     644     2216      `

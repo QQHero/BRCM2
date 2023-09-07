@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#允许桥br0发送组播包
+bcmmcastctl mode -i br0 -p 1 -m 1

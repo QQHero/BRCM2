@@ -1,0 +1,66 @@
+#! /bin/sh
+#AX3V2.0 gpio配置脚本
+
+SAVE_PATH=$(pwd)
+
+cd /sys/devices/virtual/misc/ugw_gpio/gpio_base/
+
+#系统灯（绿色灯）
+echo 0 > gpio_index
+cd sys_led
+echo 0 > active_low
+echo 18 > gpio_id
+echo 50 > freq
+echo 1 > pattern
+echo 1 > start
+cd ..
+
+#红色灯
+echo 7 > gpio_index
+cd red_led
+echo 17 > gpio_id
+echo 50 > freq
+echo 2 > pattern
+echo 1 > start
+cd ..
+
+#复位按键
+echo 32 > gpio_index
+cd reset_btn
+echo 9 > gpio_id
+echo 10 > freq
+#echo 16 > signal
+echo 80 > act_time
+echo 80 > inact_time
+echo 1 > start
+#echo xxx > pid
+cd ..
+
+#WPS按键
+echo 33 > gpio_index
+cd wps_btn
+echo 4 > gpio_id
+echo 10 > freq
+#echo 10 > signal
+echo 3 > act_time
+echo 30 > inact_time
+echo 1 > effect_time
+echo 1 > start
+cd .. 
+
+#检测射频参数
+#GPIO_43
+echo 35 > gpio_index
+cd fem_pin_1
+echo 43 > gpio_id
+echo 1 > start
+cd ..
+
+#GPIO_44
+echo 36 > gpio_index
+cd fem_pin_2
+echo 44 > gpio_id
+echo 1 > start
+cd ..
+
+cd $SAVE_PATH

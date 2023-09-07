@@ -1,0 +1,35 @@
+Index: /components/apps/wldm/trunk/Makefile
+===================================================================
+--- ./main/components/apps/wldm/Makefile
++++ ./main/components/apps/wldm/Makefile
+@@ -62,6 +62,10 @@
+ 
+ LDFLAGS		+= -L$(INSTDIR)/lib $(EXTRA_LDFLAGS)
+ 
++ifneq ($(BUILD_RDKWIFI),)
++CFLAGS += -DBCA_CPEROUTER_RDK
++endif
++
+ ifneq ("","$(DEBUG)")
+ CFLAGS		+= -DDEBUG -g
+ endif
+Index: /components/apps/wldm/trunk/wldm_lib.c
+===================================================================
+--- ./main/components/apps/wldm/wldm_lib.c
++++ ./main/components/apps/wldm/wldm_lib.c
+@@ -2191,8 +2191,14 @@
+ 			len = sizeof(pObj->Ap.Enable);
+ 			if (wldm_AccessPoint_Enable(CMD_SET_NVRAM, index,
+ 				&pObj->Ap.Enable, &len, NULL, NULL) == 0) {
+-				if (HAPD_DISABLED())
++				if (HAPD_DISABLED()) {
+ 					ioctl_map |= AccessPoint_Enable_MASK;
++				}
++#ifdef BCA_CPEROUTER_RDK
++				if (BSS_IDX(apIndex))
++					action |= ACTION_APP_NVRAM_COMMIT | ACTION_SYS_RESTART;
++				else
++#endif
+ 				action |= ACTION_APP_NVRAM_COMMIT | ACTION_APP_HOSTAPD;
+ 			}
+ 		}

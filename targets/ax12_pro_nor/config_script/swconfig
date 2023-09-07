@@ -1,0 +1,139 @@
+#! /bin/sh
+
+# $1: vlan enable  
+# $2: hw support enable
+vlan_init() 
+{
+	echo "not do"
+}
+
+# $1: vlan_id  
+# $2: vlan members, port bitmap  
+# $3 vlan tagged members, port bitmap 
+# $4:fid value
+vlan_set() 
+{
+	return
+	#echo "echo $1,$2,$3,0 > /proc/vlanGroup"
+	#echo "$1,$2,$3,0" > /proc/vlanGroup
+}
+
+# del or clear a vlanGroup
+# $1: vlan_id  
+vlan_del()
+{
+	return
+	#echo "echo $1,0,0,0 > /proc/vlanGroup"
+	#echo "$1,0,0,0" > /proc/vlanGroup
+}
+
+vlan_show()
+{
+	return
+	#cat /proc/rtl_8367r_vlan
+}
+
+# $1: phyid  - witch port to set
+# $2: pvid   - the pvid value for set
+# $3: pri    - priority value for this port
+pvid_set() 
+{
+	return
+	#echo "$1,$2,$3 > /proc/pvid" 
+	#echo "$1,$2,$3" > /proc/pvid
+}
+
+# $1: port0's pvid
+# $2: port1's pvid
+# $3: port2's pvid
+# $4: port3's pvid
+# $5: port4's pvid
+pvid_all_set()
+{
+	return
+	#pvid_set 0 $1 0
+	#pvid_set 1 $2 0
+	#pvid_set 2 $3 0
+	#pvid_set 3 $4 0
+	#pvid_set 4 $5 0
+}
+
+# $1:igmp_pbmp $2: tag_pbmp
+igmp_config() {
+	echo "argc:$#"
+	echo "$1 $2 $3 $4 $5 $6 $7 $8 $9"
+	return
+	echo "enable 1" >/proc/br_igmpsnoop
+	
+	if [ $# -gt 7 ]
+	then
+		echo "Custom IPTV mode config vlan"
+		vids=$8
+		vids=${vids//,/ }
+		for v in $vids
+		do
+			echo $v > /proc/net/vlan/groupIndex
+			echo "1,$1,$2,$v,1" > /proc/net/vlan/vlanGroup
+		done
+	else
+		echo "Default IPTV mode config vlan"
+		echo 3 > /proc/net/vlan/groupIndex
+		echo 1,$1,$2,3,1 > /proc/net/vlan/vlanGroup
+	fi
+	
+	echo "$3,$4,$5,$6,$7" > /proc/net/vlan/pvid
+	
+	vconfig set_name_type VLAN_PLUS_VID_NO_PAD
+	brctl addbr br2
+	echo "0" > /proc/mCastVlanLeakyInfo
+	
+	if [ $# -gt 7 ]
+	then
+		echo "Custom IPTV mode config interface"
+		vconfig add eth1 $9
+		ifconfig vlan$9 up
+		brctl addif br2 vlan$9
+		
+		echo "1 2 $9" > /proc/mCastVlanLeakyInfo
+	else
+		echo "Default IPTV mode config interface"
+		vconfig add eth1 3
+		ifconfig vlan3 up
+		brctl addif br2 vlan3
+		
+		echo "1 2 3" > /proc/mCastVlanLeakyInfo
+	fi
+	
+	ifconfig br2 up
+}
+
+help()
+{
+cat << EOF
+	swconfig vlan_init 0 0
+	swconfig vlan_set <vid> <members> <tagmembers>
+	swconfig vlan_del <vid>
+	swconfig vlan_show
+	swconfig pvid_set <portid> <pvid> <pri>
+	swconfig pvid_all_set <pvid0> <pvid1> <pvid2> <pvid3> <pvid4>
+EOF
+ }
+
+case $1 in
+vlan_init)
+	vlan_init $2 $3;;
+vlan_set)
+	vlan_set $2 $3 $4;;
+vlan_del)
+	vlan_del $2 ;;
+vlan_show)
+	vlan_show;;
+pvid_set)
+	pvid_set $2 $3 $4 $5 $6;;
+pvid_all_set)
+	pvid_all_set $2 $3 $4 $5 $6;;	
+igmp_config)
+	igmp_config $2 $3 $4 $5 $6 $7 $8 $9 $10;;
+*)
+	help;;
+esac

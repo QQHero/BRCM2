@@ -1,0 +1,127 @@
+#
+# Automatically generated make config: don't edit
+#
+# CONFIG_NAT is not set
+
+#
+# Base Features
+#
+CONFIG_NVRAM=y
+CONFIG_NVRAM_UTILITY=y
+CONFIG_NVRAMD=y
+CONFIG_SHARED=y
+# CONFIG_GPIO_USE_NEXUS is not set
+# CONFIG_LIBBCMSTB is not set
+CONFIG_LIBBCM=y
+# CONFIG_BUZZZ is not set
+# CONFIG_BUSYBOX is not set
+# CONFIG_WLCONF is not set
+# CONFIG_BRIDGE is not set
+# CONFIG_VLAN is not set
+# CONFIG_HTTPD is not set
+# CONFIG_WWW is not set
+CONFIG_GLIBC=y
+# CONFIG_UCLIBC is not set
+# CONFIG_LIBOPT is not set
+# CONFIG_USBAP is not set
+# CONFIG_SQUASHFS is not set
+# CONFIG_CRAMFS is not set
+
+#
+# Options
+#
+CONFIG_VENDOR=broadcom
+# CONFIG_UDHCPD is not set
+# CONFIG_LIBUPNP is not set
+# CONFIG_SAMBA is not set
+# CONFIG_TASKSET is not set
+# CONFIG_MPSTAT is not set
+# CONFIG_FFMPEG is not set
+# CONFIG_BCM_MEVENT is not set
+
+#
+# DLNA
+#
+# CONFIG_DLNA_DMS is not set
+# CONFIG_DLNA_DMR is not set
+CONFIG_NAS=y
+# CONFIG_WAPI is not set
+# CONFIG_NAND_JFFS2 is not set
+# CONFIG_WAPI_IAS is not set
+# CONFIG_WPS is not set
+# CONFIG_NFC is not set
+# CONFIG_WFI is not set
+# CONFIG_EZC is not set
+# CONFIG_LLD2D is not set
+# CONFIG_NTP is not set
+# CONFIG_UTILS is not set
+# CONFIG_WLEXE is not set
+CONFIG_BCMWPA2=y
+# CONFIG_WCN is not set
+# CONFIG_EMF is not set
+# CONFIG_WL_ACI is not set
+# CONFIG_TRAFFIC_MGMT_RSSI_POLICY is not set
+# CONFIG_PHYMON_UTILITY is not set
+# CONFIG_SHRINK_MEMORY is not set
+# CONFIG_PLC is not set
+# CONFIG_IPV6 is not set
+# CONFIG_DUAL_IMAGE_FLASH_SUPPORT is not set
+# CONFIG_FAILSAFE_UPGRADE_SUPPORT is not set
+# CONFIG_VOIP is not set
+# CONFIG_LIBZ is not set
+# CONFIG_SOUND is not set
+
+#
+# Additional C libraries
+#
+CONFIG_LIBCRYPT=y
+# CONFIG_LIBDL is not set
+CONFIG_LIBM=y
+# CONFIG_LIBNSL is not set
+CONFIG_LIBPTHREAD=y
+CONFIG_LIBRESOLV=y
+# CONFIG_LIBSTDCPP is not set
+# CONFIG_LIBUTIL is not set
+# CONFIG_LIBNFNETLINK is not set
+# CONFIG_LIBMNL is not set
+
+#
+# Environment
+#
+LIBDIR=$(TOOLCHAIN)/lib
+USRLIBDIR=$(TOOLCHAIN)/arm-linux-gnueabihf/sys-root/usr/lib
+# CONFIG_RTR_OPTIMIZE_SIZE is not set
+# CONFIG_MINI_ROUTER is not set
+
+#
+# Internal Options
+#
+# CONFIG_UTELNETD is not set
+# CONFIG_ENVRAM_UTILITY is not set
+# CONFIG_PCMCIA is not set
+# CONFIG_WIRELESS is not set
+# CONFIG_TRUEFFS is not set
+# CONFIG_FDISK is not set
+# CONFIG_DISKTYPE is not set
+# CONFIG_E2FSPROGS is not set
+# CONFIG_NCURSES is not set
+# CONFIG_TERMINFO is not set
+# CONFIG_NTSW is not set
+# CONFIG_B57LDIAG is not set
+# CONFIG_ETHTOOL is not set
+# CONFIG_LIBPCAP is not set
+# CONFIG_TCPDUMP is not set
+# CONFIG_IPTRAF is not set
+# CONFIG_DIALOG is not set
+# CONFIG_CRYPTO is not set
+# CONFIG_GDBSERVER is not set
+# CONFIG_PDRIVER is not set
+# CONFIG_VMSTAT is not set
+
+#
+# Advanced Router Features
+#
+# CONFIG_BCMQOS is not set
+# CONFIG_VISUALIZATION is not set
+CONFIG_DEBUG_MONITOR=y
+# CONFIG_AIRIQ is not set

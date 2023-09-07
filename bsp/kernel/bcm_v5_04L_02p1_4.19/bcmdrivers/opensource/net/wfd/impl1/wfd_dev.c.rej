@@ -1,0 +1,13 @@
+--- bcmdrivers/opensource/net/wfd/impl1/wfd_dev.c
++++ bcmdrivers/opensource/net/wfd/impl1/wfd_dev.c
+@@ -105,8 +105,8 @@
+ #define WFD_FLCTL_PKT_PRIO_FAVOR         4  /* Favor Pkt Prio >= 4 : VI,VO */
+ #define WFD_FLCTL_DROP_CREDITS           32
+ #if (defined(CONFIG_BCM_BPM) || defined(CONFIG_BCM_BPM_MODULE))
+-#define WFD_FLCTL_SKB_EXHAUSTION_LO_PCNT 25 /* Favored Pkt threshold */
+-#define WFD_FLCTL_SKB_EXHAUSTION_HI_PCNT 10
++#define WFD_FLCTL_SKB_EXHAUSTION_LO_PCNT 30 /* Favored Pkt threshold */
++#define WFD_FLCTL_SKB_EXHAUSTION_HI_PCNT 15
+ #endif /* CONFIG_BCM_BPM || CONFIG_BCM_BPM_MODULE */
+ #endif
+ 

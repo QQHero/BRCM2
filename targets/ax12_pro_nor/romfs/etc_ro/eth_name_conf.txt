@@ -1,0 +1,13 @@
+## 只读取一行前32字节
+lan_1:br0;
+lan_2:br1;
+p_lan_1:eth3;
+p_lan_2:eth2;
+p_lan_3:eth1;
+l_lan_1:vlan1;
+wan_1:eth0.1;
+p_wan_1:eth0;
+wl2_4:wlan0;
+wl5_0:wlan1;
+iptv_lan_1:eth1;
+iptv_wan_1:eth0.2;

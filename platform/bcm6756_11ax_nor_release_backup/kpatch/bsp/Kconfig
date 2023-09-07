@@ -1,0 +1,71 @@
+menuconfig TENDA_PRIVATE_BSP
+    depends on TENDA_PRIVATE
+    bool "Tenda Private bsp modules"
+    default y
+
+config SWITCH_BCM
+    depends on TENDA_PRIVATE_BSP
+    bool "support SWITCH_BCM"
+    default n
+	
+config PHY_YT8531_SUPPORT
+    depends on TENDA_PRIVATE_BSP
+    bool "support PHY_YT8531"
+    default n
+	
+config PHY_TRX_DELAY_SUPPORT
+    depends on TENDA_PRIVATE_BSP
+    bool "support adjust phy trx delay"
+    default n
+
+config MTD_PARTITION_LOCK
+    depends on TENDA_PRIVATE_BSP
+    bool "support mtd partition lock and unlock"
+    default n
+
+config FLASH_LOCK_SUPPORT
+    depends on TENDA_PRIVATE_BSP
+    bool "support flash lock and unlock"
+    default n
+
+config WRITE_SR_ENABLE
+    depends on FLASH_LOCK_SUPPORT
+    bool "support write sr enable"
+    default n
+    
+config VFS_LOCK_SUPPORT
+    depends on TENDA_PRIVATE_BSP
+    bool "support vfs lock and unlock"
+    default n
+
+config SUPPORT_CUSTOM_USB_LED
+    depends on TENDA_PRIVATE_BSP
+	bool "support Tenda USB LED driver"
+	default n
+	---help---
+	  Say 'y' here if you want to connect an USBLED device to your
+
+config CUSTOM_USB_LED_INDEX
+	int "Tenda USB LED INDEX"
+	default 4
+	depends on SUPPORT_CUSTOM_USB_LED
+
+config PICTURE_MTD_SUPPORT
+    depends on TENDA_PRIVATE_BSP
+    bool "support weiqi picture mtd"
+    default n
+
+config PICTURE_MTD_SIZE
+    depends on PICTURE_MTD_SUPPORT
+    hex "picture mtd size"
+    default "0x80000"
+	
+config UGW_DUAL_IMAGE_ENABLE
+	depends on TENDA_PRIVATE_BSP
+	bool "support dual image"
+	default n
+	
+config TENDA_SF19A28_PORTPING
+    depends on TENDA_PRIVATE_BSP
+    bool "support set port tx rx delay"
+    default n

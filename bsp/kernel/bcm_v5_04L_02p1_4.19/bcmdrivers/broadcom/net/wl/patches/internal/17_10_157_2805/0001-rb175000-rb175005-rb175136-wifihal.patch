@@ -1,0 +1,61 @@
+diff --git ./main/components/apps/wldm/wldm_lib_wifi.c ./main/components/apps/wldm/wldm_lib_wifi.c
+index 339e00e6..6ef1ae70 100644
+--- ./main/components/apps/wldm/wldm_lib_wifi.c
++++ ./main/components/apps/wldm/wldm_lib_wifi.c
+@@ -6813,9 +6813,10 @@ wldm_Radio_ObssCoexistenceEnable(int cmd, int apIndex,
+ 	boolean *pvalue, int *plen, char *pbuf, int *pbufsz)
+ {
+ 	char *parameter = "ObssCoexistenceEnable";
++	char nvram_name[NVRAM_NAME_SIZE];
+ 	char *osifname;
+ 
+-	IGNORE_CMD_WARNING(cmd, CMD_ADD | CMD_DEL | CMD_SET_NVRAM |CMD_SET);
++	IGNORE_CMD_WARNING(cmd, CMD_ADD | CMD_DEL | CMD_SET);
+ 
+ 	if (cmd == CMD_LIST) {
+ 		/* List the name only. */
+@@ -6838,6 +6839,12 @@ wldm_Radio_ObssCoexistenceEnable(int cmd, int apIndex,
+ 			PRINT_BUF(pbuf, *pbufsz, "%s=%s\n", parameter, *pvalue ? "true" : "false");
+ 	}
+ 
++	if (cmd & CMD_SET_NVRAM)
++	{
++		snprintf(nvram_name, sizeof(nvram_name), "%s_obss_coex", wldm_get_nvifname(apIndex));
++		NVRAM_SET(nvram_name, (*pvalue != 0) ? "1" : "0");
++	}
++
+ 	if (cmd & CMD_SET_IOCTL) {
+ 		/* 1=enable, 0=disable -1=Auto mode */
+ 		if (wl_iovar_setint(osifname, "obss_coex", *pvalue)) {
+@@ -9327,7 +9334,7 @@ wldm_AccessPoint_WPS_ConfigMethodsEnabled(int cmd, int apIndex,
+ 		char *nvram_value = NULL;
+ 
+ 		nvram_value = wlcsm_nvram_get("wps_config_method");
+-		if (nvram_value)
++		if (nvram_value && nvram_value[0] != '\0')
+ 			iwpsmethods = strtoul(nvram_value, NULL, 16);
+ 		else
+ 			iwpsmethods =
+diff --git ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_hal.c ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_hal.c
+index 67535e68..5389a9ce 100755
+--- ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_hal.c
++++ ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_hal.c
+@@ -9135,7 +9135,7 @@ INT wifi_setRadioObssCoexistenceEnable(INT apIndex, BOOL enable)
+ 		return RETURN_ERR;
+ 	}
+ 	int len = sizeof(enable);
+-	returnStatus = wldm_Radio_ObssCoexistenceEnable(CMD_SET_IOCTL, apIndex, &enable, &len, NULL, NULL);
++	returnStatus = wldm_Radio_ObssCoexistenceEnable(CMD_SET_IOCTL | CMD_SET_NVRAM, apIndex, &enable, &len, NULL, NULL);
+ 	if (returnStatus != RETURN_OK) {
+ 		HAL_WIFI_DBG(("%s wldm_Radio_ObssCoexistenceEnable Failed, Status = %d\n",
+ 			__FUNCTION__, returnStatus));
+@@ -10099,7 +10099,8 @@ INT wifi_getIndexFromName(CHAR *inputSsidString, INT *output_int)
+ // Outputs a 32 byte or less string indicating the beacon type as "None", "Basic", "WPA", "11i", "WPAand11i"
+ INT wifi_getApBeaconType(INT apIndex, CHAR *output_string)
+ {
+-	CHAR auth_mode[OUTPUT_STRING_LENGTH_32] = { 0 };
++	CHAR auth_mode[OUTPUT_STRING_LENGTH_32+1] = { 0 };
++
+ 	HAL_WIFI_DBG(("%s: apIndex = %d\n", __FUNCTION__, apIndex));
+ 
+ 	if (NULL == output_string) {

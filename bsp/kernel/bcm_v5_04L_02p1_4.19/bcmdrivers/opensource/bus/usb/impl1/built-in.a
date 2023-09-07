@@ -1,0 +1,14 @@
+!<thin>
+//                                              124       `
+bcm_bca_usb_ctrl.o/
+bcm_bca_usb_hw_6756.o/
+bcm_bca_usb_utils.o/
+bcm_bca_usb_xhci.o/
+bcm_bca_usb_ehci.o/
+bcm_bca_usb_ohci.o/
+/0              0           0     0     644     3772      `
+/20             0           0     0     644     2348      `
+/43             0           0     0     644     2828      `
+/64             0           0     0     644     5452      `
+/84             0           0     0     644     4996      `
+/104            0           0     0     644     4996      `

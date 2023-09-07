@@ -1,0 +1,6 @@
+.vscode/
+*.o
+*.ko
+*.cmd
+*.bin
+targets/ax12_pro_nor/bin/

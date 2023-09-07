@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+</head>
+
+<body>
+  <script>
+    // 解析 url
+    // 获取值
+    // 使用postMessage 传给父级
+    var searchURL = window.location.search;
+    var resInfo = {},
+      seg = searchURL.replace(/^\?/, '').split('&'),
+      len = seg.length,
+      i = 0,
+      s;
+
+    for (; i < len; i++) {
+      if (!seg[i]) { continue; }
+      s = seg[i].split('=');
+      resInfo[s[0]] = s[1];
+    }
+
+    window.parent.postMessage(resInfo, '\*');
+  </script>
+</body>
+
+</html>

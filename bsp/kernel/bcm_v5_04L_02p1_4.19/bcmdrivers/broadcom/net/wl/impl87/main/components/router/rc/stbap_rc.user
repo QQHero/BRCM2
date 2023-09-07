@@ -1,0 +1,8 @@
+#! /bin/sh
+#
+# $ Copyright Open Broadcom $
+#
+# <<Broadcom-WL-IPTag/Open:>>
+#
+# Start stbap_init.sh scrript.Add any specific daemons or apps launching here.
+stbap_init.sh

@@ -1,0 +1,511 @@
+
+/*.left-a{
+"background": "#E9E9E9",
+'z-index': '0'
+
+}
+.left-b {
+'transform': 'rotate(0deg)',
+"background": "#17CC82",
+'z-index': '1'
+
+}
+.right-a {
+'transform': 'rotate(0deg)',
+"background": "#E9E9E9",
+'z-index': '0'
+
+}
+.right-b {
+
+}*/
+.status-info[data-v-a5090cf4]{
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+      justify-content: center;
+  vertical-align: middle;
+  -ms-flex-align: center;
+      align-items: center;
+}
+.demo-row[data-v-a5090cf4]{
+  margin-top: 30px;
+}
+/*.demo-row{*/
+/*  margin-top: 30px;*/
+/*}*/
+/*.diagnosis-optimize {*/
+/*  text-align: center;*/
+/*}*/
+
+/*.diagnosis-optimize_img {*/
+/*  width: 120px;*/
+/*  height: 120px;*/
+/*  margin: 0 auto 16px;*/
+/*}*/
+
+/*.diagnosis-optimize_img img {*/
+/*  width: 120px;*/
+/*  height: 120px;*/
+/*}*/
+
+
+/*.diagnosis-optimize_p {*/
+/*  font-size: 12px;*/
+/*  color: #8D8D8D;*/
+/*  line-height: 16px;*/
+/*}*/
+
+/*.diagnosis-optimize_button {*/
+/*  margin: 24px auto;*/
+/*}*/
+
+/*.diagnosis-optimize_button button {*/
+/*  margin: 0 10px;*/
+/*}*/
+
+/*.diagnosis-line {*/
+/*  width: 100%;*/
+/*  height: 2px;*/
+/*  background: #F5F5F5;*/
+/*}*/
+
+/*.diagnosis-content {*/
+/*  margin-top: 24px;*/
+/*}*/
+
+/*.diagnosis-content li {*/
+/*  margin-bottom: 32px;*/
+/*  position: relative;*/
+/*  overflow: hidden;*/
+/*}*/
+
+/*.diagnosis-content_header {*/
+/*  !* margin-left: 52px;*/
+/*  float: left; *!*/
+/*  position: absolute;*/
+/*  left: 60px;*/
+/*  top: 0;*/
+/*  line-height: 20px;*/
+/*  height: 20px;*/
+/*  font-size: 0;*/
+/*}*/
+
+/*.diagnosis-content_header i {*/
+/*  vertical-align: middle;*/
+/*  font-size: 16px;*/
+/*  color: #979797;*/
+/*}*/
+
+/*.diagnosis-content_header h5 {*/
+/*  vertical-align: middle;*/
+/*  display: inline;*/
+/*  font-size: 14px;*/
+/*  font-weight: normal;*/
+/*  color: #262626;*/
+/*  line-height: 20px;*/
+/*  margin-left: 8px;*/
+/*}*/
+
+/*.diagnosis-content_info {*/
+/*  float: left;*/
+/*  margin-left: 242px;*/
+/*}*/
+
+/*.diagnosis-content_info i {*/
+/*  margin-top: 2px;*/
+/*  font-size: 16px;*/
+/*  float: left;*/
+/*}*/
+
+/*.diagnosis-content_info img {*/
+/*  margin-top: 2px;*/
+/*  width: 16px;*/
+/*  height: 16px;*/
+/*  float: left;*/
+/*}*/
+
+/*.diagnosis-content_info p {*/
+/*  margin-left: 22px;*/
+/*  width: 310px;*/
+/*  font-size: 12px;*/
+/*  color: #8D8D8D;*/
+/*  line-height: 20px;*/
+/*  margin-bottom: 2px;*/
+/*}*/
+
+/*.diagnosis-content_info p:last-child {*/
+/*  margin-bottom: 0px;*/
+/*}*/
+
+/*.diagnosis-content_status {*/
+/*  float: left;*/
+/*  margin-left: 48px;*/
+/*}*/
+
+/*.diagnosis-content_status span {*/
+/*  font-size: 12px;*/
+/*  display: block;*/
+/*  color: #595959;*/
+/*  line-height: 20px;*/
+/*  margin-bottom: 2px;*/
+/*}*/
+
+
+
+
+
+/*.diagnosis-optimize_circle {*/
+/*  width: 120px;*/
+/*  height: 120px;*/
+/*  position: relative;*/
+/*  border-radius: 50%;*/
+/*  background: #17CC82;*/
+/*  margin: 0 auto 16px;*/
+/*}*/
+
+/*.clip_left,*/
+/*.clip_right {*/
+/*  width: 120px;*/
+/*  height: 120px;*/
+/*  position: absolute;*/
+/*  top: 0px;*/
+/*  left: 0px;*/
+/*}*/
+
+/*.circle_left,*/
+/*.circle_right {*/
+/*  width: 120px;*/
+/*  height: 120px;*/
+/*  position: absolute;*/
+/*  border-radius: 50%;*/
+/*  top: 0px;*/
+/*  left: 0px;*/
+/*  background: #E9E9E9;*/
+/*}*/
+
+/*!*出于展示用的改变背景色*!*/
+/*!*.circle_left{*/
+/*    background: green;*/
+/*    }*/
+/*    .circle_right{*/
+/*    background: lightblue;*/
+/*    }*!*/
+/*.circle_right,*/
+/*.clip_right {*/
+/*  clip: rect(0, auto, auto, 60px);*/
+/*}*/
+
+/*.circle_left,*/
+/*.clip_left {*/
+/*  clip: rect(0, 60px, auto, 0);*/
+/*}*/
+
+/*!**/
+/*    *当top和left取值为auto时，相当于0*/
+/*    *当bottom和right取值为auto时，相当于100%*/
+/*    *!*/
+/*.circle_mask {*/
+/*  width: 110px;*/
+/*  height: 110px;*/
+/*  border-radius: 50%;*/
+/*  left: 5px;*/
+/*  top: 5px;*/
+/*  background: #FFF;*/
+/*  position: absolute;*/
+/*  text-align: center;*/
+/*  line-height: 110px;*/
+/*  font-size: 16px;*/
+/*  z-index: 10;*/
+/*}*/
+
+/*.circle_mask p {*/
+/*  font-size: 14px;*/
+/*  color: #595959;*/
+/*}*/
+
+/*.circle_mask img {*/
+/*  width: 48px;*/
+/*  height: 48px;*/
+/*  vertical-align: middle;*/
+/*}*/
+
+/*.diagnosis-content_info--wifi {*/
+/*  width: 310px;*/
+/*  font-size: 12px;*/
+/*  color: #8D8D8D;*/
+/*  line-height: 20px;*/
+/*  margin-left: 22px;*/
+/*  margin-bottom: 2px;*/
+/*}*/
+/*.diagnosis-content_info--wifi:last-child {*/
+/*  margin-bottom: 0;*/
+/*}*/
+/*.diagnosis-content_info--wifi h5{*/
+/*  font-weight: normal;*/
+/*  display: inline-block;*/
+/*  width: 40px;*/
+/*  vertical-align: top;*/
+/*}*/
+/*.diagnosis-content_info--wifi span {*/
+/*  display: inline-block;*/
+/*}*/
+
+/*.router-diagnosis_btn {*/
+/*  padding: 0;*/
+/*  width: 88px;*/
+/*  height: 32px;*/
+/*  background: #FF801F;*/
+/*  border-radius: 2px;*/
+/*  border: none;*/
+/*  font-size: 14px;*/
+/*  color: #FFFFFF;*/
+/*  line-height: 32px;*/
+/*}*/
+
+/*.router-diagnosis_btn:hover {*/
+/*  background-color: #ffab6c;*/
+/*}*/
+
+/*.router-diagnosis_btn:disabled {*/
+/*  background: rgba(255, 128, 31, 0.4) !important;*/
+/*  cursor: not-allowed;*/
+/*  box-shadow: none !important;*/
+/*}*/
+
+/*.router-diagnosis_btn--info {*/
+/*  padding: 0;*/
+/*  width: 88px;*/
+/*  height: 32px;*/
+/*  background: #FFFFFF;*/
+/*  border-radius: 2px;*/
+/*  border: 1px solid #D8D8D8;*/
+/*  font-size: 14px;*/
+/*  color: #595959;*/
+/*  line-height: 32px;*/
+/*}*/
+
+/*.router-diagnosis_btn--info:hover {*/
+/*  background-color: #fff;*/
+/*  color: #ff801f;*/
+/*  border-color: #ff801f;*/
+/*}*/
+
+/*.router-diagnosis_btn--info:disabled {*/
+/*  background: #fafafa !important;*/
+/*  color: #c0c0c0 !important;*/
+/*  border-color: #d8d8d8 !important;*/
+/*  box-shadow: none !important;*/
+/*  cursor: not-allowed;*/
+/*}*/
+.diagnosis-optimize[data-v-a5090cf4] {
+  text-align: center;
+}
+.diagnosis-optimize_img[data-v-a5090cf4] {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 16px;
+}
+.diagnosis-optimize_img img[data-v-a5090cf4] {
+  width: 120px;
+  height: 120px;
+}
+.diagnosis-optimize_p[data-v-a5090cf4] {
+  /*font-size: 12px;*/
+  color: #8D8D8D;
+  line-height: 16px;
+}
+.diagnosis-optimize_button[data-v-a5090cf4] {
+  margin: 24px auto;
+}
+.diagnosis-optimize_button button[data-v-a5090cf4] {
+  margin: 0 10px;
+}
+.diagnosis-line[data-v-a5090cf4] {
+  width: 100%;
+  height: 2px;
+  background: #F5F5F5;
+}
+.diagnosis-content[data-v-a5090cf4] {
+  margin-top: 24px;
+}
+.diagnosis-content li[data-v-a5090cf4] {
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.diagnosis-content_header[data-v-a5090cf4] {
+  /* margin-left: 52px;
+  float: left; */
+  position: absolute;
+  left: 60px;
+  top: 0;
+  line-height: 20px;
+  height: 20px;
+  font-size: 0;
+}
+.diagnosis-content_header i[data-v-a5090cf4] {
+  vertical-align: middle;
+  font-size: 16px;
+  color: #979797;
+}
+.diagnosis-content_header h5[data-v-a5090cf4] {
+  vertical-align: middle;
+  display: inline;
+  font-size: 14px;
+  font-weight: normal;
+  color: #262626;
+  line-height: 20px;
+  margin-left: 8px;
+}
+.diagnosis-content_info[data-v-a5090cf4] {
+  float: left;
+  margin-left: 242px;
+}
+.diagnosis-content_info i[data-v-a5090cf4] {
+  margin-top: 2px;
+  font-size: 16px;
+  float: left;
+}
+.diagnosis-content_info img[data-v-a5090cf4] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  float: left;
+}
+.diagnosis-content_info p[data-v-a5090cf4] {
+  margin-left: 22px;
+  width: 310px;
+  /*font-size: 12px;*/
+  color: #8D8D8D;
+  line-height: 20px;
+  margin-bottom: 2px;
+}
+.diagnosis-content_info p[data-v-a5090cf4]:last-child {
+  margin-bottom: 0px;
+}
+.diagnosis-content_status[data-v-a5090cf4] {
+  float: left;
+  margin-left: 48px;
+}
+.diagnosis-content_status span[data-v-a5090cf4] {
+  /*font-size: 12px;*/
+  display: block;
+  color: #595959;
+  line-height: 20px;
+  margin-bottom: 2px;
+}
+.diagnosis-content_status span[data-v-a5090cf4]:last-child {
+  margin-bottom: 0;
+}
+.error[data-v-a5090cf4] {
+  color: #F7421E !important;
+}
+.success[data-v-a5090cf4] {
+  color: #17CC82 !important;
+}
+.warning[data-v-a5090cf4] {
+  color: #F4B71E !important;
+}
+.wait[data-v-a5090cf4] {
+  color: #8D8D8D !important;
+}
+.diagnosis-optimize_circle[data-v-a5090cf4] {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  border-radius: 50%;
+  background: #17CC82;
+  margin: 0 auto 16px;
+}
+.clip_left[data-v-a5090cf4],
+.clip_right[data-v-a5090cf4] {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.circle_left[data-v-a5090cf4],
+.circle_right[data-v-a5090cf4] {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  border-radius: 50%;
+  top: 0px;
+  left: 0px;
+  background: #E9E9E9;
+}
+
+/*出于展示用的改变背景色*/
+/*.circle_left{
+    background: green;
+    }
+    .circle_right{
+    background: lightblue;
+    }*/
+.circle_right[data-v-a5090cf4],
+.clip_right[data-v-a5090cf4] {
+  clip: rect(0, auto, auto, 60px);
+}
+.circle_left[data-v-a5090cf4],
+.clip_left[data-v-a5090cf4] {
+  clip: rect(0, 60px, auto, 0);
+}
+
+/*
+    *当top和left取值为auto时，相当于0
+    *当bottom和right取值为auto时，相当于100%
+    */
+.circle_mask[data-v-a5090cf4] {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  left: 5px;
+  top: 5px;
+  background: #FFF;
+  position: absolute;
+  text-align: center;
+  line-height: 110px;
+  font-size: 16px;
+  z-index: 10;
+}
+.circle_mask p[data-v-a5090cf4] {
+  font-size: 14px;
+  color: #595959;
+}
+.circle_mask img[data-v-a5090cf4] {
+  width: 48px;
+  height: 48px;
+  vertical-align: middle;
+}
+.diagnosis-content_info--wifi[data-v-a5090cf4] {
+  width: 310px;
+  /*font-size: 12px;*/
+  color: #8D8D8D;
+  line-height: 20px;
+  margin-left: 22px;
+  margin-bottom: 2px;
+}
+.diagnosis-content_info--wifi[data-v-a5090cf4]:last-child {
+  margin-bottom: 0;
+}
+.diagnosis-content_info--wifi h5[data-v-a5090cf4]{
+  font-weight: normal;
+  display: inline-block;
+  width: 40px;
+  vertical-align: top;
+}
+.diagnosis-content_info--wifi span[data-v-a5090cf4] {
+  display: inline-block;
+}
+.diagnosis-content_statuss span[data-v-a5090cf4] {
+  display: block;
+  color: #595959;
+  line-height: 20px;
+  margin-bottom: 2px;
+}
+.diagnosis-content_statuss span[data-v-a5090cf4]:last-child {
+  margin-bottom: 0;
+}
+

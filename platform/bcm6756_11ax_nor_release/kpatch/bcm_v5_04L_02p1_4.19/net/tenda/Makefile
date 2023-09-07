@@ -1,0 +1,3 @@
+
+obj-$(CONFIG_TENDA_PRIVATE_KM) += km/
+obj-$(CONFIG_TENDA_PRIVATE_WLAN) += wifi/
