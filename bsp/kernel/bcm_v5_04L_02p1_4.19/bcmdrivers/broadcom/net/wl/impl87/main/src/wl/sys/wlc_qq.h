@@ -505,9 +505,108 @@ struct pkt_count_qq {
 
 
 
+#include <wlc_lq.h>
 
+#include <wlc_rspec.h>/**
+ * Returns the rate in [Kbps] units, 0 for invalid ratespec.
+ */
+static uint
+wf_he_rspec_to_rate(ratespec_t rspec)
+{
+	uint mcs = RSPEC_HE_MCS(rspec);
+	uint nss = RSPEC_HE_NSS(rspec);
+	bool dcm = (rspec & WL_RSPEC_DCM) != 0;
+	uint bw =  RSPEC_BW(rspec) >> WL_RSPEC_BW_SHIFT;
+	uint gi =  RSPEC_HE_LTF_GI(rspec);
 
+	if (mcs <= WLC_MAX_HE_MCS && nss != 0 && nss <= 8) {
+		return wf_he_mcs_to_rate(mcs, nss, bw, gi, dcm);
+	}
+#ifdef BCMDBG
+	printf("%s: rspec %x, mcs %u, nss %u\n", __FUNCTION__, rspec, mcs, nss);
+#endif
+	ASSERT(mcs <= WLC_MAX_HE_MCS);
+	ASSERT(nss != 0 && nss <= 8);
+	return 0;
+} /* wf_he_rspec_to_rate */
 
+struct phy_info_qq {
+    uint8 fix_rate;
+    uint32 mcs[RATESEL_MFBR_NUM];
+    uint32 nss[RATESEL_MFBR_NUM];
+    uint32 rate[RATESEL_MFBR_NUM];
+    uint BW[RATESEL_MFBR_NUM];
+    uint32 ISSGI[RATESEL_MFBR_NUM];
+    int16 RSSI;
+    int8 noiselevel;
+}phy_info_qq_t;
+
+/** take a well formed ratespec_t arg and return phy rate in [Kbps] units */
+void wf_rspec_to_phyinfo_qq(ratesel_txs_t rs_txs, struct phy_info_qq *phy_info_qq_cur)
+{
+    uint rnum = 0;
+    do{
+        
+    ratespec_t rspec = rs_txs.txrspec[rnum];
+	uint rate = (uint)(-1);
+	uint mcs, nss;
+
+	switch (rspec & WL_RSPEC_ENCODING_MASK) {
+		case WL_RSPEC_ENCODE_HE:
+			rate = wf_he_rspec_to_rate(rspec);
+			break;
+		case WL_RSPEC_ENCODE_VHT:
+			mcs = RSPEC_VHT_MCS(rspec);
+			nss = RSPEC_VHT_NSS(rspec);
+#ifdef BCMDBG
+			if (mcs > WLC_MAX_VHT_MCS || nss == 0 || nss > 8) {
+				printf("%s: rspec=%x\n", __FUNCTION__, rspec);
+			}
+#endif /* BCMDBG */
+			ASSERT(mcs <= WLC_MAX_VHT_MCS);
+			ASSERT(nss != 0 && nss <= 8);
+			rate = wf_mcs_to_rate(mcs, nss,
+				RSPEC_BW(rspec), RSPEC_ISSGI(rspec));
+			break;
+		case WL_RSPEC_ENCODE_HT:
+			mcs = RSPEC_HT_MCS(rspec);
+#ifdef BCMDBG
+			if (mcs > 32 && !IS_PROPRIETARY_11N_MCS(mcs)) {
+				printf("%s: rspec=%x\n", __FUNCTION__, rspec);
+			}
+#endif /* BCMDBG */
+			ASSERT(mcs <= 32 || IS_PROPRIETARY_11N_MCS(mcs));
+			if (mcs == 32) {
+				rate = wf_mcs_to_rate(mcs, 1, WL_RSPEC_BW_40MHZ,
+					RSPEC_ISSGI(rspec));
+			} else {
+#if defined(WLPROPRIETARY_11N_RATES)
+				nss = GET_11N_MCS_NSS(mcs);
+				mcs = wf_get_single_stream_mcs(mcs);
+#else /* this ifdef prevents ROM abandons */
+				nss = 1 + (mcs / 8);
+				mcs = mcs % 8;
+#endif /* WLPROPRIETARY_11N_RATES */
+				rate = wf_mcs_to_rate(mcs, nss, RSPEC_BW(rspec),
+					RSPEC_ISSGI(rspec));
+			}
+			break;
+		case WL_RSPEC_ENCODE_RATE:	/* Legacy */
+			rate = 500 * RSPEC2RATE(rspec);
+			break;
+		default:
+			ASSERT(0);
+			break;
+	}
+    phy_info_qq_cur->mcs[rnum] = mcs;
+    phy_info_qq_cur->nss[rnum] = nss;
+    phy_info_qq_cur->rate[rnum] = rate;
+    phy_info_qq_cur->BW[rnum] = RSPEC_BW(rspec) >> WL_RSPEC_BW_SHIFT;;
+    phy_info_qq_cur->ISSGI[rnum] = RSPEC_ISSGI(rspec);
+    rnum++;
+    }while (!(phy_info_qq_cur->fix_rate>0) && rnum < RATESEL_MFBR_NUM); /* loop over rates */
+
+}
 
 
 
@@ -716,7 +815,7 @@ void pkt_qq_del_timeout_ergodic(osl_t *osh){
 
 void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *ampdu_tx, struct scb *scb, 
             tx_status_t *txs, wlc_pkttag_t* pkttag, wlc_txh_info_t *txh_info,bool was_acked,osl_t *osh
-            , void *p, bool use_last_pkt, uint cur_mpdu_index){
+            , void *p, bool use_last_pkt, uint cur_mpdu_index, ratesel_txs_t rs_txs,uint32 receive_time,uint32 *ccastats_qq_cur){
     //新bool use_last_pkt变量，用于减少遍历搜索的时间，在此之前每个数据包都需要从头开始搜索，太耗时间
     //加上它以后，就可以从上次搜索的地方开始搜索。对于AMPDU的情况会有较好的结果
 
@@ -793,150 +892,180 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
             //printk("**************debug7*******************");
         }
         pkt_qq_cur->airtime_all += cur_airtime;
-        uint32 cur_time = OSL_SYSUPTIME();
+        uint32 cur_time = receive_time;
         uint32 pkt_qq_cur_PHYdelay = cur_time - pkt_qq_cur->into_hw_time;
         uint16 cur_pktSEQ = pkttag->seq;
         //if(pkt_qq_cur->pktSEQ == cur_pktSEQ ){//如果找到了这个数据包
         //if(pkt_qq_cur->FrameID == htol16(curTxFrameID) ){//如果找到了这个数据包
         if((pkt_qq_cur->FrameID == htol16(curTxFrameID)) && (pkt_qq_cur->pktSEQ == cur_pktSEQ)){//如果找到了这个数据包
-            found_pkt_node_qq = TRUE;
-            pkt_qq_cur->airtime_self = cur_airtime;
-            pkt_qq_cur->tid = tid;
-            if(was_acked){//如果成功ACK 
-                uint16 index_i = 0;
-                for(int i = 0; i<pkt_phydelay_dict_len; i++){
-                    index_i = i;
-                    if(i*pkt_phydelay_dict_step+pkt_phydelay_dict_step>pkt_qq_cur_PHYdelay){
-                        
-                        break;
-                    }
-                }
-                pkt_phydelay_dict[index_i]++;
-                pkt_qq_cur->free_time = cur_time;
-                pkt_qq_cur->free_txop = wlc_bmac_cca_read_counter(wlc->hw, M_CCA_TXOP_L_OFFSET(wlc), M_CCA_TXOP_H_OFFSET(wlc));
-                pkt_qq_cur->ps_dur_trans = 0;//当前帧发送期间PS 时间统计
-                if(scb->PS){
-                    pkt_qq_cur->ps_dur_trans = scb->ps_tottime - pkt_qq_cur->ps_totaltime + cur_time - scb->ps_starttime;
-                }else{
-                    pkt_qq_cur->ps_dur_trans = scb->ps_tottime - pkt_qq_cur->ps_totaltime;
-                }
-                uint32 ccastats_qq_cur[CCASTATS_MAX];
-                uint32 ccastats_qq_differ[CCASTATS_MAX];
-                for (int i = 0; i < CCASTATS_MAX; i++) {
-                    ccastats_qq_cur[i] = wlc_bmac_cca_read_counter(wlc->hw, 4 * i, (4 * i + 2));
-                    ccastats_qq_differ[i] = ccastats_qq_cur[i] - pkt_qq_cur->ccastats_qq[i];
-                }
-                pkt_qq_cur->busy_time = ccastats_qq_differ[CCASTATS_TXDUR] +
-                    ccastats_qq_differ[CCASTATS_INBSS] +
-                    ccastats_qq_differ[CCASTATS_OBSS] +
-                    ccastats_qq_differ[CCASTATS_NOCTG] +
-                    ccastats_qq_differ[CCASTATS_NOPKT];
-                memcpy(pkt_qq_cur->ccastats_qq_differ, ccastats_qq_differ, sizeof(pkt_qq_cur->ccastats_qq_differ));
-                
-                pkt_qq_cur->txop_in_fly = (pkt_qq_cur->free_txop - pkt_qq_cur->into_hw_txop)*slottime_qq;
-                scb_pps_info_t *pps_scb_qq = SCB_PPSINFO(wlc->pps_info, scb);            
-                uint32 time_in_pretend_tot_qq = pps_scb_qq->ps_pretend_total_time_in_pps;
-                if (pps_scb_qq == NULL){
-                    time_in_pretend_tot_qq += R_REG(wlc->osh, D11_TSFTimerLow(wlc)) - pps_scb_qq->ps_pretend_start;
-                }
-                pkt_qq_cur->time_in_pretend_in_fly = time_in_pretend_tot_qq - pkt_qq_cur->time_in_pretend_tot;
-                pkt_qq_cur->ampdu_seq = cur_mpdu_index;
-                if(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>1){//如果时延较高就打印出来
-                    //int dump_rand_flag = OSL_RAND() % 10000;
-                    kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-                    memcpy(info_qq, pkt_qq_cur, sizeof(*pkt_qq_cur));
-                    debugfs_set_info_qq(0, info_qq, 1);
-                    //if (!use_last_pkt) {/*use_last_pkt代表非第一个mpdu，所以这里指的是只打印第一个mpdu的信息*/
-                    if (0) {/*use_last_pkt代表非第一个mpdu，所以这里指的是只打印第一个mpdu的信息*/
-                        printk("----------[fyl] OSL_SYSUPTIME()1----------(%u)",OSL_SYSUPTIME());
-                        printk("----------[fyl] acked_FrameID----------(%u)",pkt_qq_cur->FrameID);
-                        printk("----------[fyl] pktSEQ----------(%u)",pkt_qq_cur->pktSEQ);
-                        read_lock(&pkt_qq_mutex_len); // 加锁
-                        printk("----------[fyl] pkt_qq_chain_len----------(%u)",pkt_qq_chain_len);
-                        read_unlock(&pkt_qq_mutex_len); // 解锁
-                        printk("----------[fyl] cur_mpdu_index----------(%u)",cur_mpdu_index);/*当前mpdu在ampdu中的编号*/
-                        printk("----------[fyl] pkt_qq_cur->failed_cnt----------(%u)",pkt_qq_cur->failed_cnt);
-                        printk("----------[fyl] pkt_qq_cur_PHYdelay----------(%u)",pkt_qq_cur_PHYdelay);
-                        printk("----------[fyl] pkt_qq_cur->free_time----------(%u)",pkt_qq_cur->free_time);
-                        printk("----------[fyl] pkt_qq_cur->into_hw_time----------(%u)",pkt_qq_cur->into_hw_time);
-                        printk("----------[fyl] pkt_qq_cur->airtime_self----------(%u)",pkt_qq_cur->airtime_self);
-                        //printk("----------[fyl] pkt_qq_cur->airtime_all----------(%u)",pkt_qq_cur->airtime_all);
-                        printk("----------[fyl] busy_qq----------(%u)",pkt_qq_cur->busy_time);
-                        printk("----------[fyl] free_txop:::into_hw_txop:::txop*9----------(%u:%u:%u)",pkt_qq_cur->free_txop, pkt_qq_cur->into_hw_txop,pkt_qq_cur->txop_in_fly);
-                        printk("----------[fyl] pkt_qq_cur:ps_pretend_probe(%u):::ps_pretend_count(%u):::ps_pretend_succ_count(%u):::ps_pretend_failed_ack_count(%u)----------",\
-                        pkt_qq_cur->ps_pretend_probe, pkt_qq_cur->ps_pretend_count,pkt_qq_cur->ps_pretend_succ_count,pkt_qq_cur->ps_pretend_failed_ack_count);
-                        printk("----------[fyl] pps_scb_qq:ps_pretend_probe(%u):::ps_pretend_count(%u):::ps_pretend_succ_count(%u):::ps_pretend_failed_ack_count(%u)----------",\
-                        pps_scb_qq->ps_pretend_probe, pps_scb_qq->ps_pretend_count,pps_scb_qq->ps_pretend_succ_count,pps_scb_qq->ps_pretend_failed_ack_count);
-
-                        printk("----------[fyl] ampdu_tx_cfg->ba_policy----------(%u)",ampdu_tx_cfg->ba_policy);
-                        //printk("----------[fyl] ampdu_tx_cfg->ba_policy::ba_rx_wsize::delba_timeout----------(%u)",
-                                    //ampdu_tx_cfg->ba_policy,ba_rx_wsize,delba_timeout);
-                        /*printk("ccastats_qq_differ:TXDUR(%u)INBSS(%u)OBSS(%u)NOCTG(%u)NOPKT(%u)",ccastats_qq_differ[0]\
-                            ,ccastats_qq_differ[1],ccastats_qq_differ[2],ccastats_qq_differ[3]\
-                            ,ccastats_qq_differ[4]);*/
-                        printk("----------[fyl] time_in_pretend_tot_qq:::pkt_qq_cur->time_in_pretend_tot:::R_REG(wlc->osh, D11_TSFTimerLow(wlc)):::pps_scb_qq->ps_pretend_start:::time_in_pretend----------(%u:%u:%u:%u:%u)",time_in_pretend_tot_qq,pkt_qq_cur->time_in_pretend_tot,R_REG(wlc->osh, D11_TSFTimerLow(wlc)),pps_scb_qq->ps_pretend_start,time_in_pretend_tot_qq - pkt_qq_cur->time_in_pretend_tot);
-                        printk("----------[fyl] ini->tid----------(%u)",tid);
-                        printk("----------[fyl] scb->ps_tottime:scb->ps_starttime:ps_dur_trans----------(%u:%u:%u)",scb->ps_tottime,scb->ps_starttime,pkt_qq_cur->ps_dur_trans);
-                        
-                        printk("----------[fyl] PS:::ps_pretend:::PS_TWT:::ps_txfifo_blk----------(%u:%u:%u:%u)",
-                                    scb->PS, scb->ps_pretend,scb->PS_TWT,scb->ps_txfifo_blk);
-                        printk("--[fyl] txs->status.rts_tx_cnt:txs->status.cts_tx_cnt---(%u:%u)",txs->status.rts_tx_cnt,txs->status.cts_rx_cnt);
-                        printk("ccastats_qq_differ:TXDUR(%u)INBSS(%u)OBSS(%u)NOCTG(%u)NOPKT(%u)DOZE(%u)TXOP(%u)GDTXDUR(%u)BDTXDUR(%u)",ccastats_qq_differ[0]\
-                            ,ccastats_qq_differ[1],ccastats_qq_differ[2],ccastats_qq_differ[3]\
-                            ,ccastats_qq_differ[4],ccastats_qq_differ[5],ccastats_qq_differ[6]\
-                            ,ccastats_qq_differ[7],ccastats_qq_differ[8]);
-                        if(pkt_qq_cur->failed_cnt>0){
-                            printk("failed_time_list_qq:0(%u)1(%u)2(%u)3(%u)4(%u)5(%u)6(%u)7(%u)8(%u)9(%u)",pkt_qq_cur->failed_time_list_qq[0]\
-                            ,pkt_qq_cur->failed_time_list_qq[1],pkt_qq_cur->failed_time_list_qq[2],pkt_qq_cur->failed_time_list_qq[3]\
-                            ,pkt_qq_cur->failed_time_list_qq[4],pkt_qq_cur->failed_time_list_qq[5],pkt_qq_cur->failed_time_list_qq[6]\
-                            ,pkt_qq_cur->failed_time_list_qq[7],pkt_qq_cur->failed_time_list_qq[8],pkt_qq_cur->failed_time_list_qq[9]);
+            if((!was_acked)||((was_acked)&&(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>1))){//提前判断一下，降低总体计算量 
+                found_pkt_node_qq = TRUE;
+                pkt_qq_cur->airtime_self = cur_airtime;
+                pkt_qq_cur->tid = tid;
+                if(was_acked){//如果成功ACK 
+                    uint16 index_i = 0;
+                    for(int i = 0; i<pkt_phydelay_dict_len; i++){
+                        index_i = i;
+                        if(i*pkt_phydelay_dict_step+pkt_phydelay_dict_step>pkt_qq_cur_PHYdelay){
+                            
+                            break;
                         }
-                        printk("----------[fyl] OSL_SYSUPTIME()2----------(%u)",OSL_SYSUPTIME());
                     }
-
-                }
-                /*删除已经ACK的数据包节点*/
-                //struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
-                pkt_qq_last = pkt_qq_cur_next;
-                index_last = index;
-                pkt_qq_delete(pkt_qq_cur,osh);
-                pkt_qq_chain_len_acked ++;
-                //pkt_qq_cur = pkt_qq_cur_next;
-
-                //break;                   
-                //pkt_qq_cur = pkt_qq_cur->next;
-                //continue; 
-            }else{//未收到ACK则增加计数
-                /*用于记录出现重传包重传时，函数调用路径*/
-                debug_qqdx_retry_pkt.FrameID = pkt_qq_cur->FrameID;
-                debug_qqdx_retry_pkt.pktSEQ = pkt_qq_cur->pktSEQ;
-                debug_qqdx_retry_pkt.into_hw_time = pkt_qq_cur->into_hw_time;
-                debug_qqdx_retry_pkt.time_in_pretend_tot = pkt_qq_cur->time_in_pretend_tot;
-                debug_qqdx_retry_pkt.ps_totaltime = pkt_qq_cur->ps_totaltime;
-                pkt_qq_chain_len_unacked ++;
-                if((pkt_qq_cur->failed_cnt>0)&&(pkt_qq_cur->failed_time_list_qq[pkt_qq_cur->failed_cnt-1]==cur_time)){/*如果同时到达的，就不认为是重传*/
-                    
-                }else{
-                    if(pkt_qq_cur->failed_cnt<10){
-                        pkt_qq_cur->failed_time_list_qq[pkt_qq_cur->failed_cnt] = cur_time;
+                    pkt_phydelay_dict[index_i]++;
+                    pkt_qq_cur->free_time = cur_time;
+                    pkt_qq_cur->free_txop = wlc_bmac_cca_read_counter(wlc->hw, M_CCA_TXOP_L_OFFSET(wlc), M_CCA_TXOP_H_OFFSET(wlc));
+                    pkt_qq_cur->ps_dur_trans = 0;//当前帧发送期间PS 时间统计
+                    if(scb->PS){
+                        pkt_qq_cur->ps_dur_trans = scb->ps_tottime - pkt_qq_cur->ps_totaltime + cur_time - scb->ps_starttime;
+                    }else{
+                        pkt_qq_cur->ps_dur_trans = scb->ps_tottime - pkt_qq_cur->ps_totaltime;
                     }
+                    uint32 ccastats_qq_differ[CCASTATS_MAX];
+                    for (int i = 0; i < CCASTATS_MAX; i++) {
+                        ccastats_qq_differ[i] = ccastats_qq_cur[i] - pkt_qq_cur->ccastats_qq[i];
+                    }
+                    pkt_qq_cur->busy_time = ccastats_qq_differ[CCASTATS_TXDUR] +
+                        ccastats_qq_differ[CCASTATS_INBSS] +
+                        ccastats_qq_differ[CCASTATS_OBSS] +
+                        ccastats_qq_differ[CCASTATS_NOCTG] +
+                        ccastats_qq_differ[CCASTATS_NOPKT];
+                    memcpy(pkt_qq_cur->ccastats_qq_differ, ccastats_qq_differ, sizeof(pkt_qq_cur->ccastats_qq_differ));
                     
-                    pkt_qq_cur->failed_cnt++;
-                    //break;
+                    pkt_qq_cur->txop_in_fly = (pkt_qq_cur->free_txop - pkt_qq_cur->into_hw_txop)*slottime_qq;
+                    scb_pps_info_t *pps_scb_qq = SCB_PPSINFO(wlc->pps_info, scb);            
+                    uint32 time_in_pretend_tot_qq = pps_scb_qq->ps_pretend_total_time_in_pps;
+                    if (pps_scb_qq == NULL){
+                        time_in_pretend_tot_qq += R_REG(wlc->osh, D11_TSFTimerLow(wlc)) - pps_scb_qq->ps_pretend_start;
+                    }
+                    pkt_qq_cur->time_in_pretend_in_fly = time_in_pretend_tot_qq - pkt_qq_cur->time_in_pretend_tot;
+                    pkt_qq_cur->ampdu_seq = cur_mpdu_index;
+
+                    struct phy_info_qq *phy_info_qq_cur = NULL;
+                    phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(osh, sizeof(phy_info_qq_t));
+                    phy_info_qq_cur->fix_rate = (ltoh16(txh_info->MacTxControlHigh) & D11AC_TXC_FIX_RATE) ? 1:0;
+                    wf_rspec_to_phyinfo_qq(rs_txs, phy_info_qq_cur);
+                    phy_info_qq_cur->RSSI = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(txs));
+                    phy_info_qq_cur->RSSI = ((phy_info_qq_cur->RSSI) & PHYRSSI_SIGN_MASK) ? (phy_info_qq_cur->RSSI - PHYRSSI_2SCOMPLEMENT) : phy_info_qq_cur->RSSI;
+                    phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                    kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                    memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                    debugfs_set_info_qq(2, info_qq, 1);
+                    MFREE(osh, phy_info_qq_cur, sizeof(phy_info_qq_t));
+                    if(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>1){//如果时延较高就打印出来
+                        //printk("----------[fyl] phy_info_qq_cur:mcs(%u):rate(%u):fix_rate(%u)----------",phy_info_qq_cur->mcs[0],phy_info_qq_cur->rate[0],phy_info_qq_cur->fix_rate);
+                        //int dump_rand_flag = OSL_RAND() % 10000;
+                        kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                        memcpy(info_qq, pkt_qq_cur, sizeof(*pkt_qq_cur));
+                        debugfs_set_info_qq(0, info_qq, 1);
+                        //if (!use_last_pkt) {/*use_last_pkt代表非第一个mpdu，所以这里指的是只打印第一个mpdu的信息*/
+                        if (0) {/*use_last_pkt代表非第一个mpdu，所以这里指的是只打印第一个mpdu的信息*/
+                            printk("----------[fyl] OSL_SYSUPTIME()1----------(%u)",OSL_SYSUPTIME());
+                            printk("----------[fyl] acked_FrameID----------(%u)",pkt_qq_cur->FrameID);
+                            printk("----------[fyl] pktSEQ----------(%u)",pkt_qq_cur->pktSEQ);
+                            read_lock(&pkt_qq_mutex_len); // 加锁
+                            printk("----------[fyl] pkt_qq_chain_len----------(%u)",pkt_qq_chain_len);
+                            read_unlock(&pkt_qq_mutex_len); // 解锁
+                            printk("----------[fyl] cur_mpdu_index----------(%u)",cur_mpdu_index);/*当前mpdu在ampdu中的编号*/
+                            printk("----------[fyl] pkt_qq_cur->failed_cnt----------(%u)",pkt_qq_cur->failed_cnt);
+                            printk("----------[fyl] pkt_qq_cur_PHYdelay----------(%u)",pkt_qq_cur_PHYdelay);
+                            printk("----------[fyl] pkt_qq_cur->free_time----------(%u)",pkt_qq_cur->free_time);
+                            printk("----------[fyl] pkt_qq_cur->into_hw_time----------(%u)",pkt_qq_cur->into_hw_time);
+                            printk("----------[fyl] pkt_qq_cur->airtime_self----------(%u)",pkt_qq_cur->airtime_self);
+                            //printk("----------[fyl] pkt_qq_cur->airtime_all----------(%u)",pkt_qq_cur->airtime_all);
+                            printk("----------[fyl] busy_qq----------(%u)",pkt_qq_cur->busy_time);
+                            printk("----------[fyl] free_txop:::into_hw_txop:::txop*9----------(%u:%u:%u)",pkt_qq_cur->free_txop, pkt_qq_cur->into_hw_txop,pkt_qq_cur->txop_in_fly);
+                            printk("----------[fyl] pkt_qq_cur:ps_pretend_probe(%u):::ps_pretend_count(%u):::ps_pretend_succ_count(%u):::ps_pretend_failed_ack_count(%u)----------",\
+                            pkt_qq_cur->ps_pretend_probe, pkt_qq_cur->ps_pretend_count,pkt_qq_cur->ps_pretend_succ_count,pkt_qq_cur->ps_pretend_failed_ack_count);
+                            printk("----------[fyl] pps_scb_qq:ps_pretend_probe(%u):::ps_pretend_count(%u):::ps_pretend_succ_count(%u):::ps_pretend_failed_ack_count(%u)----------",\
+                            pps_scb_qq->ps_pretend_probe, pps_scb_qq->ps_pretend_count,pps_scb_qq->ps_pretend_succ_count,pps_scb_qq->ps_pretend_failed_ack_count);
+
+                            printk("----------[fyl] ampdu_tx_cfg->ba_policy----------(%u)",ampdu_tx_cfg->ba_policy);
+                            //printk("----------[fyl] ampdu_tx_cfg->ba_policy::ba_rx_wsize::delba_timeout----------(%u)",
+                                        //ampdu_tx_cfg->ba_policy,ba_rx_wsize,delba_timeout);
+                            /*printk("ccastats_qq_differ:TXDUR(%u)INBSS(%u)OBSS(%u)NOCTG(%u)NOPKT(%u)",ccastats_qq_differ[0]\
+                                ,ccastats_qq_differ[1],ccastats_qq_differ[2],ccastats_qq_differ[3]\
+                                ,ccastats_qq_differ[4]);*/
+                            printk("----------[fyl] time_in_pretend_tot_qq:::pkt_qq_cur->time_in_pretend_tot:::R_REG(wlc->osh, D11_TSFTimerLow(wlc)):::pps_scb_qq->ps_pretend_start:::time_in_pretend----------(%u:%u:%u:%u:%u)",time_in_pretend_tot_qq,pkt_qq_cur->time_in_pretend_tot,R_REG(wlc->osh, D11_TSFTimerLow(wlc)),pps_scb_qq->ps_pretend_start,time_in_pretend_tot_qq - pkt_qq_cur->time_in_pretend_tot);
+                            printk("----------[fyl] ini->tid----------(%u)",tid);
+                            printk("----------[fyl] scb->ps_tottime:scb->ps_starttime:ps_dur_trans----------(%u:%u:%u)",scb->ps_tottime,scb->ps_starttime,pkt_qq_cur->ps_dur_trans);
+                            
+                            printk("----------[fyl] PS:::ps_pretend:::PS_TWT:::ps_txfifo_blk----------(%u:%u:%u:%u)",
+                                        scb->PS, scb->ps_pretend,scb->PS_TWT,scb->ps_txfifo_blk);
+                            printk("--[fyl] txs->status.rts_tx_cnt:txs->status.cts_tx_cnt---(%u:%u)",txs->status.rts_tx_cnt,txs->status.cts_rx_cnt);
+                            printk("ccastats_qq_differ:TXDUR(%u)INBSS(%u)OBSS(%u)NOCTG(%u)NOPKT(%u)DOZE(%u)TXOP(%u)GDTXDUR(%u)BDTXDUR(%u)",ccastats_qq_differ[0]\
+                                ,ccastats_qq_differ[1],ccastats_qq_differ[2],ccastats_qq_differ[3]\
+                                ,ccastats_qq_differ[4],ccastats_qq_differ[5],ccastats_qq_differ[6]\
+                                ,ccastats_qq_differ[7],ccastats_qq_differ[8]);
+                            if(pkt_qq_cur->failed_cnt>0){
+                                printk("failed_time_list_qq:0(%u)1(%u)2(%u)3(%u)4(%u)5(%u)6(%u)7(%u)8(%u)9(%u)",pkt_qq_cur->failed_time_list_qq[0]\
+                                ,pkt_qq_cur->failed_time_list_qq[1],pkt_qq_cur->failed_time_list_qq[2],pkt_qq_cur->failed_time_list_qq[3]\
+                                ,pkt_qq_cur->failed_time_list_qq[4],pkt_qq_cur->failed_time_list_qq[5],pkt_qq_cur->failed_time_list_qq[6]\
+                                ,pkt_qq_cur->failed_time_list_qq[7],pkt_qq_cur->failed_time_list_qq[8],pkt_qq_cur->failed_time_list_qq[9]);
+                            }
+                            printk("----------[fyl] OSL_SYSUPTIME()2----------(%u)",OSL_SYSUPTIME());
+                        }
+
+                    }
+                    /*删除已经ACK的数据包节点*/
+                    //struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
+                    pkt_qq_last = pkt_qq_cur_next;
+                    index_last = index;
+                    pkt_qq_delete(pkt_qq_cur,osh);
+                    pkt_qq_chain_len_acked++;
+                    //pkt_qq_cur = pkt_qq_cur_next;
+
+                    //break;                   
+                    //pkt_qq_cur = pkt_qq_cur->next;
+                    //continue; 
+                }else{//未收到ACK则增加计数
+                    /*用于记录出现重传包重传时，函数调用路径*/
+                    debug_qqdx_retry_pkt.FrameID = pkt_qq_cur->FrameID;
+                    debug_qqdx_retry_pkt.pktSEQ = pkt_qq_cur->pktSEQ;
+                    debug_qqdx_retry_pkt.into_hw_time = pkt_qq_cur->into_hw_time;
+                    debug_qqdx_retry_pkt.time_in_pretend_tot = pkt_qq_cur->time_in_pretend_tot;
+                    debug_qqdx_retry_pkt.ps_totaltime = pkt_qq_cur->ps_totaltime;
+                    pkt_qq_chain_len_unacked ++;
+                    if((pkt_qq_cur->failed_cnt>0)&&(pkt_qq_cur->failed_time_list_qq[pkt_qq_cur->failed_cnt-1]==cur_time)){/*如果同时到达的，就不认为是重传*/
+                        
+                    }else{
+                        if(pkt_qq_cur->failed_cnt<10){
+                            pkt_qq_cur->failed_time_list_qq[pkt_qq_cur->failed_cnt] = cur_time;
+                        }
+                        
+                        pkt_qq_cur->failed_cnt++;
+                        //break;
+                    }
+                    memcpy(debug_qqdx_retry_pkt.failed_time_list_qq,pkt_qq_cur->failed_time_list_qq,sizeof(pkt_qq_cur->failed_time_list_qq));
+                    
+                    /*
+                    printk("----------[fyl] unacked_FrameID----------(%u)",pkt_qq_cur->FrameID);
+                    printk("----------[fyl] pktSEQ----------(%u)",pkt_qq_cur->pktSEQ);
+                    printk("----------[fyl] cur_time----------(%u)",cur_time);
+                    printk("----------[fyl] into_hw_time----------(%u)",pkt_qq_cur->into_hw_time);
+                    printk("----------[fyl] now-into_hw_time----------(%u)",cur_time-pkt_qq_cur->into_hw_time);
+                    */
+                    
+                    
+                    //debug_qqdx_retry_pkt.failed_time_list_qq = pkt_qq_cur->failed_time_list_qq;
+                    //pkt_qq_cur = pkt_qq_cur->next;continue;
                 }
-                memcpy(debug_qqdx_retry_pkt.failed_time_list_qq,pkt_qq_cur->failed_time_list_qq,sizeof(pkt_qq_cur->failed_time_list_qq));
-                
-                /*
-                printk("----------[fyl] unacked_FrameID----------(%u)",pkt_qq_cur->FrameID);
-                printk("----------[fyl] pktSEQ----------(%u)",pkt_qq_cur->pktSEQ);
-                printk("----------[fyl] cur_time----------(%u)",cur_time);
-                printk("----------[fyl] into_hw_time----------(%u)",pkt_qq_cur->into_hw_time);
-                printk("----------[fyl] now-into_hw_time----------(%u)",cur_time-pkt_qq_cur->into_hw_time);
-                */
-                
-                
-                //debug_qqdx_retry_pkt.failed_time_list_qq = pkt_qq_cur->failed_time_list_qq;
-                //pkt_qq_cur = pkt_qq_cur->next;continue;
+            }
+            else{
+                if(was_acked){
+                    pkt_qq_last = pkt_qq_cur_next;
+                    index_last = index;
+                    pkt_qq_delete(pkt_qq_cur,osh);
+                    pkt_qq_chain_len_acked++;
+                    uint16 index_i = 0;
+                    for(int i = 0; i<pkt_phydelay_dict_len; i++){
+                        index_i = i;
+                        if(i*pkt_phydelay_dict_step+pkt_phydelay_dict_step>pkt_qq_cur_PHYdelay){
+                            
+                            break;
+                        }
+                    }
+                    pkt_phydelay_dict[index_i]++;
+                }
             }
         }else{
 

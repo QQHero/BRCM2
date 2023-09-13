@@ -1544,6 +1544,12 @@ wlc_apps_bcmc_scb_ps_on(wlc_info_t *wlc, wlc_bsscfg_t *bsscfg)
     if (bcmc_scb->ps_starttime == 0) {
         bcmc_scb->ps_on_cnt++;
         bcmc_scb->ps_starttime = OSL_SYSUPTIME();
+    /* dump_flag_qqdx */
+#ifdef dump_stack_qqdx_print
+        printk(KERN_ALERT"----------[fyl] wlc_apps_bcmc_scb_ps_on(wlc_info_t *wlc, scb_t *scb) dump_stack start----------");
+        dump_stack();
+        printk(KERN_ALERT"----------[fyl] wlc_apps_bcmc_scb_ps_on(wlc_info_t *wlc, scb_t *scb) dump_stack stop----------");
+#endif /*dump_stack_qqdx_print*/
     }
 #endif /* WL_PS_STATS */
     if (SCB_TOT_PKTS_INFLT_FIFOCNT_VAL(bcmc_scb)) {
@@ -1564,6 +1570,12 @@ wlc_apps_bcmc_scb_ps_on(wlc_info_t *wlc, wlc_bsscfg_t *bsscfg)
 void
 wlc_apps_scb_ps_on(wlc_info_t *wlc, struct scb *scb)
 {
+    /* dump_flag_qqdx */
+#ifdef dump_stack_qqdx_print
+        printk(KERN_ALERT"----[fyl] wlc_apps_scb_ps_on dump_stack start----(%u)",OSL_SYSUPTIME());
+        dump_stack();
+        printk(KERN_ALERT"----[fyl] wlc_apps_scb_ps_on dump_stack stop---(%u)",OSL_SYSUPTIME());
+#endif /*dump_stack_qqdx_print*/
     struct apps_scb_psinfo *scb_psinfo;
     apps_wlc_psinfo_t *wlc_psinfo;
     apps_bss_info_t *bss_info;
@@ -4340,6 +4352,12 @@ wlc_apps_twt_sp_enter_ps(wlc_info_t *wlc, scb_t *scb)
     if (scb->ps_starttime == 0) {
         scb->ps_on_cnt++;
         scb->ps_starttime = OSL_SYSUPTIME();
+    /* dump_flag_qqdx */
+#ifdef dump_stack_qqdx_print
+        printk(KERN_ALERT"----------[fyl] wlc_apps_twt_sp_enter_ps dump_stack start----------");
+        dump_stack();
+        printk(KERN_ALERT"----------[fyl] wlc_apps_twt_sp_enter_ps dump_stack stop----------");
+#endif /*dump_stack_qqdx_print*/
     }
 #endif /* WL_PS_STATS */
     /* NOTE: set flags to SCB_PS_FIRST_SUPPR_HANDLED then this function does not have to
@@ -4546,6 +4564,12 @@ wlc_apps_twt_enter_ready(wlc_info_t *wlc, scb_t *scb)
     if (scb->ps_starttime == 0) {
         scb->ps_on_cnt++;
         scb->ps_starttime = OSL_SYSUPTIME();
+    /* dump_flag_qqdx */
+#ifdef dump_stack_qqdx_print
+        printk(KERN_ALERT"----------[fyl] wlc_apps_twt_enter_ready(wlc_info_t *wlc, scb_t *scb) dump_stack start----------");
+        dump_stack();
+        printk(KERN_ALERT"----------[fyl] wlc_apps_twt_enter_ready(wlc_info_t *wlc, scb_t *scb) dump_stack stop----------");
+#endif /*dump_stack_qqdx_print*/
     }
 #endif /* WL_PS_STATS */
     ASSERT(bss_info->ps_nodes);

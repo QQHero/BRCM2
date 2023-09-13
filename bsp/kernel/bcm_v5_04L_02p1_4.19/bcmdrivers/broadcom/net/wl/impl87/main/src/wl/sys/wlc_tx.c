@@ -1796,6 +1796,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                 memcpy(pkt_count_qq_cur->pkt_phydelay_dict,pkt_phydelay_dict,sizeof(pkt_phydelay_dict));
                 kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
                 memcpy(info_qq, pkt_count_qq_cur, sizeof(*pkt_count_qq_cur));
+                MFREE(osh, pkt_count_qq_cur, sizeof(pkt_count_qq_t));
                 debugfs_set_info_qq(1, info_qq, 1);
                 
 

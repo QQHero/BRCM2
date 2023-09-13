@@ -671,6 +671,13 @@ wlc_pmq_processpmq(wlc_hw_info_t *wlc_hw, bool bounded)
 			wlc_apps_ps_requester(wlc, scb, ps_on_rqstr, ps_off_rqstr);
 		}
 
+    /* dump_flag_qqdx */
+#ifdef dump_stack_qqdx_print
+        printk(KERN_ALERT"----[fyl] wlc_apps_process_ps_switch start----(%d:%d:%d:%d:%u)",ps_on,ps_pretend,
+			ps_omi,ps_disassoc_deauth,OSL_SYSUPTIME());
+        printk(KERN_ALERT"----[fyl] wlc_apps_process_ps_switch stop---(%u)",OSL_SYSUPTIME());
+#endif /*dump_stack_qqdx_print*/
+        
 		wlc_apps_process_ps_switch(wlc, scb, ps_on | ps_pretend |
 			ps_omi | ps_disassoc_deauth);
 

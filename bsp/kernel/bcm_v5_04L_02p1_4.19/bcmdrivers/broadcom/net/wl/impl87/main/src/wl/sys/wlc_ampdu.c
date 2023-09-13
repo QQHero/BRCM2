@@ -213,7 +213,7 @@ static INLINE void * __wlc_ampdu_pktq_penq_head(wlc_info_t *wlc, scb_ampdu_tx_t 
     uint8 tid, void *pkt);
     /* dump_flag_qqdx */
 //#include <wlc_qq.h>
-extern void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t *ini, ampdu_tx_info_t *ampdu_tx, struct scb *scb, tx_status_t *txs, wlc_pkttag_t* pkttag, wlc_txh_info_t *txh_info,bool was_acked,osl_t *osh, void *p, bool use_last_pkt,uint cur_mpdu_index);
+extern void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t *ini, ampdu_tx_info_t *ampdu_tx, struct scb *scb, tx_status_t *txs, wlc_pkttag_t* pkttag, wlc_txh_info_t *txh_info,bool was_acked,osl_t *osh, void *p, bool use_last_pkt,uint cur_mpdu_index, ratesel_txs_t rs_txs, uint32 receive_time,uint32 *ccastats_qq_cur);
 static bool pspretend_qq_flag = FALSE;//用来判断是否出现了发送失败的情况，进而得出PPS 是否符合预期的结论
 #if 0
 /* dump_flag_qqdx */
@@ -9465,6 +9465,12 @@ wlc_ampdu_dotxstatus_aqm_complete(ampdu_tx_info_t *ampdu_tx, struct scb *scb,
 
     /* dump_flag_qqdx */
     bool first_pkt_flag_qqdx = TRUE;
+    uint32 receive_time = OSL_SYSUPTIME();//用于记录受到包的更准确时间，避免处理这些包耗时太久
+
+    uint32 ccastats_qq_cur[CCASTATS_MAX];
+    for (int i = 0; i < CCASTATS_MAX; i++) {
+        ccastats_qq_cur[i] = wlc_bmac_cca_read_counter(wlc->hw, 4 * i, (4 * i + 2));
+    }
     /* dump_flag_qqdx */
 
     while (TRUE) { /* loops over each tx MPDU in the caller supplied tx sts */
@@ -9867,7 +9873,7 @@ free_and_next:
     /* dump_flag_qqdx */
         //ack_update_qq(txh_info->TxFrameID,was_acked,wlc->osh);
         ack_update_qq(wlc, ini,ampdu_tx, scb, txs, pkttag, txh_info,was_acked\
-        ,wlc->osh,p, !first_pkt_flag_qqdx,tot_mpdu);
+        ,wlc->osh,p, !first_pkt_flag_qqdx,tot_mpdu,rs_txs,receive_time, ccastats_qq_cur);
         first_pkt_flag_qqdx = FALSE;
         /*对于多包情况只需要第一次的时候从头开始，其他情况从上次开始*/
         #ifdef PROP_TXSTATUS
