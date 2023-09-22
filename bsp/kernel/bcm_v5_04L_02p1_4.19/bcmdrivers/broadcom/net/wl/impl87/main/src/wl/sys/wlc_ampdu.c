@@ -6519,6 +6519,21 @@ static int BCMFASTPATH
 wlc_sendampdu_noaqm(ampdu_tx_info_t *ampdu_tx, wlc_txq_info_t *qi, void **pdu, int prec,
     struct spktq *output_q, int *pkt_cnt, uint fifo)
 {
+
+    /* dump_flag_qqdx */
+//#ifdef dump_stack_qqdx_print
+    int dump_rand_flag = OSL_RAND() % 10000;
+    if (dump_rand_flag>=0) {
+        printk(KERN_ALERT"----------[fyl] wlc_sendampdu_noaqm start----------");
+        dump_stack();
+        printk(KERN_ALERT"----------[fyl] wlc_sendampdu_noaqm stop----------");
+
+#ifdef WL11K
+	printk(KERN_ALERT"----------[fyl] WL11K----------");
+#endif /* WL11K */
+    }
+//#endif /*dump_stack_qqdx_print*/
+    /* dump_flag_qqdx */
     wlc_info_t *wlc;
     osl_t *osh;
     void *p;
@@ -9650,7 +9665,7 @@ wlc_ampdu_dotxstatus_aqm_complete(ampdu_tx_info_t *ampdu_tx, struct scb *scb,
         /* dump_flag_qqdx */
         if(!was_acked){
             pspretend_qq_flag = TRUE;
-            printk("----------[fyl] startPPS TIME(%u)",OSL_SYSUPTIME());
+            printk("----------[fyl] startPPS TIME(%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq);
         /* dump_flag_qqdx */
         }
 
@@ -9695,7 +9710,7 @@ wlc_ampdu_dotxstatus_aqm_complete(ampdu_tx_info_t *ampdu_tx, struct scb *scb,
             } else {
                 pps_retry = FALSE;
             }
-
+            pps_retry = FALSE;
             if (pps_retry) {
                 tainted = wlc_pkt_get_txh_hdr(wlc, p, &txh);
             } else {

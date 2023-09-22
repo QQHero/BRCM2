@@ -375,6 +375,8 @@ struct pkt_qq {
     uint32 airtime_self;/*该数据包所在帧的airtime*/
     uint32 airtime_all;/*该数据包进入硬件发送队列以后所有已发送帧的airtime之和*/
     uint32 failed_time_list_qq[10];/*发射失败时间列表*/
+    uint32 retry_time_list_qq[10];/*发射失败重传时间列表*/
+    uint32 retry_time_list_index;/*发射失败重传时间列表当前index*/
     uint32 ccastats_qq[CCASTATS_MAX];/*一些发送时间相关的变量*/
     uint32 ccastats_qq_differ[CCASTATS_MAX];
     /*PPS相关变量*/
@@ -449,6 +451,10 @@ void timer_callback_qq(struct timer_list *t) {
     mod_timer(&timer_qq, jiffies + msecs_to_jiffies(TIMER_INTERVAL_MS_qq));
 }
 #endif
+
+/*是否打印超时被删除的包，专用于debug*/
+#define PRINTTIMEOUTPKT
+
 
 #ifndef BCMDBG_PPS_qq
 #define BCMDBG_PPS_qq
@@ -671,7 +677,6 @@ void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur){
         pkt_qq_cur->prev= (struct pkt_qq *)pkt_qq_chain_tail;
         pkt_qq_chain_tail = (struct pkt_qq *)pkt_qq_cur;
     }
-
     mutex_unlock(&pkt_qq_mutex_tail); // 解锁
 
     write_lock(&pkt_qq_mutex_len); // 加锁
@@ -755,6 +760,46 @@ void pkt_qq_delete(struct pkt_qq *pkt_qq_cur,osl_t *osh){
 }
 
 
+bool pkt_qq_retry_ergodic(uint16 FrameID, uint16 cur_pktSEQ, osl_t *osh){
+    uint32 cur_time = OSL_SYSUPTIME();
+    read_lock(&pkt_qq_mutex_len); // 加锁
+    uint16 cur_pkt_qq_chain_len = pkt_qq_chain_len;
+    read_unlock(&pkt_qq_mutex_len); // 解锁
+    if(cur_pkt_qq_chain_len==0){
+        return FALSE;
+    }
+    uint16 index = 0;
+    mutex_lock(&pkt_qq_mutex_head); // 加锁
+    struct pkt_qq *pkt_qq_cur = pkt_qq_chain_head;
+    //printk(KERN_ALERT"###########pkt_qq_chain_len before delete(%d)",pkt_qq_chain_len);
+    while((pkt_qq_cur != (struct pkt_qq *)NULL )){                    
+        //printk("###****************index----------(%u)",index);
+        if((pkt_qq_cur->FrameID == FrameID) && (pkt_qq_cur->pktSEQ == cur_pktSEQ)){
+            pkt_qq_cur->retry_time_list_qq[pkt_qq_cur->retry_time_list_index] = cur_time;
+            pkt_qq_cur->retry_time_list_index++;
+            mutex_unlock(&pkt_qq_mutex_head); // 解锁
+            return TRUE;
+            break;
+        }
+
+        struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
+        pkt_qq_cur = pkt_qq_cur_next;
+        //printk("###****************[fyl] pkt_qq_cur_PHYdelay----------(%u)",pkt_qq_cur_PHYdelay);
+        //printk("###****************[fyl] FrameID@@@@@@@@@@@@@@@(%u)",pkt_qq_cur->FrameID);
+        index++;
+        if(cur_pkt_qq_chain_len<index){
+            mutex_unlock(&pkt_qq_mutex_head); // 解锁
+    return FALSE;
+            break;
+        }
+    }
+    mutex_unlock(&pkt_qq_mutex_head); // 解锁
+    //printk("###****************index----------(%u)",index);
+    //printk(KERN_ALERT"###########pkt_qq_chain_len after delete(%u)",pkt_qq_chain_len);
+    return FALSE;
+
+}
+
 void pkt_qq_del_timeout_ergodic(osl_t *osh){
     uint32 cur_time = OSL_SYSUPTIME();
     if(!mutex_trylock(&pkt_qq_mutex_head)){
@@ -798,6 +843,11 @@ void pkt_qq_del_timeout_ergodic(osl_t *osh){
             uint32 pkt_qq_cur_PHYdelay = cur_time - pkt_qq_cur->into_hw_time;
             struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
             if((pkt_qq_cur_PHYdelay>pkt_qq_ddl)||(pkt_qq_cur->free_time > 0)){/*每隔一段时间删除超时的数据包节点以及已经ACK的数据包*/
+#ifdef PRINTTIMEOUTPKT
+                kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                memcpy(info_qq, pkt_qq_cur, sizeof(*pkt_qq_cur));
+                debugfs_set_info_qq(0, info_qq, 1);
+#endif
                 pkt_qq_delete(pkt_qq_cur,osh);
                 pkt_qq_chain_len_timeout ++;
             }
@@ -870,16 +920,20 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
     struct pkt_qq *pkt_qq_cur;
     uint16 index;
     read_lock(&pkt_qq_mutex_len); // 加锁
+#ifdef USE_LAST_PKT/*如果use_last_pkt为false，或者后两个不对劲，就重新设置*/
     if((!use_last_pkt)||(index_last <= 0) || (pkt_qq_last == (struct pkt_qq *)NULL)\
         ||(index_last>=cur_pkt_qq_chain_len)){
         /*如果use_last_pkt为false，或者后两个不对劲，就重新设置*/
+#endif
         pkt_qq_cur = pkt_qq_chain_head;
         index = 0;
+#ifdef USE_LAST_PKT
     }else{
         pkt_qq_cur = pkt_qq_last;
         index = index_last;
 
     }
+#endif
     read_unlock(&pkt_qq_mutex_len); // 解锁
     bool found_pkt_node_qq = FALSE;
     while((pkt_qq_cur != (struct pkt_qq *)NULL)&&(index<cur_pkt_qq_chain_len)){
@@ -897,9 +951,9 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
         uint16 cur_pktSEQ = pkttag->seq;
         //if(pkt_qq_cur->pktSEQ == cur_pktSEQ ){//如果找到了这个数据包
         //if(pkt_qq_cur->FrameID == htol16(curTxFrameID) ){//如果找到了这个数据包
-        if((pkt_qq_cur->FrameID == htol16(curTxFrameID)) && (pkt_qq_cur->pktSEQ == cur_pktSEQ)){//如果找到了这个数据包
-            if((!was_acked)||((was_acked)&&(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>1))){//提前判断一下，降低总体计算量 
+        if((pkt_qq_cur->FrameID == htol16(curTxFrameID)) && (pkt_qq_cur->pktSEQ == cur_pktSEQ)){//如果找到了这个数据包 
                 found_pkt_node_qq = TRUE;
+            if((!was_acked)||((was_acked)&&(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>=1))){//提前判断一下，降低总体计算量
                 pkt_qq_cur->airtime_self = cur_airtime;
                 pkt_qq_cur->tid = tid;
                 if(was_acked){//如果成功ACK 
@@ -951,7 +1005,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                     memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
                     debugfs_set_info_qq(2, info_qq, 1);
                     MFREE(osh, phy_info_qq_cur, sizeof(phy_info_qq_t));
-                    if(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>1){//如果时延较高就打印出来
+                    if(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>=1){//如果时延较高就打印出来
                         //printk("----------[fyl] phy_info_qq_cur:mcs(%u):rate(%u):fix_rate(%u)----------",phy_info_qq_cur->mcs[0],phy_info_qq_cur->rate[0],phy_info_qq_cur->fix_rate);
                         //int dump_rand_flag = OSL_RAND() % 10000;
                         kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
@@ -1072,6 +1126,11 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
             if(pkt_qq_cur_PHYdelay > pkt_qq_ddl){//如果该节点并非所要找的节点，并且该数据包时延大于ddl，就删除该节点
                 //deleteNUM_delay++;
                 //struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
+#ifdef PRINTTIMEOUTPKT
+                kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                memcpy(info_qq, pkt_qq_cur, sizeof(*pkt_qq_cur));
+                debugfs_set_info_qq(0, info_qq, 1);
+#endif
                 pkt_qq_delete(pkt_qq_cur,osh);
                 pkt_qq_chain_len_timeout ++;
             
@@ -1098,6 +1157,8 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
         pkt_qq_chain_len_found++;
     }else{
         pkt_qq_chain_len_notfound++;
+
+        printk("----------[fyl] not found(%u:%u:%u)",OSL_SYSUPTIME(),curTxFrameID,pkttag->seq);
     }
     mutex_unlock(&pkt_qq_mutex_head); // 解锁
     //printk("****************[fyl] index:deleteNUM_delay----------(%u:%u)",index,deleteNUM_delay);

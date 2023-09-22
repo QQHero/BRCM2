@@ -2090,6 +2090,21 @@ wlc_ratesel_chklmt(ratespec_t rspec, uint32 maxr, uint32 minr)
 ratespec_t
 wlc_ratesel_getmcsfbr(rcb_t *state, uint8 ac, uint8 plcp0)
 {
+
+    /* dump_flag_qqdx */
+//#ifdef dump_stack_qqdx_print
+    int dump_rand_flag = OSL_RAND() % 10000;
+    if (dump_rand_flag>=0) {
+        printk(KERN_ALERT"----------[fyl] wlc_ratesel_getmcsfbr start----------");
+        dump_stack();
+        printk(KERN_ALERT"----------[fyl] wlc_ratesel_getmcsfbr end----------");
+
+#ifdef D11AC_TXD
+	printk(KERN_ALERT"----------[fyl] D11AC_TXD----------");
+#endif /* D11AC_TXD */
+    }
+//#endif /*dump_stack_qqdx_print*/
+    /* dump_flag_qqdx */
 	uint8 mcs, bw;
 	int mcsid, fbrid;
 	ratespec_t fbrspec;
@@ -6507,6 +6522,21 @@ wlc_ratesel_gettxrate(rcb_t *state, uint16 *frameid,
 	ratesel_txparams_t *ratesel_rates, /* a set of primary and optionally fallback rates */
 	uint16 *flags)
 {
+
+    /* dump_flag_qqdx */
+#ifdef dump_stack_qqdx_print
+    int dump_rand_flag = OSL_RAND() % 10000;
+    if (dump_rand_flag>=0) {
+        printk(KERN_ALERT"----------[fyl] wlc_ratesel_gettxrate start----------");
+        dump_stack();
+        printk(KERN_ALERT"----------[fyl] wlc_ratesel_gettxrate stop----------");
+
+#ifdef D11AC_TXD
+	printk(KERN_ALERT"----------[fyl] D11AC_TXD----------");
+#endif /* D11AC_TXD */
+    }
+#endif /*dump_stack_qqdx_print*/
+    /* dump_flag_qqdx */
 	ratesel_info_t *rsi;
 	rcb_rtcmn_t *state_dl;
 	uint8 rateid, fbrateid;

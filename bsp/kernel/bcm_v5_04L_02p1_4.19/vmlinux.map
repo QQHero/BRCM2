@@ -17215,10 +17215,10 @@ Linker script and memory map
  *(.rodata)
  .rodata        0x00000000c0800000        0xf init/main.o
  *fill*         0x00000000c080000f        0x1 
- .rodata        0x00000000c0800010      0x101 init/version.o
+ .rodata        0x00000000c0800010      0x102 init/version.o
                 0x00000000c0800010                linux_proc_banner
                 0x00000000c0800078                linux_banner
- *fill*         0x00000000c0800111        0x3 
+ *fill*         0x00000000c0800112        0x2 
  .rodata        0x00000000c0800114       0x50 arch/arm/vfp/vfpsingle.o
  .rodata        0x00000000c0800164        0xf arch/arm/vfp/vfpdouble.o
  *fill*         0x00000000c0800173        0x1 
