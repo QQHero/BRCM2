@@ -416,6 +416,11 @@
                                                           KM_WIRELESS_STA_NONE)
 #endif
 
+    /* dump_flag_qqdx */
+#include <wlc_qq_struct.h>
+//extern struct phy_info_qq phy_info_qq
+extern struct phy_info_qq phy_info_qq_rx_new;
+
 /** so that each pre parse callback function has access to a 'wlc' pointer */
 typedef struct {
     wlc_info_t *wlc;
@@ -634,6 +639,11 @@ wlc_recv(wlc_info_t *wlc, void *p)
 
     /* compute the RSSI from d11rxhdr and record it in wlc_rxd11hr */
     phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
+    /* dump_flag_qqdx */
+    if(wrxh->rssi<0){
+        phy_info_qq_rx_new.RSSI = wrxh->rssi;
+    }
+    //printk("rssi(%d,%d)",wrxh->rssi,phy_info_qq_rx_new.RSSI);
 
     /* strip off HW rxhdr */
     if (PKTLEN(osh, p) < wlc->hwrxoff) {

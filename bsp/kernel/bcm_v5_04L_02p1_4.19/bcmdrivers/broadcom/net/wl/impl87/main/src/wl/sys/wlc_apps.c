@@ -818,6 +818,10 @@ wlc_apps_scb_psinfo_deinit(void *context, struct scb *remove)
             }
 #endif /* WL_USE_SUPR_PSQ */
             if (SCB_PS(remove) && !SCB_ISMULTI(remove)) {
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_apps_scb_psinfo_deinit (%u)wlc_apps_scb_ps_off----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
                 wlc_apps_scb_ps_off(wlc, remove, TRUE);
             } else if (!pktq_empty(psq))
                 wlc_apps_ps_flush(wlc, remove);
@@ -1914,6 +1918,10 @@ wlc_apps_scb_drained(wlc_info_t *wlc, scb_t *scb)
             }
 #endif /* PSPRETEND */
             WL_PS_EX(scb, ("Allowing PS Off for STA\n"));
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_apps_scb_drained (%u)wlc_apps_scb_ps_off----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
             wlc_apps_scb_ps_off(wlc, scb, discard);
         }
 
@@ -1964,6 +1972,10 @@ wlc_apps_process_pend_ps(wlc_info_t *wlc)
             (!AUXPMQ_ENAB(wlc->pub) || scb->ps_txfifo_blk) &&
 #endif /* WL_PS_SCB_TXFIFO_BLK */
             !SCB_ISMULTI(scb)) {
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_apps_process_pend_ps (%u)wlc_apps_scb_drained----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
 
             wlc_apps_scb_drained(wlc, scb);
         }
@@ -3509,6 +3521,10 @@ wlc_apps_process_ps_switch(wlc_info_t *wlc, struct scb *scb, uint8 ps_on)
              * and it should stay there. TWT will take control of PM.
              */
             if (!scb_psinfo->twt_active) {
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_apps_process_ps_switch (%u)wlc_apps_scb_ps_off----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
                 wlc_apps_scb_ps_off(wlc, scb, FALSE);
             } else {
                 WL_TWT(("wl%d.%d: %s: Block PS OFF %02x "MACF" (%d/%d/%d/%d/%d)\n",
@@ -4758,6 +4774,10 @@ wlc_apps_trigger_on_complete(wlc_info_t *wlc, scb_t *scb)
 #if defined(WL_PS_SCB_TXFIFO_BLK)
         if (AUXPMQ_ENAB(wlc->pub)) {
             if ((SCB_PS(scb) || SCB_TWTPS(scb)) && !SCB_ISMULTI(scb)) {
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_apps_trigger_on_complete (%u)wlc_apps_scb_drained----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
                 wlc_apps_scb_drained(wlc, scb);
             }
         } else
@@ -5709,6 +5729,10 @@ wlc_apps_scb_state_upd_cb(void *ctx, scb_state_upd_data_t *notif_data)
     if (BSSCFG_AP(scb->bsscfg) && (oldstate & ASSOCIATED) && !SCB_ASSOCIATED(scb)) {
         if (SCB_PS(scb) && !SCB_ISMULTI(scb)) {
             WL_PS_EX(scb, ("SCB disassociated, take it out of PS\n"));
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_apps_scb_state_upd_cb (%u)wlc_apps_scb_ps_off----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
             wlc_apps_scb_ps_off(wlc, scb, TRUE);
         }
     }
@@ -5730,6 +5754,10 @@ wlc_apps_bss_updn(void *ctx, bsscfg_up_down_event_data_t *evt)
             if (scb_psinfo == NULL)
                 continue;
 
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_apps_bss_updn (%u)wlc_apps_scb_ps_off----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
             if (SCB_PS(scb) && !SCB_ISMULTI(scb))
                 wlc_apps_scb_ps_off(wlc, scb, TRUE);
             else if (!pktq_empty(&scb_psinfo->psq))

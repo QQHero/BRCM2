@@ -3683,6 +3683,10 @@ wlc_ap_process_assocreq(wlc_ap_info_t *ap, wlc_bsscfg_t *bsscfg,
         /* If we are in PS mode then return to non PS mode as there is a state mismatch
          * between the STA and the AP
          */
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_ap_process_assocreq (%u)wlc_apps_scb_ps_off----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
         if (SCB_PS(scb))
             wlc_apps_scb_ps_off(wlc, scb, TRUE);
 
@@ -5603,6 +5607,10 @@ wlc_ap_sta_probe_complete(wlc_info_t *wlc, uint txstatus, struct scb *scb, void 
             if (!(wlc->block_datafifo & DATA_BLOCK_PS))
 #endif /* ! WL_PS_SCB_TXFIFO_BLK */
             {
+    /* dump_flag_qqdx */
+#ifdef dump_stack_ps_qqdx_print
+    printk(KERN_ALERT"----------[fyl] wlc_ap_sta_probe_complete (%u)wlc_apps_scb_ps_off----------",OSL_SYSUPTIME());
+#endif /*dump_stack_ps_qqdx_print*/
                 wlc_apps_scb_ps_off(wlc, scb, FALSE);
             } else {
                 /* STA should transition to PS-OFF once PS flush done */

@@ -326,6 +326,8 @@ struct ampdu_tx_info {
 #include <wl_linux.h>
 #include <wlc_hw.h>
 #include "../../shared/hnddma_priv.h"
+#include <phy_rssi_api.h>
+#include <wlc_qq_struct.h>
 
 
 
@@ -352,54 +354,6 @@ struct ampdu_tx_info {
 
 
 
-/* dump_flag_qqdx */
-struct pkt_qq {
-    uint32 tcp_seq;/* Starting sequence number */
-    uint32 ampdu_seq;/* preassigned seqnum for AMPDU */
-    uint32 packetid;/* 未知变量packetid */
-    uint16 FrameID;//每个数据帧生命周期不变的
-    uint16 pktSEQ;//也许每个数据包生命周期不变的
-	uint16 n_pkts;       /**< number of queued packets */
-    uint8 tid;//tid
-    uint32 into_hw_time;/*进入硬件队列的时间*/
-    uint32 free_time;/*传输成功被释放的时间*/
-    uint32 into_hw_txop;/*进入硬件队列的txop*/
-    uint32 free_txop;/*传输成功被释放的txop*/
-    uint32 txop_in_fly;/*传输过程中的busy_time*/
-    uint32 busy_time;/*传输过程中的txop*/
-    uint32 drop_time;/*传输失败被丢弃的时间*/
-    uint8 failed_cnt;/*发射失败次数*/
-    uint32 ps_totaltime;/*该scb设备进入ps的总时间，为了这个统计，我在wl_mk中添加了WL_PS_STATS = 1，但是失败了，路由器崩溃
-    所以我在多处增加了#ifndef WL_PS_STATS #define WL_PS_STATS*/
-    uint32 ps_dur_trans;//传输过程中的PS统计
-    uint32 airtime_self;/*该数据包所在帧的airtime*/
-    uint32 airtime_all;/*该数据包进入硬件发送队列以后所有已发送帧的airtime之和*/
-    uint32 failed_time_list_qq[10];/*发射失败时间列表*/
-    uint32 retry_time_list_qq[10];/*发射失败重传时间列表*/
-    uint32 retry_time_list_index;/*发射失败重传时间列表当前index*/
-    uint32 ccastats_qq[CCASTATS_MAX];/*一些发送时间相关的变量*/
-    uint32 ccastats_qq_differ[CCASTATS_MAX];
-    /*PPS相关变量*/
-	uint32 ps_pretend_probe;
-	uint32 ps_pretend_count;
-	uint8  ps_pretend_succ_count;
-	uint8  ps_pretend_failed_ack_count;
-    uint32 time_in_pretend_tot;
-    uint32 time_in_pretend_in_fly;
-    uint32 pktnum_to_send;
-    /*总的进入PPS 时间
-    该统计博通并未开启，通过BCMDBG宏来关闭相关统计，需要一个一个开启（将BCMDBG改为BCMDBG_PPS_qq并define），如下是所开启的相关部分：
-    1.wlc_pspretend_scb_time_upd相关（wlc_pspretend.h，wlc_pspretend.c,wlc_app.c）
-    2.wlc_pspretend.h中增加#ifndef BCMDBG_PPS_qq   #define BCMDBG_PPS_qq   #endif
-    3.wlc_pspretend_supr_upd相关（wlc_pspretend.h，wlc_pspretend.c,wlc_app.c,wlc_ampdu.c,wlc_txs.c）
-    4.scb_pps_info_t定义处（wlc_pspretend.c）
-    5.本文件   PPS时间统计相关   部分
-    */
-
-    struct pkt_qq *next;
-    struct pkt_qq *prev;
-    
-}pkt_qq_t;
 struct pkt_qq *pkt_qq_chain_head = (struct pkt_qq *)NULL;
 struct pkt_qq *pkt_qq_chain_tail = (struct pkt_qq *)NULL;
 
@@ -418,6 +372,7 @@ for(i = 0; i<pkt_phydelay_dict_len; i++){
 }*/
 /*统计链表增减节点的各种情况*/
 uint32 pkt_qq_chain_len_add = 0;//链表增加
+uint32 pkt_qq_chain_len_soft_retry = 0;//记录PPS等原因重传导致的
 uint32 pkt_qq_chain_len_add_last = 0;//记录上次链表增加过的数据包数量
 uint32 pkt_qq_chain_len_acked = 0;//正常收到ack并删除
 uint32 pkt_qq_chain_len_unacked = 0;//正常收到ack并删除
@@ -460,13 +415,6 @@ void timer_callback_qq(struct timer_list *t) {
 #define BCMDBG_PPS_qq
 #endif
 /* PPS时间统计相关 *//* module private info */
-struct wlc_pps_info {
-	wlc_info_t *wlc;
-	osl_t *osh;
-	int scb_handle;
-	struct  wl_timer *ps_pretend_probe_timer;
-	bool is_ps_pretend_probe_timer_running;
-};
 typedef struct wlc_pps_info wlc_pps_info_t;
 typedef struct {
 	uint32 ps_pretend_start;
@@ -497,17 +445,6 @@ struct pkt_qq debug_qqdx_retry_pkt;// = (struct pkt_qq )NULL;
 
 
 
-struct pkt_count_qq {
-    uint32 pkt_qq_chain_len_now;
-    uint32 pkt_qq_chain_len_add;
-    uint32 pkt_qq_chain_len_acked;
-    uint32 pkt_qq_chain_len_unacked;
-    uint32 pkt_qq_chain_len_timeout;
-    uint32 pkt_qq_chain_len_outofrange;
-    uint32 pkt_qq_chain_len_notfound;
-    uint32 pkt_qq_chain_len_found;
-    uint32 pkt_phydelay_dict[30];    
-}pkt_count_qq_t;
 
 
 
@@ -536,16 +473,7 @@ wf_he_rspec_to_rate(ratespec_t rspec)
 	return 0;
 } /* wf_he_rspec_to_rate */
 
-struct phy_info_qq {
-    uint8 fix_rate;
-    uint32 mcs[RATESEL_MFBR_NUM];
-    uint32 nss[RATESEL_MFBR_NUM];
-    uint32 rate[RATESEL_MFBR_NUM];
-    uint BW[RATESEL_MFBR_NUM];
-    uint32 ISSGI[RATESEL_MFBR_NUM];
-    int16 RSSI;
-    int8 noiselevel;
-}phy_info_qq_t;
+struct phy_info_qq phy_info_qq_rx_new;
 
 /** take a well formed ratespec_t arg and return phy rate in [Kbps] units */
 void wf_rspec_to_phyinfo_qq(ratesel_txs_t rs_txs, struct phy_info_qq *phy_info_qq_cur)
@@ -660,6 +588,7 @@ void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur){
     }
 
     pkt_qq_chain_len_add++;
+    pkt_qq_cur->pkt_qq_chain_len_add = pkt_qq_chain_len_add;
     pkt_qq_cur->next = (struct pkt_qq *)NULL;
     pkt_qq_cur->prev = (struct pkt_qq *)NULL;
 
@@ -706,7 +635,7 @@ void pkt_qq_delete(struct pkt_qq *pkt_qq_cur,osl_t *osh){
         //printk("**************debug12******************");
         if(pkt_qq_chain_head->next == (struct pkt_qq *)NULL){//防止删除节点时出错
             //printk("**************debug13*******************");
-            MFREE(osh, pkt_qq_cur, sizeof(pkt_qq_t));
+            MFREE(osh, pkt_qq_cur, sizeof(*pkt_qq_cur));
             pkt_qq_chain_head=(struct pkt_qq *)NULL;
             pkt_qq_chain_tail=pkt_qq_chain_head;
             read_lock(&pkt_qq_mutex_len); // 加锁
@@ -733,7 +662,7 @@ void pkt_qq_delete(struct pkt_qq *pkt_qq_cur,osl_t *osh){
             pkt_qq_chain_len--;
             write_unlock(&pkt_qq_mutex_len); // 解锁
 
-            MFREE(osh, pkt_qq_cur, sizeof(pkt_qq_t));
+            MFREE(osh, pkt_qq_cur, sizeof(*pkt_qq_cur));
         }
         
     }else{
@@ -749,7 +678,7 @@ void pkt_qq_delete(struct pkt_qq *pkt_qq_cur,osl_t *osh){
         }
         //printk("**************debug19*******************");
         
-        MFREE(osh, pkt_qq_cur, sizeof(pkt_qq_t));
+        MFREE(osh, pkt_qq_cur, sizeof(*pkt_qq_cur));
         write_lock(&pkt_qq_mutex_len); // 加锁
         pkt_qq_chain_len--;
         write_unlock(&pkt_qq_mutex_len); // 解锁
@@ -845,6 +774,7 @@ void pkt_qq_del_timeout_ergodic(osl_t *osh){
             if((pkt_qq_cur_PHYdelay>pkt_qq_ddl)||(pkt_qq_cur->free_time > 0)){/*每隔一段时间删除超时的数据包节点以及已经ACK的数据包*/
 #ifdef PRINTTIMEOUTPKT
                 kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                pkt_qq_cur->droped_withoutACK_time = cur_time;
                 memcpy(info_qq, pkt_qq_cur, sizeof(*pkt_qq_cur));
                 debugfs_set_info_qq(0, info_qq, 1);
 #endif
@@ -995,16 +925,24 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                     pkt_qq_cur->ampdu_seq = cur_mpdu_index;
 
                     struct phy_info_qq *phy_info_qq_cur = NULL;
-                    phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(osh, sizeof(phy_info_qq_t));
+                    phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(osh, sizeof(*phy_info_qq_cur));
                     phy_info_qq_cur->fix_rate = (ltoh16(txh_info->MacTxControlHigh) & D11AC_TXC_FIX_RATE) ? 1:0;
                     wf_rspec_to_phyinfo_qq(rs_txs, phy_info_qq_cur);
-                    phy_info_qq_cur->RSSI = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(txs));
-                    phy_info_qq_cur->RSSI = ((phy_info_qq_cur->RSSI) & PHYRSSI_SIGN_MASK) ? (phy_info_qq_cur->RSSI - PHYRSSI_2SCOMPLEMENT) : phy_info_qq_cur->RSSI;
+                    //phy_info_qq_cur->RSSI = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(txs));
+                    //phy_info_qq_cur->RSSI = ((phy_info_qq_cur->RSSI) & PHYRSSI_SIGN_MASK) ? (phy_info_qq_cur->RSSI - PHYRSSI_2SCOMPLEMENT) : phy_info_qq_cur->RSSI;
+                    phy_info_qq_cur->RSSI = pkttag->pktinfo.misc.rssi;
+                    //wlc_d11rxhdr_t	*wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, p);
+                    //phy_info_qq_cur->RSSI = phy_rssi_compute_rssi(WLC_PI(wlc), wrxh);
+                    //phy_info_qq_cur->RSSI = wrxh->rssi;
+                    
+                    phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+                    printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+                    phy_info_qq_cur->SNR = pkttag->pktinfo.misc.snr;
                     phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
                     kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
                     memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
                     debugfs_set_info_qq(2, info_qq, 1);
-                    MFREE(osh, phy_info_qq_cur, sizeof(phy_info_qq_t));
+                    MFREE(osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
                     if(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>=1){//如果时延较高就打印出来
                         //printk("----------[fyl] phy_info_qq_cur:mcs(%u):rate(%u):fix_rate(%u)----------",phy_info_qq_cur->mcs[0],phy_info_qq_cur->rate[0],phy_info_qq_cur->fix_rate);
                         //int dump_rand_flag = OSL_RAND() % 10000;
@@ -1128,6 +1066,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                 //struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
 #ifdef PRINTTIMEOUTPKT
                 kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                pkt_qq_cur->droped_withoutACK_time = cur_time;
                 memcpy(info_qq, pkt_qq_cur, sizeof(*pkt_qq_cur));
                 debugfs_set_info_qq(0, info_qq, 1);
 #endif
