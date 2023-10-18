@@ -175,7 +175,7 @@ typedef struct five_tuples
 #define MAX_APP_ID_LENGTH 16
 #define MAX_CHANSPEC_LENGTH 10
 
-#define MAX_SESSION_LIFE_TIME 30000   //30 seconds
+#define MAX_SESSION_LIFE_TIME 66000   //66 seconds
 
 #define MAX_CONFIGS 1
 

@@ -18,10 +18,10 @@
 @ -I ./arch/arm/include/uapi -I ./arch/arm/include/generated/uapi
 @ -I ./include/uapi -I ./include/generated/uapi
 @ -I bcmdrivers/opensource/include/bcm963xx/
-@ -I /media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include
-@ -I /media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/include/bcm963xx
-@ -I /media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include/uapi
-@ -I /media/startlab/系统/HomeCoverage0905/bsp/kernel/bcm_v5_04L_02p1_4.19/net/bridge
+@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include
+@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/include/bcm963xx
+@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include/uapi
+@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/net/bridge
 @ -iprefix /projects/hnd/tools/bcm/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/bin/../lib/gcc/arm-buildroot-linux-gnueabi/9.2.0/
 @ -isysroot /projects/hnd/tools/bcm/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/arm-buildroot-linux-gnueabi/sysroot
 @ -D __KERNEL__ -D __LINUX_ARM_ARCH__=7 -U arm -D BCA_HNDROUTER

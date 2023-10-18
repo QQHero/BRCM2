@@ -13,6 +13,16 @@
 #include <pthread.h>
 #include <errno.h>
 #include "TencentWiFi.h"
+/* dump_flag_qqdx */
+#include <fcntl.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <stdbool.h>
+#include <netinet/ether.h>
+/* dump_flag_qqdx */
 
 
 
@@ -324,7 +334,57 @@ int mp_start_session_without_report(char* session_id, char* sta_ip_addr, char* a
 	return 0;
 }
 
+/* dump_flag_qqdx */
+#ifndef ETHER_ADDR_LEN
+#define ETHER_ADDR_LEN 6
+#endif
+#define DEBUG_CLASS_MAX_FIELD 200
 
+struct start_sta_info{
+	int8_t start_is_on;//判断是否游戏正在运行
+	struct ether_addr ea;
+	int8_t ac_queue_index;
+};
+typedef uint32_t kernel_info_t;
+typedef struct {
+    struct timespec timestamp;  // for debugging
+    //kernel_info_t info[sizeof(pkt_qq_t)];
+    kernel_info_t info[DEBUG_CLASS_MAX_FIELD];
+} info_class_t;
+struct start_sta_info *start_sta_info_cur;
+
+void write_data(kernel_info_t *info_input);
+void write_data(kernel_info_t *info_input)
+{
+	int fd = open("/sys/kernel/debug/kernel_info/class4", O_WRONLY);
+	info_class_t kernel_info_list;
+	if (fd < 0) {
+		perror("open");
+		exit(1);
+	}
+	/*
+	if (likely(ts > 0)) {
+        // recording timestamp may incur syncronization error between kernel info and userspace
+        ktime_get_ts(&(kernel_info_list.timestamp));
+    }*/
+	//debug_print("qq______________000");
+	ssize_t len = write(fd, info_input, sizeof(kernel_info_t)*DEBUG_CLASS_MAX_FIELD);
+	/*
+    for (int i = 0; i < DEBUG_CLASS_MAX_FIELD; ++i) {
+        debug_print("info1[%d] = %u\n", i, info_input[i]);
+    }*/
+	//debug_print("qq______________111");
+	//debug_print("qq______________444");
+	if (len < 0) {
+		perror("write");
+		exit(1);
+	}
+	//debug_print("qq______________333");
+
+	close(fd);
+}
+//#include "debugfs_qq.h"
+/* dump_flag_qqdx */
 int mp_start_session(char* session_id, char* sta_ip_addr, char* proxy_ip_addr, int proxy_port, char* report_ip_addr, int report_port, char* app_id, int timer_ms, uint32_t version_num)
 {
 	char message[UDP_BUFSIZE];
@@ -387,6 +447,27 @@ int mp_start_session(char* session_id, char* sta_ip_addr, char* proxy_ip_addr, i
 	}
 	else
 		debug_print("mac addr:%s\n",new_node->sta_mac_addr);
+	/* dump_flag_qqdx */
+	start_sta_info_cur = (struct start_sta_info *) malloc(sizeof(struct start_sta_info));
+	
+	ether_aton_r(new_node->sta_mac_addr,&(start_sta_info_cur->ea));
+	//memcpy(start_sta_info_cur->ea.ether_addr_octet, new_node->sta_mac_addr, ETHER_ADDR_LEN);
+	
+	start_sta_info_cur->start_is_on = 1;
+	start_sta_info_cur->ac_queue_index = 4;
+
+	kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+	memcpy(info_qq, start_sta_info_cur, sizeof(*start_sta_info_cur));
+	/*debug_print("sizeof(*start_sta_info_cur)[%d][%d][%d][%d]\n", sizeof(*start_sta_info_cur)\
+	, sizeof(start_sta_info_cur->start_is_on), sizeof(start_sta_info_cur->ea), sizeof(start_sta_info_cur->ac_queue_index));
+    for (int i = 0; i < DEBUG_CLASS_MAX_FIELD; ++i) {
+        debug_print("info2[%d] = %u\n", i, info_qq[i]);
+    }*/
+	debug_print("qq______________111222");
+	write_data(info_qq);
+	
+	debug_print("qq______________222");
+	/* dump_flag_qqdx */
 
 /*
 	if(start_timer(new_node->session_id, &new_node->timer_id, new_node->timer_ms, timer_callback) == -1){
@@ -555,6 +636,21 @@ int mp_stop_session(char* session_id, int stop_reason)
 		debug_print("exit program\n");
 		exit(0);
 	}
+
+    /* dump_flag_qqdx */
+    start_sta_info_cur->start_is_on = 0;
+    start_sta_info_cur->ac_queue_index = 4;
+	//debug_print("session_stop_qq\n");
+
+	kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+	memcpy(info_qq, start_sta_info_cur, sizeof(*start_sta_info_cur));
+	/*debug_print("sizeof(*start_sta_info_cur)[%d][%d][%d][%d]\n", sizeof(*start_sta_info_cur)\
+	, sizeof(start_sta_info_cur->start_is_on), sizeof(start_sta_info_cur->ea), sizeof(start_sta_info_cur->ac_queue_index));
+    for (int i = 0; i < DEBUG_CLASS_MAX_FIELD; ++i) {
+        debug_print("info2[%d] = %u\n", i, info_qq[i]);
+    }*/
+	write_data(info_qq);
+    /* dump_flag_qqdx */
 
 	return result;
 }

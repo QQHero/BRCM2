@@ -2375,8 +2375,8 @@ static struct platform_driver wl_plat_drv = {
 #include <linux/string.h>
 #include <linux/mutex.h>
 
-static char *class_names[DEBUG_MAX_CLASS] = {"class1", "class2", "class3"}; 
-//1:超时pkt信息；2：包统计信息；3：物理层信息
+static char *class_names[DEBUG_MAX_CLASS] = {"class1", "class2", "class3", "class4"}; 
+//1:超时pkt信息；2：包统计信息；3：物理层信息;4:start云游戏用户部分信息
 static struct dentry *debugfs_dir = NULL;
 static struct dentry *debugfs_classes[DEBUG_MAX_CLASS] = {NULL};
 static info_class_t *kernel_info_list[DEBUG_MAX_CLASS] = {NULL}; 
@@ -2418,6 +2418,97 @@ int debugfs_set_info_qq(uint8 class, kernel_info_t *info_input, uint8 ts) {
 
     return 0;
 }
+
+int debugfs_read_info_qq(uint8 class, info_class_t *output_info) {
+    
+    if (unlikely(class >= DEBUG_MAX_CLASS)) {
+        printk(KERN_ERR "debugfs type overflow: class %d\n", class);
+        return -1;
+    }
+
+    mutex_lock(&info_mtx[class]);
+    memcpy(output_info, kernel_info_list[class], sizeof(info_class_t));
+    /*for (int i = 0; i < DEBUG_CLASS_MAX_FIELD; ++i) {
+        printk("info3[%d] = %u\n", i, output_info->info[i]);
+    }*/
+    mutex_unlock(&info_mtx[class]);
+
+    return 0;
+}
+
+static ssize_t debugfs_write_cb(struct file *file, const char __user *user_buffer, size_t count, loff_t *ppos) {
+    const char *filename = file->f_path.dentry->d_name.name;
+
+    for (int i = 0; i < DEBUG_MAX_CLASS; ++i) {
+        if (strcmp(filename, class_names[i]) == 0) {
+            if (count != sizeof(kernel_info_t)*DEBUG_CLASS_MAX_FIELD)
+                return -EINVAL;
+
+            mutex_lock(&info_mtx[i]);
+            // recording timestamp may incur syncronization error between kernel info and userspace
+            ktime_get_ts(&(kernel_info_list[i]->timestamp));
+            int bytes = simple_write_to_buffer(kernel_info_list[i]->info, sizeof(kernel_info_t)*DEBUG_CLASS_MAX_FIELD, ppos, user_buffer, count);
+            /*for (int j = 0; j < DEBUG_CLASS_MAX_FIELD; ++j) {
+                printk("info4[%d] = %u\n", j, kernel_info_list[i]->info[j]);
+            }*/
+            mutex_unlock(&info_mtx[i]);
+            return bytes;
+        }
+    }
+    return -ENOENT;
+}
+
+#if 0
+int debugfs_read_info_qq(uint8 class, kernel_info_t *info_input, uint8 ts) {
+    if (unlikely(class >= DEBUG_MAX_CLASS)) {
+        printk(KERN_ERR "debugfs type overflow: class %d\n", class);
+        return -1;
+    }
+    
+    mutex_lock(&info_mtx[class]);
+    memcpy(info_input, kernel_info_list[class]->info, sizeof(*info_input));
+    //kernel_info_list[class]->info = info_input;
+
+    if (likely(ts > 0)) {
+        // recording timestamp may incur syncronization error between kernel info and userspace
+        ktime_get_ts(&(kernel_info_list[class]->timestamp));
+    }
+    mutex_unlock(&info_mtx[class]);
+
+    return 0;
+}
+static ssize_t debugfs_write_cb(struct file *file, char __user *user_buffer,
+                         size_t count, loff_t *ppos){
+    const char *filename = file->f_path.dentry->d_name.name;
+
+    for (int i = 0; i < DEBUG_MAX_CLASS; ++i) {
+        // printk(KERN_INFO "filename: %s", filename);
+        if (strcmp(filename, class_names[i]) == 0) {
+            // *ppos = file->f_pos;
+            // printk(KERN_INFO "count %d, ppos %lld\n", count, *ppos);
+            mutex_lock(&info_mtx[i]);
+            int bytes = simple_read_from_buffer(user_buffer, count, ppos, kernel_info_list[i], sizeof(info_class_t));
+            // copy_to_user(user_buffer, kernel_info_list[i], sizeof(info_class_t));
+            mutex_unlock(&info_mtx[i]);
+            return bytes;
+            // return sizeof(info_class_t);
+        }
+    }
+
+
+
+
+
+    if (count != sizeof(info_class_t))
+        return -EINVAL;
+
+    if (copy_from_user(&data, buf, count))
+        return -EFAULT;
+
+    return count;
+}
+#endif
+
 
 static ssize_t debugfs_read_cb(struct file *file, char __user *user_buffer,
                          size_t count, loff_t *ppos) {
@@ -2475,6 +2566,7 @@ static const struct file_operations debugfs_file_ops = {
     .owner = THIS_MODULE,
     .read = debugfs_read_cb,
     .llseek = debugfs_llseek_cb,
+    .write = debugfs_write_cb,
 };
 
 // safe for multiple invokations

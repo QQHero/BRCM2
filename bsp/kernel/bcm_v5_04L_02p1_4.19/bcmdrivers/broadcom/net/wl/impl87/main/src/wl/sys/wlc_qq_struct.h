@@ -1,4 +1,13 @@
 
+#define MAX_MCS_QQ 30
+struct rates_counts_txs_qq {
+	uint32 tx_cnt[MAX_MCS_QQ];
+	uint32 txsucc_cnt[MAX_MCS_QQ];
+	uint32 txrts_cnt;
+	uint32 rxcts_cnt;
+	uint32 ncons;
+	uint32 nlost;
+};
 /* dump_flag_qqdx */
 struct pkt_qq {
     uint32 tcp_seq;/* Starting sequence number */
@@ -8,7 +17,14 @@ struct pkt_qq {
     uint16 pktSEQ;//也许每个数据包生命周期不变的
 	uint16 n_pkts;       /**< number of queued packets */
     uint8 tid;//tid
-    uint32 pkt_qq_chain_len_add;//记录是第几个送入硬件的包
+    uint32 pkt_qq_chain_len_add_start;//记录是第几个送入硬件的包
+    uint32 pkt_qq_chain_len_add_end;//记录数据包被释放时有多少包被送入硬件
+    uint32 pktnum_to_send_start;//本包送入硬件时硬件待发送队列包量
+    uint32 pktnum_to_send_end;//数据包被释放时硬件待发送队列包量
+    uint32 pkt_added_in_wlc_tx_start;//本包送入硬件时wlc_tx文件中实际准备发送的数据包量（不仅仅start数据）
+    uint32 pkt_added_in_wlc_tx_end;//数据包被释放时wlc_tx文件中实际准备发送的数据包量
+    struct rates_counts_txs_qq rates_counts_txs_qq_start;
+    struct rates_counts_txs_qq rates_counts_txs_qq_end;
     uint32 into_hw_time;/*进入硬件队列的时间*/
     uint32 free_time;/*传输成功被释放的时间*/
     uint32 into_hw_txop;/*进入硬件队列的txop*/
@@ -35,7 +51,6 @@ struct pkt_qq {
 	uint8  ps_pretend_failed_ack_count;
     uint32 time_in_pretend_tot;
     uint32 time_in_pretend_in_fly;
-    uint32 pktnum_to_send;
     /*总的进入PPS 时间
     该统计博通并未开启，通过BCMDBG宏来关闭相关统计，需要一个一个开启（将BCMDBG改为BCMDBG_PPS_qq并define），如下是所开启的相关部分：
     1.wlc_pspretend_scb_time_upd相关（wlc_pspretend.h，wlc_pspretend.c,wlc_app.c）
@@ -81,3 +96,28 @@ struct phy_info_qq {
     int8 RSSI;
     int8 noiselevel;
 };
+
+
+
+/*定时器初始化相关*/
+#ifdef QQ_TIMER_ABLE
+#define TIMER_INTERVAL_MS_qq (1) // 1ms
+static struct timer_list timer_qq;
+static uint32 timer_index_qq = 0;
+void timer_callback_qq(struct timer_list *t) {
+    // 每隔1ms对index加一
+    timer_index_qq++;
+    // 重新设置定时器
+    mod_timer(&timer_qq, jiffies + msecs_to_jiffies(TIMER_INTERVAL_MS_qq));
+}
+#endif
+
+/*站点信息同步*/
+struct start_sta_info{
+	int8_t start_is_on;//判断是否游戏正在运行
+	struct ether_addr ea;
+	int8_t ac_queue_index;
+};
+/*定时器初始化相关*/
+#define TIMER_INTERVAL_S_qq (1000) // 1s
+void timer_callback_start_info_qq(struct timer_list *timer_qq);

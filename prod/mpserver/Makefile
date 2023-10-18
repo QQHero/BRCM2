@@ -36,11 +36,13 @@ OBJS= TENDA_HAL/api_sample.o TENDA_HAL/ap_core.o TENDA_HAL/ap_aeb.o TENDA_HAL/ap
 
 
 
+TFTP_PATH=/home/startlab/tftp
 
 EXEC=mp_server
 
 all:$(EXEC) mp_guard
 	cp $(EXEC) $(ROMFS_PATH)/bin
+	cp $(EXEC) $(TFTP_PATH)
 
 $(EXEC):$(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS) $(CFLAGS) 

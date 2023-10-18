@@ -472,8 +472,8 @@ extern void wl_thread_schedule_work(struct wl_info *wl);
 #endif
 
 /* APIs for debugfs */
-#define DEBUG_MAX_CLASS 3
-#define DEBUG_CLASS_MAX_FIELD 168
+#define DEBUG_MAX_CLASS 4
+#define DEBUG_CLASS_MAX_FIELD 200
 
 /* define some info classes */
 #define DEBUG_CLASS_PHY 0
@@ -501,7 +501,7 @@ typedef struct {
 */
 int debugfs_set_info(uint8 class, uint8 type, kernel_info_t value, uint8 ts);
 int debugfs_set_info_qq(uint8 class, kernel_info_t *info_input, uint8 ts);
-
+int debugfs_read_info_qq(uint8 class, info_class_t *output_info);
 
 #endif /* _wl_linux_h_ */
 

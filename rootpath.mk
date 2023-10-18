@@ -1,1 +1,1 @@
-TOP_PATH = /media/startlab/系统/HomeCoverage0905
+TOP_PATH = /media/startlab/软件/HomeCoverage1008

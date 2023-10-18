@@ -213,11 +213,16 @@ static INLINE void * __wlc_ampdu_pktq_penq_head(wlc_info_t *wlc, scb_ampdu_tx_t 
     uint8 tid, void *pkt);
     /* dump_flag_qqdx */
 //#include <wlc_qq.h>
-extern uint32 pkt_qq_chain_len_add;
-extern uint32 pkt_qq_chain_len_soft_retry;
+#include <wlc_qq_struct.h>
 extern void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t *ini, ampdu_tx_info_t *ampdu_tx, struct scb *scb, tx_status_t *txs, wlc_pkttag_t* pkttag, wlc_txh_info_t *txh_info,bool was_acked,osl_t *osh, void *p, bool use_last_pkt,uint cur_mpdu_index, ratesel_txs_t rs_txs, uint32 receive_time,uint32 *ccastats_qq_cur);
 static bool pspretend_qq_flag = FALSE;//用来判断是否出现了发送失败的情况，进而得出PPS 是否符合预期的结论
 
+extern uint32 pkt_qq_chain_len_add;//链表增加
+extern uint32 pkt_qq_chain_len_soft_retry;//记录PPS等原因重传导致的
+/*定时器初始化相关*/
+//extern bool timer_qq_loaded = FALSE;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
 
 
 
@@ -9378,14 +9383,19 @@ wlc_ampdu_dotxstatus_aqm_complete(ampdu_tx_info_t *ampdu_tx, struct scb *scb,
      */
 
 
+        
 
     /* dump_flag_qqdx */
     bool first_pkt_flag_qqdx = TRUE;
     uint32 receive_time = OSL_SYSUPTIME();//用于记录受到包的更准确时间，避免处理这些包耗时太久
-
     uint32 ccastats_qq_cur[CCASTATS_MAX];
-    for (int i = 0; i < CCASTATS_MAX; i++) {
-        ccastats_qq_cur[i] = wlc_bmac_cca_read_counter(wlc->hw, 4 * i, (4 * i + 2));
+    if(start_game_is_on){
+        if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
+
+            for (int i = 0; i < CCASTATS_MAX; i++) {
+                ccastats_qq_cur[i] = wlc_bmac_cca_read_counter(wlc->hw, 4 * i, (4 * i + 2));
+            }
+        }
     }
     /* dump_flag_qqdx */
 
@@ -9564,10 +9574,14 @@ wlc_ampdu_dotxstatus_aqm_complete(ampdu_tx_info_t *ampdu_tx, struct scb *scb,
 
         
         /* dump_flag_qqdx */
-        if(!was_acked){
-            pspretend_qq_flag = TRUE;
-            printk("----------[fyl] startPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
-        /* dump_flag_qqdx */
+        if(start_game_is_on){
+            if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
+                if(!was_acked){
+                    pspretend_qq_flag = TRUE;
+                    printk("----------[fyl] startPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
+                /* dump_flag_qqdx */
+                }
+            }
         }
 
 #if defined(PKTQ_LOG)
@@ -9787,15 +9801,19 @@ free_and_next:
             succ_mpdu++;
         }
     /* dump_flag_qqdx */
-        //ack_update_qq(txh_info->TxFrameID,was_acked,wlc->osh);
-        ack_update_qq(wlc, ini,ampdu_tx, scb, txs, pkttag, txh_info,was_acked\
-        ,wlc->osh,p, !first_pkt_flag_qqdx,tot_mpdu,rs_txs,receive_time, ccastats_qq_cur);
-        first_pkt_flag_qqdx = FALSE;
-        /*对于多包情况只需要第一次的时候从头开始，其他情况从上次开始*/
-        #ifdef PROP_TXSTATUS
-                    printk("----------[fyl] PROP_TXSTATUS----------");
-#endif
-        //ack_update_qq(pkttag->seq,was_acked,wlc->osh);
+        if(start_game_is_on){
+            if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
+                //ack_update_qq(txh_info->TxFrameID,was_acked,wlc->osh);
+                ack_update_qq(wlc, ini,ampdu_tx, scb, txs, pkttag, txh_info,was_acked\
+                ,wlc->osh,p, !first_pkt_flag_qqdx,tot_mpdu,rs_txs,receive_time, ccastats_qq_cur);
+                first_pkt_flag_qqdx = FALSE;
+                /*对于多包情况只需要第一次的时候从头开始，其他情况从上次开始*/
+                #ifdef PROP_TXSTATUS
+                            printk("----------[fyl] PROP_TXSTATUS----------");
+                #endif
+                //ack_update_qq(pkttag->seq,was_acked,wlc->osh);
+            }
+        }
     /* dump_flag_qqdx */
 
 #endif /* WLSCB_HISTO */
@@ -10012,9 +10030,13 @@ free_and_next:
         wlc_pspretend_dotxstatus(wlc->pps_info, scb, pps_recvd_ack);
 
         /* dump_flag_qqdx */
-        if(pps_recvd_ack && pspretend_qq_flag){
-            printk("----------[fyl] endPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
-            pspretend_qq_flag = FALSE;
+        if(start_game_is_on){
+            if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
+                if(pps_recvd_ack && pspretend_qq_flag){
+                    printk("----------[fyl] endPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
+                    pspretend_qq_flag = FALSE;
+                }
+            }
         }
     }
 #endif /* PSPRETEND */

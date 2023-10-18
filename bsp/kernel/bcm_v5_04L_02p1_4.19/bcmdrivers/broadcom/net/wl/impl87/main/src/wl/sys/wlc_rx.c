@@ -418,8 +418,12 @@
 
     /* dump_flag_qqdx */
 #include <wlc_qq_struct.h>
+#include <wl_linux.h>
 //extern struct phy_info_qq phy_info_qq
 extern struct phy_info_qq phy_info_qq_rx_new;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
+
 
 /** so that each pre parse callback function has access to a 'wlc' pointer */
 typedef struct {
@@ -639,11 +643,6 @@ wlc_recv(wlc_info_t *wlc, void *p)
 
     /* compute the RSSI from d11rxhdr and record it in wlc_rxd11hr */
     phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
-    /* dump_flag_qqdx */
-    if(wrxh->rssi<0){
-        phy_info_qq_rx_new.RSSI = wrxh->rssi;
-    }
-    //printk("rssi(%d,%d)",wrxh->rssi,phy_info_qq_rx_new.RSSI);
 
     /* strip off HW rxhdr */
     if (PKTLEN(osh, p) < wlc->hwrxoff) {
@@ -701,6 +700,88 @@ wlc_recv(wlc_info_t *wlc, void *p)
 
     plcp_len = D11_PHY_RXPLCP_LEN(corerev);
     h = (struct dot11_header *)(PKTDATA(osh, p) + plcp_len);
+    /* dump_flag_qqdx */
+    if(wrxh->rssi<0){
+        if(start_game_is_on){
+    #if 0
+        struct scb *scb = NULL;
+        enum wlc_bandunit bandunit;
+        bandunit = CHSPEC_BANDUNIT(D11RXHDR_ACCESS_VAL(rxh, pub->corerev, RxChan));
+        wlc_bsscfg_t *bsscfg = NULL;
+        uchar *plcp;
+        plcp = PKTDATA(osh, p);
+        struct wlc_frminfo f;    /* frame info to be passed to intermediate functions */
+        f.h = (struct dot11_header *)(plcp + D11_PHY_RXPLCP_LEN(corerev));
+
+        scb = wlc_scbibssfindband(wlc, &f.h->a2, bandunit, &bsscfg);
+    #endif
+        //struct ether_addr *ea_cur = wlc_monitor_get_align_ea(wlc->mon_info);
+        //struct ether_addr *ea_cur = &(scb->ea);
+        struct ether_addr *ea_cur = &(h->a2);
+
+            /*printk(KERN_ALERT"rssi----------[fyl] dump_stack start(%u)----------",memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)));
+            dump_stack();
+            printk(KERN_ALERT"rssi----------[fyl] dump_stack stop----------");
+            printk("MAC address (start_sta_info_cur->ea): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                start_sta_info_cur->ea.octet[0],
+                start_sta_info_cur->ea.octet[1],
+                start_sta_info_cur->ea.octet[2],
+                start_sta_info_cur->ea.octet[3],
+                start_sta_info_cur->ea.octet[4],
+                start_sta_info_cur->ea.octet[5]);
+            printk("MAC address (ea_cur): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                ea_cur->octet[0],
+                ea_cur->octet[1],
+                ea_cur->octet[2],
+                ea_cur->octet[3],
+                ea_cur->octet[4],
+                ea_cur->octet[5]);*/
+            if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
+                phy_info_qq_rx_new.RSSI = wrxh->rssi;
+                struct phy_info_qq *phy_info_qq_cur = NULL;
+                phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(osh, sizeof(*phy_info_qq_cur));
+                                
+                phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+                //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+                phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                debugfs_set_info_qq(2, info_qq, 1);
+                MFREE(osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+            }
+        }
+    }
+    //printk("rssi(%d,%d)",wrxh->rssi,phy_info_qq_rx_new.RSSI);
+    /*
+    printk("MAC address (a1): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                h->a1.octet[0],
+                h->a1.octet[1],
+                h->a1.octet[2],
+                h->a1.octet[3],
+                h->a1.octet[4],
+                h->a1.octet[5]);
+    printk("MAC address (a2): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                h->a2.octet[0],
+                h->a2.octet[1],
+                h->a2.octet[2],
+                h->a2.octet[3],
+                h->a2.octet[4],
+                h->a2.octet[5]);
+    printk("MAC address (a3): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                h->a3.octet[0],
+                h->a3.octet[1],
+                h->a3.octet[2],
+                h->a3.octet[3],
+                h->a3.octet[4],
+                h->a3.octet[5]);
+    printk("MAC address (a4): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                h->a4.octet[0],
+                h->a4.octet[1],
+                h->a4.octet[2],
+                h->a4.octet[3],
+                h->a4.octet[4],
+                h->a4.octet[5]);*/
+    
     len = PKTLEN(osh, p) + PKTFRAGUSEDLEN(osh, p);
 
     /* use rx header to verify that we can process the packet */

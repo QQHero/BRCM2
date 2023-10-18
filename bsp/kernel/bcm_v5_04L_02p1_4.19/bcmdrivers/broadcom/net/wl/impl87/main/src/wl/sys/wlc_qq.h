@@ -351,9 +351,6 @@ struct ampdu_tx_info {
 
 
 
-
-
-
 struct pkt_qq *pkt_qq_chain_head = (struct pkt_qq *)NULL;
 struct pkt_qq *pkt_qq_chain_tail = (struct pkt_qq *)NULL;
 
@@ -370,17 +367,6 @@ uint32 pkt_phydelay_dict[30] = {0};//记录不同时延情况下的pkt数量
 for(i = 0; i<pkt_phydelay_dict_len; i++){
     pkt_phydelay_dict[i] = 0;
 }*/
-/*统计链表增减节点的各种情况*/
-uint32 pkt_qq_chain_len_add = 0;//链表增加
-uint32 pkt_qq_chain_len_soft_retry = 0;//记录PPS等原因重传导致的
-uint32 pkt_qq_chain_len_add_last = 0;//记录上次链表增加过的数据包数量
-uint32 pkt_qq_chain_len_acked = 0;//正常收到ack并删除
-uint32 pkt_qq_chain_len_unacked = 0;//正常收到ack并删除
-uint32 pkt_qq_chain_len_timeout = 0;//超时删除
-uint32 pkt_qq_chain_len_outofrange = 0;//超过链表最大长度删除
-uint32 pkt_qq_chain_len_notfound = 0;// 遍历链表没有找到
-uint32 pkt_qq_chain_len_found = 0;// 遍历链表没有找到
-#define PKTCOUNTCYCLE 100000//每隔100000个包打印一次数据包统计信息
 
 //DEFINE_MUTEX(pkt_qq_mutex); // 定义一个互斥锁
 DEFINE_MUTEX(pkt_qq_mutex_tail); // 定义一个互斥锁
@@ -393,19 +379,11 @@ bool PS_is_on = FALSE;//判断当前是否正处于PS
 uint32 PS_start_last = 0;//最近一次进入PS的时间
 */
 
-/*定时器初始化相关*/
-#ifdef QQ_TIMER_ABLE
-bool timer_qq_loaded = FALSE;
-#define TIMER_INTERVAL_MS_qq (1) // 1ms
-static struct timer_list timer_qq;
-static uint32 timer_index_qq = 0;
-void timer_callback_qq(struct timer_list *t) {
-    // 每隔1ms对index加一
-    timer_index_qq++;
-    // 重新设置定时器
-    mod_timer(&timer_qq, jiffies + msecs_to_jiffies(TIMER_INTERVAL_MS_qq));
-}
-#endif
+
+
+
+
+
 
 /*是否打印超时被删除的包，专用于debug*/
 #define PRINTTIMEOUTPKT
@@ -445,6 +423,24 @@ struct pkt_qq debug_qqdx_retry_pkt;// = (struct pkt_qq )NULL;
 
 
 
+/*统计链表增减节点的各种情况*/
+uint32 pkt_qq_chain_len_add = 0;//链表增加
+uint32 pkt_qq_chain_len_soft_retry = 0;//记录PPS等原因重传导致的
+uint32 pkt_qq_chain_len_add_last = 0;//记录上次链表增加过的数据包数量
+uint32 pkt_qq_chain_len_acked = 0;//正常收到ack并删除
+uint32 pkt_qq_chain_len_unacked = 0;//正常收到ack并删除
+uint32 pkt_qq_chain_len_timeout = 0;//超时删除
+uint32 pkt_qq_chain_len_outofrange = 0;//超过链表最大长度删除
+uint32 pkt_qq_chain_len_notfound = 0;// 遍历链表没有找到
+uint32 pkt_qq_chain_len_found = 0;// 遍历链表没有找到
+#define PKTCOUNTCYCLE 100000//每隔100000个包打印一次数据包统计信息
+uint32 pkt_added_in_wlc_tx = 0;//wlc_tx文件中实际准备发送的数据包量
+
+
+struct start_sta_info *start_sta_info_cur;
+bool start_game_is_on = FALSE;
+/*定时器初始化相关*/
+bool timer_qq_loaded = FALSE;
 
 
 
@@ -542,6 +538,76 @@ void wf_rspec_to_phyinfo_qq(ratesel_txs_t rs_txs, struct phy_info_qq *phy_info_q
 
 }
 
+uint wf_rspec_to_mcs_qq(ratespec_t rspec)
+{
+	uint rate = (uint)(-1);
+	uint mcs, nss;
+
+	switch (rspec & WL_RSPEC_ENCODING_MASK) {
+		case WL_RSPEC_ENCODE_HE:
+			rate = wf_he_rspec_to_rate(rspec);
+			break;
+		case WL_RSPEC_ENCODE_VHT:
+			mcs = RSPEC_VHT_MCS(rspec);
+			nss = RSPEC_VHT_NSS(rspec);
+#ifdef BCMDBG
+			if (mcs > WLC_MAX_VHT_MCS || nss == 0 || nss > 8) {
+				printf("%s: rspec=%x\n", __FUNCTION__, rspec);
+			}
+#endif /* BCMDBG */
+			ASSERT(mcs <= WLC_MAX_VHT_MCS);
+			ASSERT(nss != 0 && nss <= 8);
+			rate = wf_mcs_to_rate(mcs, nss,
+				RSPEC_BW(rspec), RSPEC_ISSGI(rspec));
+			break;
+		case WL_RSPEC_ENCODE_HT:
+			mcs = RSPEC_HT_MCS(rspec);
+#ifdef BCMDBG
+			if (mcs > 32 && !IS_PROPRIETARY_11N_MCS(mcs)) {
+				printf("%s: rspec=%x\n", __FUNCTION__, rspec);
+			}
+#endif /* BCMDBG */
+			ASSERT(mcs <= 32 || IS_PROPRIETARY_11N_MCS(mcs));
+			if (mcs == 32) {
+				rate = wf_mcs_to_rate(mcs, 1, WL_RSPEC_BW_40MHZ,
+					RSPEC_ISSGI(rspec));
+			} else {
+#if defined(WLPROPRIETARY_11N_RATES)
+				nss = GET_11N_MCS_NSS(mcs);
+				mcs = wf_get_single_stream_mcs(mcs);
+#else /* this ifdef prevents ROM abandons */
+				nss = 1 + (mcs / 8);
+				mcs = mcs % 8;
+#endif /* WLPROPRIETARY_11N_RATES */
+				rate = wf_mcs_to_rate(mcs, nss, RSPEC_BW(rspec),
+					RSPEC_ISSGI(rspec));
+			}
+			break;
+		case WL_RSPEC_ENCODE_RATE:	/* Legacy */
+			rate = 500 * RSPEC2RATE(rspec);
+			break;
+		default:
+			ASSERT(0);
+			break;
+	}
+    return mcs;
+
+}
+
+
+struct rates_counts_txs_qq *cur_rates_counts_txs_qq;
+void update_cur_rates_counts_txs_qq(ratesel_txs_t rs_txs){
+    cur_rates_counts_txs_qq->ncons += rs_txs.ncons;
+    cur_rates_counts_txs_qq->nlost = rs_txs.nlost;
+    cur_rates_counts_txs_qq->rxcts_cnt = rs_txs.rxcts_cnt;
+    cur_rates_counts_txs_qq->txrts_cnt = rs_txs.txrts_cnt;
+    for(uint i = 0; i<RATESEL_MFBR_NUM; i++){
+        uint cur_mcs = wf_rspec_to_mcs_qq(rs_txs.txrspec[i]);
+        cur_rates_counts_txs_qq->txsucc_cnt[cur_mcs] += rs_txs.txsucc_cnt[i];
+        cur_rates_counts_txs_qq->tx_cnt[cur_mcs] += rs_txs.tx_cnt[i];
+    }
+
+}
 
 
 
@@ -587,8 +653,9 @@ void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur){
         return;
     }
 
+
     pkt_qq_chain_len_add++;
-    pkt_qq_cur->pkt_qq_chain_len_add = pkt_qq_chain_len_add;
+    pkt_qq_cur->pkt_qq_chain_len_add_start = pkt_qq_chain_len_add;
     pkt_qq_cur->next = (struct pkt_qq *)NULL;
     pkt_qq_cur->prev = (struct pkt_qq *)NULL;
 
@@ -613,16 +680,6 @@ void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur){
     write_unlock(&pkt_qq_mutex_len); // 解锁
 
 
-#ifdef QQ_TIMER_ABLE
-    if(!timer_qq_loaded){
-        timer_setup(&timer_qq, timer_callback_qq, 0);
-
-        // 设置定时器间隔为1ms
-        mod_timer(&timer_qq, jiffies + msecs_to_jiffies(TIMER_INTERVAL_MS_qq));
-        timer_qq_loaded = TRUE;
-
-    }
-#endif
 }
 void pkt_qq_delete(struct pkt_qq *pkt_qq_cur,osl_t *osh){
     //mutex_lock(&pkt_qq_mutex); // 加锁
@@ -801,6 +858,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
 
     //mutex_lock(&pkt_qq_mutex); // 加锁
     //printk("**************debug1*******************");
+    update_cur_rates_counts_txs_qq(rs_txs);
     uint slottime_qq = APHY_SLOT_TIME;
     ampdu_tx_config_t *ampdu_tx_cfg = ampdu_tx->config;
     if (wlc->band->gmode && !wlc->shortslot)
@@ -896,6 +954,13 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                         }
                     }
                     pkt_phydelay_dict[index_i]++;
+                    pkt_qq_cur->pkt_qq_chain_len_add_end = pkt_qq_chain_len_add;
+                    /*计算等待发送的数据包量*/
+                    uint fifo = D11_TXFID_GET_FIFO(wlc, htol16(curTxFrameID));
+                    hnddma_t *tx_di = WLC_HW_DI(wlc, fifo);
+                    dma_info_t *di = DI_INFO(tx_di);
+                    pkt_qq_cur->pktnum_to_send_end = NTXDACTIVE(di->txin, di->txout) + 1;
+                    pkt_qq_cur->pkt_added_in_wlc_tx_end = pkt_added_in_wlc_tx;
                     pkt_qq_cur->free_time = cur_time;
                     pkt_qq_cur->free_txop = wlc_bmac_cca_read_counter(wlc->hw, M_CCA_TXOP_L_OFFSET(wlc), M_CCA_TXOP_H_OFFSET(wlc));
                     pkt_qq_cur->ps_dur_trans = 0;//当前帧发送期间PS 时间统计
@@ -914,7 +979,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                         ccastats_qq_differ[CCASTATS_NOCTG] +
                         ccastats_qq_differ[CCASTATS_NOPKT];
                     memcpy(pkt_qq_cur->ccastats_qq_differ, ccastats_qq_differ, sizeof(pkt_qq_cur->ccastats_qq_differ));
-                    
+                    memcpy(&(pkt_qq_cur->rates_counts_txs_qq_end), &cur_rates_counts_txs_qq, sizeof(struct rates_counts_txs_qq));
                     pkt_qq_cur->txop_in_fly = (pkt_qq_cur->free_txop - pkt_qq_cur->into_hw_txop)*slottime_qq;
                     scb_pps_info_t *pps_scb_qq = SCB_PPSINFO(wlc->pps_info, scb);            
                     uint32 time_in_pretend_tot_qq = pps_scb_qq->ps_pretend_total_time_in_pps;
@@ -936,7 +1001,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                     //phy_info_qq_cur->RSSI = wrxh->rssi;
                     
                     phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
-                    printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+                    //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
                     phy_info_qq_cur->SNR = pkttag->pktinfo.misc.snr;
                     phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
                     kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
