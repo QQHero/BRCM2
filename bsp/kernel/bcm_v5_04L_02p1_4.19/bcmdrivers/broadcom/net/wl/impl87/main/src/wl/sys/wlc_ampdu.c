@@ -224,6 +224,8 @@ extern uint32 pkt_qq_chain_len_soft_retry;//记录PPS等原因重传导致的
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
 
+extern struct rates_counts_txs_qq *cur_rates_counts_txs_qq;
+extern void update_cur_rates_counts_txs_qq(wlc_info_t *wlc, uint8 txs_mutype, bool txs_mu, bool fix_rate, tx_status_t *txs,ratesel_txs_t rs_txs,uint16 ncons, uint16 nlost);
 
 
 #if defined(BCM_PKTFWD_FLCTL)
@@ -9800,13 +9802,23 @@ free_and_next:
             succ_msdu += WLPKTTAG_AMSDU(p) ? amsdu_sf : 1;
             succ_mpdu++;
         }
+        if(first_pkt_flag_qqdx){
+            //update_cur_rates_counts_txs_qq(wlc, txs_mutype, txs_mu, fix_rate, txs,rs_txs, ncons, nlost);
+            //printk("RxAckRSSI: %d ", (txs->ackphyrxsh & PRXS1_JSSI_MASK) >> PRXS1_JSSI_SHIFT);
+            int eee = 0;
+            eee++;
+
+        }
+        //update_cur_rates_counts_txs_qq(wlc, txs_mutype, txs_mu, fix_rate, txs, ncons, nlost);
+        //printk("RxAckRSSI: 0x%04x ", (txs->ackphyrxsh & PRXS1_JSSI_MASK) >> PRXS1_JSSI_SHIFT);
+        //printk("update_cur_rates_counts_txs_qq16");
     /* dump_flag_qqdx */
         if(start_game_is_on){
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
                 //ack_update_qq(txh_info->TxFrameID,was_acked,wlc->osh);
                 ack_update_qq(wlc, ini,ampdu_tx, scb, txs, pkttag, txh_info,was_acked\
                 ,wlc->osh,p, !first_pkt_flag_qqdx,tot_mpdu,rs_txs,receive_time, ccastats_qq_cur);
-                first_pkt_flag_qqdx = FALSE;
+                
                 /*对于多包情况只需要第一次的时候从头开始，其他情况从上次开始*/
                 #ifdef PROP_TXSTATUS
                             printk("----------[fyl] PROP_TXSTATUS----------");
@@ -9814,6 +9826,7 @@ free_and_next:
                 //ack_update_qq(pkttag->seq,was_acked,wlc->osh);
             }
         }
+        first_pkt_flag_qqdx = FALSE;
     /* dump_flag_qqdx */
 
 #endif /* WLSCB_HISTO */

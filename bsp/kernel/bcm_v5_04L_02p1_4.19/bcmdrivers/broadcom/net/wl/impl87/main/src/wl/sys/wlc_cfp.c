@@ -122,6 +122,15 @@
 #endif /* STS_XFER_PHYRXS */
 #include <wlc_apps.h>
 
+    /* dump_flag_qqdx */
+#include <wlc_qq_struct.h>
+#include <wl_linux.h>
+//extern struct phy_info_qq phy_info_qq
+extern struct phy_info_qq phy_info_qq_rx_new;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
+extern uint rssi_ring_buffer_index;
+extern DataPoint_qq rssi_ring_buffer_cur[RSSI_RING_SIZE];
 /**
  * XXX NIC Mode
  *
@@ -2492,7 +2501,41 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 		h = (struct dot11_header *)PKTPULL(wlc->osh, p,
 			D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
 #endif /* ! DONGLEBUILD */
+/* dump_flag_qqdx */
+        if(wrxh->rssi<0){
+            if(start_game_is_on){
+                //printk("----------[fyl] OSL_SYSUPTIME17(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
+                //struct ether_addr *ea_cur = &(h_qq->a2);
+                struct ether_addr *ea_cur = &(h->a2);
 
+                /*printk("MAC address (hdr): %02x:%02x:%02x:%02x:%02x:%02x----(%d)\n",
+                            hdr->sa.octet[0],
+                            hdr->sa.octet[1],
+                            hdr->sa.octet[2],
+                            hdr->sa.octet[3],
+                            hdr->sa.octet[4],
+                            hdr->sa.octet[5],wrxh->rssi);*/
+                if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
+                    //printk("----------[fyl] cfp_OSL_SYSUPTIME111(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
+                    if(phy_info_qq_rx_new.RSSI != wrxh->rssi){
+						phy_info_qq_rx_new.RSSI = wrxh->rssi;
+						//struct phy_info_qq *phy_info_qq_cur = NULL;
+						//phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+										
+						//phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+						//printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+						phy_info_qq_rx_new.noiselevel = wlc_lq_chanim_phy_noise(wlc);
+						save_rssi(wrxh->rssi,phy_info_qq_rx_new.noiselevel);						
+                    	memcpy(phy_info_qq_rx_new.rssi_ring_buffer, rssi_ring_buffer_cur, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
+						/*kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+						memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+						debugfs_set_info_qq(2, info_qq, 1);
+						MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));*/
+					}
+                }
+            }
+        }
+/* dump_flag_qqdx */
 		pkt_len = pkttotlen(wlc->osh, p);
 
 		 /* Dont expect fragmented packets here in CFP path */

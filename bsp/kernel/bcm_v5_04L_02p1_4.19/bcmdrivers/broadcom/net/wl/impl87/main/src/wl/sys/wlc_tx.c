@@ -1185,8 +1185,12 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         cur_rates_counts_txs_qq->nlost = 0;
         cur_rates_counts_txs_qq->rxcts_cnt = 0;
         cur_rates_counts_txs_qq->txrts_cnt = 0;
-        memset(cur_rates_counts_txs_qq->tx_cnt, 0, sizeof(cur_rates_counts_txs_qq->tx_cnt));
-        memset(cur_rates_counts_txs_qq->txsucc_cnt, 0, sizeof(cur_rates_counts_txs_qq->txsucc_cnt));
+        for(uint i = 0; i<MAX_MCS_QQ;i++){
+            cur_rates_counts_txs_qq->tx_cnt[i] = 0;
+            cur_rates_counts_txs_qq->txsucc_cnt[i] = 0;
+        }
+        //memset(cur_rates_counts_txs_qq->tx_cnt, 0, sizeof(cur_rates_counts_txs_qq->tx_cnt));
+        //memset(cur_rates_counts_txs_qq->txsucc_cnt, 0, sizeof(cur_rates_counts_txs_qq->txsucc_cnt));
 
 
     }
@@ -1558,6 +1562,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
             spktq_enq_head(spktq, p);
             break;
         }
+        
         //#if 0
         if(start_game_is_on){
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
@@ -1610,7 +1615,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                         dma_info_t *di = DI_INFO(tx_di);
                         pkt_qq_cur->pktnum_to_send_start = NTXDACTIVE(di->txin, di->txout) + 1;
                         pkt_qq_cur->pkt_added_in_wlc_tx_start = pkt_added_in_wlc_tx;
-                        memcpy(&(pkt_qq_cur->rates_counts_txs_qq_start), &cur_rates_counts_txs_qq, sizeof(struct rates_counts_txs_qq));
+                        memcpy(&(pkt_qq_cur->rates_counts_txs_qq_start), cur_rates_counts_txs_qq, sizeof(struct rates_counts_txs_qq));
 
                         //memcpy(pkt_qq_cur->rates_counts_txs_qq_start, &cur_rates_counts_txs_qq, sizeof(pkt_qq_cur->rates_counts_txs_qq_start));
         #ifdef dump_stack_qqdx_print

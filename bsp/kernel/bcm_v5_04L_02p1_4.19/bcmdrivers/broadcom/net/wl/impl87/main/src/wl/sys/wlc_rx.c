@@ -423,6 +423,8 @@
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
+extern uint rssi_ring_buffer_index;
+extern DataPoint_qq rssi_ring_buffer_cur[RSSI_RING_SIZE];
 
 
 /** so that each pre parse callback function has access to a 'wlc' pointer */
@@ -643,7 +645,7 @@ wlc_recv(wlc_info_t *wlc, void *p)
 
     /* compute the RSSI from d11rxhdr and record it in wlc_rxd11hr */
     phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
-
+    
     /* strip off HW rxhdr */
     if (PKTLEN(osh, p) < wlc->hwrxoff) {
         WLCNTINCR(pub->_cnt->rxrunt);
@@ -703,51 +705,25 @@ wlc_recv(wlc_info_t *wlc, void *p)
     /* dump_flag_qqdx */
     if(wrxh->rssi<0){
         if(start_game_is_on){
-    #if 0
-        struct scb *scb = NULL;
-        enum wlc_bandunit bandunit;
-        bandunit = CHSPEC_BANDUNIT(D11RXHDR_ACCESS_VAL(rxh, pub->corerev, RxChan));
-        wlc_bsscfg_t *bsscfg = NULL;
-        uchar *plcp;
-        plcp = PKTDATA(osh, p);
-        struct wlc_frminfo f;    /* frame info to be passed to intermediate functions */
-        f.h = (struct dot11_header *)(plcp + D11_PHY_RXPLCP_LEN(corerev));
-
-        scb = wlc_scbibssfindband(wlc, &f.h->a2, bandunit, &bsscfg);
-    #endif
-        //struct ether_addr *ea_cur = wlc_monitor_get_align_ea(wlc->mon_info);
-        //struct ether_addr *ea_cur = &(scb->ea);
-        struct ether_addr *ea_cur = &(h->a2);
-
-            /*printk(KERN_ALERT"rssi----------[fyl] dump_stack start(%u)----------",memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)));
-            dump_stack();
-            printk(KERN_ALERT"rssi----------[fyl] dump_stack stop----------");
-            printk("MAC address (start_sta_info_cur->ea): %02x:%02x:%02x:%02x:%02x:%02x\n",
-                start_sta_info_cur->ea.octet[0],
-                start_sta_info_cur->ea.octet[1],
-                start_sta_info_cur->ea.octet[2],
-                start_sta_info_cur->ea.octet[3],
-                start_sta_info_cur->ea.octet[4],
-                start_sta_info_cur->ea.octet[5]);
-            printk("MAC address (ea_cur): %02x:%02x:%02x:%02x:%02x:%02x\n",
-                ea_cur->octet[0],
-                ea_cur->octet[1],
-                ea_cur->octet[2],
-                ea_cur->octet[3],
-                ea_cur->octet[4],
-                ea_cur->octet[5]);*/
+            struct ether_addr *ea_cur = &(h->a2);
             if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
-                phy_info_qq_rx_new.RSSI = wrxh->rssi;
-                struct phy_info_qq *phy_info_qq_cur = NULL;
-                phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(osh, sizeof(*phy_info_qq_cur));
-                                
-                phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
-                //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
-                phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
-                kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-                memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-                debugfs_set_info_qq(2, info_qq, 1);
-                MFREE(osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                //printk("----------[fyl] OSL_SYSUPTIME2(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
+                if(phy_info_qq_rx_new.RSSI != wrxh->rssi){
+                    phy_info_qq_rx_new.RSSI = wrxh->rssi;
+                    //struct phy_info_qq *phy_info_qq_cur = NULL;
+                    //phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+                                    
+                    //phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+                    //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+                    phy_info_qq_rx_new.noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                    save_rssi(wrxh->rssi,phy_info_qq_rx_new.noiselevel);						
+                    memcpy(phy_info_qq_rx_new.rssi_ring_buffer, rssi_ring_buffer_cur, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
+                    /*kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                    memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                    debugfs_set_info_qq(2, info_qq, 1);
+                    MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));*/
+                }
+                
             }
         }
     }
@@ -4148,6 +4124,7 @@ wlc_recv_mgmt_ctl(wlc_info_t *wlc, osl_t *osh, wlc_d11rxhdr_t *wrxh, void *p)
                       wlc->pub->unit, __FUNCTION__, fc));
         }
         toss_reason = RX_PKTDROP_RSN_INVALID_CTRL_FIELD;
+
         goto toss_silently;
     }
 
@@ -5046,6 +5023,7 @@ wlc_recv_mgmt_ctl(wlc_info_t *wlc, osl_t *osh, wlc_d11rxhdr_t *wrxh, void *p)
 #endif
 
     PKTFREE(osh, p, FALSE);
+
     return;
 
 toss_rxbadproto:
@@ -5577,6 +5555,7 @@ wlc_recvfilter(wlc_info_t *wlc, wlc_bsscfg_t **pbsscfg, struct dot11_header *h,
 
     ASSERT(pscb != NULL);
     scb = *pscb;
+
 
     rx_bandunit = CHSPEC_BANDUNIT(D11RXHDR_ACCESS_VAL(&wrxh->rxhdr,
         wlc->pub->corerev, RxChan));

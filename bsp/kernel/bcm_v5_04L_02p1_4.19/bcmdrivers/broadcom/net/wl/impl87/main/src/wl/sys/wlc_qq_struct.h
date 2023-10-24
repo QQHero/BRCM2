@@ -85,6 +85,17 @@ struct pkt_count_qq {
     uint32 pkt_qq_chain_len_found;
     uint32 pkt_phydelay_dict[30];    
 };
+
+/*rssi的ring buffer*/
+#define RSSI_RING_SIZE 40
+
+typedef struct {
+    int8 RSSI;
+    int8 noiselevel;
+    int32 timestamp;
+} DataPoint_qq;
+
+void save_rssi(int8 RSSI,int8 noiselevel);
 struct phy_info_qq {
     uint8 fix_rate;
     uint32 mcs[RATESEL_MFBR_NUM];
@@ -95,6 +106,8 @@ struct phy_info_qq {
     int8 SNR;
     int8 RSSI;
     int8 noiselevel;
+    uint8 rssi_ring_buffer_index;
+    DataPoint_qq rssi_ring_buffer[RSSI_RING_SIZE];
 };
 
 
@@ -121,3 +134,5 @@ struct start_sta_info{
 /*定时器初始化相关*/
 #define TIMER_INTERVAL_S_qq (1000) // 1s
 void timer_callback_start_info_qq(struct timer_list *timer_qq);
+
+

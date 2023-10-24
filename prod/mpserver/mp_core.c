@@ -280,6 +280,7 @@ int mp_set_tuples(char* session_id, five_tuples_t *tuples)
 
 int mp_start_session_without_report(char* session_id, char* sta_ip_addr, char* app_id, int timer_ms, uint32_t version_num)
 {
+	debug_print("qq______________333");
 	if(get_session_node(session_id) != NULL) {
 		debug_print("session already existed\n");
 		return 1;
@@ -644,12 +645,12 @@ int mp_stop_session(char* session_id, int stop_reason)
 
 	kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 	memcpy(info_qq, start_sta_info_cur, sizeof(*start_sta_info_cur));
+	//write_data(info_qq);//暂时先阻止退出
 	/*debug_print("sizeof(*start_sta_info_cur)[%d][%d][%d][%d]\n", sizeof(*start_sta_info_cur)\
 	, sizeof(start_sta_info_cur->start_is_on), sizeof(start_sta_info_cur->ea), sizeof(start_sta_info_cur->ac_queue_index));
     for (int i = 0; i < DEBUG_CLASS_MAX_FIELD; ++i) {
         debug_print("info2[%d] = %u\n", i, info_qq[i]);
     }*/
-	write_data(info_qq);
     /* dump_flag_qqdx */
 
 	return result;

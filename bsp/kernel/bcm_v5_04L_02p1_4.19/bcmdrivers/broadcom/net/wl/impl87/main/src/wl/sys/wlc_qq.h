@@ -596,19 +596,119 @@ uint wf_rspec_to_mcs_qq(ratespec_t rspec)
 
 
 struct rates_counts_txs_qq *cur_rates_counts_txs_qq;
+/*
 void update_cur_rates_counts_txs_qq(ratesel_txs_t rs_txs){
     cur_rates_counts_txs_qq->ncons += rs_txs.ncons;
-    cur_rates_counts_txs_qq->nlost = rs_txs.nlost;
-    cur_rates_counts_txs_qq->rxcts_cnt = rs_txs.rxcts_cnt;
-    cur_rates_counts_txs_qq->txrts_cnt = rs_txs.txrts_cnt;
+    cur_rates_counts_txs_qq->nlost += rs_txs.nlost;
+    cur_rates_counts_txs_qq->rxcts_cnt += rs_txs.rxcts_cnt;
+    cur_rates_counts_txs_qq->txrts_cnt += rs_txs.txrts_cnt;
     for(uint i = 0; i<RATESEL_MFBR_NUM; i++){
         uint cur_mcs = wf_rspec_to_mcs_qq(rs_txs.txrspec[i]);
         cur_rates_counts_txs_qq->txsucc_cnt[cur_mcs] += rs_txs.txsucc_cnt[i];
         cur_rates_counts_txs_qq->tx_cnt[cur_mcs] += rs_txs.tx_cnt[i];
+        //printk("tx_cnt(%u:%u:%u)",cur_mcs,rs_txs.tx_cnt[i],cur_rates_counts_txs_qq->tx_cnt[cur_mcs]);
     }
+
+}*/
+void update_cur_rates_counts_txs_qq(wlc_info_t *wlc, uint8 txs_mutype, bool txs_mu, bool fix_rate, tx_status_t *txs,ratesel_txs_t rs_txs,uint16 ncons, uint16 nlost){
+    cur_rates_counts_txs_qq->ncons += ncons;
+    cur_rates_counts_txs_qq->nlost += nlost;
+    cur_rates_counts_txs_qq->rxcts_cnt += txs->status.cts_rx_cnt;
+    cur_rates_counts_txs_qq->txrts_cnt += txs->status.rts_tx_cnt;
+        /* Parse rs_txs_cur according to transmission type */
+    
+    uint8    rtidx = 0;
+    ratesel_txs_t rs_txs_cur;
+    //rs_txs_cur.txrspec[i] = rs_txs.txrspec[i];
+    rs_txs_cur.tx_cnt[0]     = 0;
+    rs_txs_cur.txsucc_cnt[0] = 0;
+    rs_txs_cur.tx_cnt[1]     = 0;
+    rs_txs_cur.txsucc_cnt[1] = 0;
+    rs_txs_cur.tx_cnt[2]     = 0;
+    rs_txs_cur.txsucc_cnt[2] = 0;
+    rs_txs_cur.tx_cnt[3]     = 0;
+    rs_txs_cur.txsucc_cnt[3] = 0;
+    //printk("update_cur_rates_counts_txs_qq1");
+    if (fix_rate && !txs_mu) {
+        /* if using fix rate, retrying 64 mpdus >=4 times can overflow 8-bit cnt.
+         * So ucode treats fix rate specially.
+         */
+        rs_txs_cur.tx_cnt[0]     = (TX_STATUS_MACTXS_S3(txs)) & 0xffff;
+        rs_txs_cur.txsucc_cnt[0] = (TX_STATUS_MACTXS_S3(txs) >> 16) & 0xffff;
+        //printk("update_cur_rates_counts_txs_qq2");
+    } else {
+        //printk("update_cur_rates_counts_txs_qq3");
+        txs_mutype = TX_STATUS_MUTYP(wlc->pub->corerev, TX_STATUS_MACTXS_S5(txs));
+        //printk("update_cur_rates_counts_txs_qq4");
+        if (txs_mu) { /* MU case */
+        //printk("update_cur_rates_counts_txs_qq5");
+            
+            /* MU txstatus uses RT1~RT3 for other purposes */
+            if (txs_mutype == TX_STATUS_MUTP_HEOM) {
+        //printk("update_cur_rates_counts_txs_qq6");
+                rtidx = TX_STATUS128_HEOM_RTIDX(TX_STATUS_MACTXS_S4(txs));
+        //printk("update_cur_rates_counts_txs_qq7");
+                //ASSERT(rtidx < RATESEL_MFBR_NUM);
+            }
+        } else { /* SU Case */
+        //printk("update_cur_rates_counts_txs_qq8");
+            rs_txs_cur.tx_cnt[1]     = (TX_STATUS_MACTXS_S3(txs) >> 16) & 0xff;
+            rs_txs_cur.txsucc_cnt[1] = (TX_STATUS_MACTXS_S3(txs) >> 24) & 0xff;
+            rs_txs_cur.tx_cnt[2]     = (TX_STATUS_MACTXS_S4(txs) >>  0) & 0xff;
+            rs_txs_cur.txsucc_cnt[2] = (TX_STATUS_MACTXS_S4(txs) >>  8) & 0xff;
+            rs_txs_cur.tx_cnt[3]     = (TX_STATUS_MACTXS_S4(txs) >> 16) & 0xff;
+            rs_txs_cur.txsucc_cnt[3] = (TX_STATUS_MACTXS_S4(txs) >> 24) & 0xff;
+        //printk("update_cur_rates_counts_txs_qq9");
+        }
+        if(rtidx<RATESEL_MFBR_NUM){
+        //printk("update_cur_rates_counts_txs_qq10");
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs));
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs) >> 8);
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs));
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs) >> 8);
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs));
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs) >> 8);
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs));
+        //printk("TX_STATUS_MACTXS_S3(txs)(%u)",TX_STATUS_MACTXS_S3(txs) >> 8);
+            rs_txs_cur.tx_cnt[rtidx]     = (TX_STATUS_MACTXS_S3(txs)) & 0xff;
+            rs_txs_cur.txsucc_cnt[rtidx] = (TX_STATUS_MACTXS_S3(txs) >> 8) & 0xff;
+
+        }
+
+
+    }
+    for(uint i = 0; i<RATESEL_MFBR_NUM; i++){
+
+        rs_txs_cur.txrspec[i] = rs_txs.txrspec[i];
+        uint cur_mcs = wf_rspec_to_mcs_qq(rs_txs_cur.txrspec[i]);
+        //printk("update_cur_rates_counts_txs_qq13(%u)",cur_mcs);
+
+        cur_rates_counts_txs_qq->txsucc_cnt[cur_mcs] += rs_txs_cur.txsucc_cnt[i];
+        //printk("update_cur_rates_counts_txs_qq131");
+        cur_rates_counts_txs_qq->tx_cnt[cur_mcs] += rs_txs_cur.tx_cnt[i];
+        //printk("update_cur_rates_counts_txs_qq132");
+        //printk("tx_cnt(%u:%u:%u:%u)",i,cur_mcs,cur_rates_counts_txs_qq->tx_cnt[cur_mcs],rs_txs_cur.tx_cnt[i]);
+
+        //printk("txsucc_cnt(%u:%u:%u:%u)",i,cur_mcs,cur_rates_counts_txs_qq->txsucc_cnt[cur_mcs],rs_txs_cur.txsucc_cnt[i]);
+        //printk("tx_cnt(%u:%u:%u)",cur_mcs,rs_txs_cur.tx_cnt[i],cur_rates_counts_txs_qq->tx_cnt[cur_mcs]);
+    }
+        //printk("update_cur_rates_counts_txs_qq14");
+        //printk("update_cur_rates_counts_txs_qq15");
 
 }
 
+
+
+/*rssi的ring buffer*/
+uint rssi_ring_buffer_index = 0;
+DataPoint_qq rssi_ring_buffer_cur[RSSI_RING_SIZE];
+
+void save_rssi(int8 RSSI,int8 noiselevel) {
+    rssi_ring_buffer_cur[rssi_ring_buffer_index].RSSI = RSSI;
+    rssi_ring_buffer_cur[rssi_ring_buffer_index].noiselevel = noiselevel;
+    rssi_ring_buffer_cur[rssi_ring_buffer_index].timestamp = OSL_SYSUPTIME();
+    rssi_ring_buffer_index = (rssi_ring_buffer_index + 1) % RSSI_RING_SIZE;
+}
 
 
 
@@ -858,7 +958,6 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
 
     //mutex_lock(&pkt_qq_mutex); // 加锁
     //printk("**************debug1*******************");
-    update_cur_rates_counts_txs_qq(rs_txs);
     uint slottime_qq = APHY_SLOT_TIME;
     ampdu_tx_config_t *ampdu_tx_cfg = ampdu_tx->config;
     if (wlc->band->gmode && !wlc->shortslot)
@@ -979,7 +1078,10 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                         ccastats_qq_differ[CCASTATS_NOCTG] +
                         ccastats_qq_differ[CCASTATS_NOPKT];
                     memcpy(pkt_qq_cur->ccastats_qq_differ, ccastats_qq_differ, sizeof(pkt_qq_cur->ccastats_qq_differ));
-                    memcpy(&(pkt_qq_cur->rates_counts_txs_qq_end), &cur_rates_counts_txs_qq, sizeof(struct rates_counts_txs_qq));
+                    memcpy(&(pkt_qq_cur->rates_counts_txs_qq_end), cur_rates_counts_txs_qq, sizeof(struct rates_counts_txs_qq));
+                    /*for(uint i = 0; i<8; i++){
+                        printk("tx_cnt2(%u:%u:%u)",i,pkt_qq_cur->rates_counts_txs_qq_end.tx_cnt[i],cur_rates_counts_txs_qq->tx_cnt[i]);
+                    }*/
                     pkt_qq_cur->txop_in_fly = (pkt_qq_cur->free_txop - pkt_qq_cur->into_hw_txop)*slottime_qq;
                     scb_pps_info_t *pps_scb_qq = SCB_PPSINFO(wlc->pps_info, scb);            
                     uint32 time_in_pretend_tot_qq = pps_scb_qq->ps_pretend_total_time_in_pps;
@@ -995,15 +1097,18 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                     wf_rspec_to_phyinfo_qq(rs_txs, phy_info_qq_cur);
                     //phy_info_qq_cur->RSSI = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(txs));
                     //phy_info_qq_cur->RSSI = ((phy_info_qq_cur->RSSI) & PHYRSSI_SIGN_MASK) ? (phy_info_qq_cur->RSSI - PHYRSSI_2SCOMPLEMENT) : phy_info_qq_cur->RSSI;
-                    phy_info_qq_cur->RSSI = pkttag->pktinfo.misc.rssi;
+                    //phy_info_qq_cur->RSSI = pkttag->pktinfo.misc.rssi;
                     //wlc_d11rxhdr_t	*wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, p);
                     //phy_info_qq_cur->RSSI = phy_rssi_compute_rssi(WLC_PI(wlc), wrxh);
                     //phy_info_qq_cur->RSSI = wrxh->rssi;
                     
                     phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+                    memcpy(phy_info_qq_cur->rssi_ring_buffer, phy_info_qq_rx_new.rssi_ring_buffer, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
+
                     //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
                     phy_info_qq_cur->SNR = pkttag->pktinfo.misc.snr;
                     phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                    phy_info_qq_cur->rssi_ring_buffer_index = rssi_ring_buffer_index;
                     kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
                     memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
                     debugfs_set_info_qq(2, info_qq, 1);
