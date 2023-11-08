@@ -6922,6 +6922,9 @@ BCMATTACHFN(wlc_attach)(void *wl, uint16 vendor, uint16 device, uint unit, uint 
 #endif /* defined(DONGLEBUILD) && !defined(PREATTACH_NORECLAIM) && !defined(BCMUCDOWNLOAD) */
     enum wlc_bandunit bandunit;
 
+    /* dump_flag_qqdx */
+    #if 0
+    /* dump_flag_qqdx */
 #ifdef BCMDBG
     /* wlc_info_t::last must be the last field of wlc_info_t */
     STATIC_ASSERT(sizeof(wlc_info_t) ==
@@ -6930,6 +6933,9 @@ BCMATTACHFN(wlc_attach)(void *wl, uint16 vendor, uint16 device, uint unit, uint 
     STATIC_ASSERT(sizeof(wlc_bsscfg_t) ==
                   OFFSETOF(wlc_bsscfg_t, last) + sizeof(((wlc_info_t *)0)->last));
 #endif
+    /* dump_flag_qqdx */
+#endif
+    /* dump_flag_qqdx */
 
     WL_TRACE(("wl%d: %s: vendor 0x%x device 0x%x\n", unit, __FUNCTION__, vendor, device));
 

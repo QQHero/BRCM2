@@ -425,8 +425,23 @@ extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
 extern uint rssi_ring_buffer_index;
 extern DataPoint_qq rssi_ring_buffer_cur[RSSI_RING_SIZE];
+void process_beacon_packet(struct dot11_header *h);
+void remove_expired_APinfo_qq(void);
+void update_global_AP_list(wlc_bss_info_t *bss_info);
+void find_best_channels(int *best_40MHz_channels, int *best_80MHz_channels);
 
-
+/* bandwidth ASCII string */
+const char *wf_chspec_bw_str[] =
+{
+	"na",
+	"na",
+	"20",
+	"40",
+	"80",
+	"160",
+	"80+80",
+	"na"
+};
 /** so that each pre parse callback function has access to a 'wlc' pointer */
 typedef struct {
     wlc_info_t *wlc;
@@ -703,27 +718,39 @@ wlc_recv(wlc_info_t *wlc, void *p)
     plcp_len = D11_PHY_RXPLCP_LEN(corerev);
     h = (struct dot11_header *)(PKTDATA(osh, p) + plcp_len);
     /* dump_flag_qqdx */
+    uint16 fc_qq, fk_qq;
+    fc_qq = ltoh16(h->fc);
+    //ft = FC_TYPE(fc);
+    fk_qq = (fc_qq & FC_KIND_MASK);
     if(wrxh->rssi<0){
         if(start_game_is_on){
-            struct ether_addr *ea_cur = &(h->a2);
-            if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
-                //printk("----------[fyl] OSL_SYSUPTIME2(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
-                if(phy_info_qq_rx_new.RSSI != wrxh->rssi){
-                    phy_info_qq_rx_new.RSSI = wrxh->rssi;
-                    //struct phy_info_qq *phy_info_qq_cur = NULL;
-                    //phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-                                    
-                    //phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
-                    //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
-                    phy_info_qq_rx_new.noiselevel = wlc_lq_chanim_phy_noise(wlc);
-                    save_rssi(wrxh->rssi,phy_info_qq_rx_new.noiselevel);						
-                    memcpy(phy_info_qq_rx_new.rssi_ring_buffer, rssi_ring_buffer_cur, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
-                    /*kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-                    memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-                    debugfs_set_info_qq(2, info_qq, 1);
-                    MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));*/
+            if(fk_qq == FC_BEACON){
+                process_beacon_packet(h);
+            }
+            if(fk_qq == FC_BLOCKACK){
+                struct ether_addr *ea_cur = &(h->a2);
+                if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
+                    //printk("----------[fyl] OSL_SYSUPTIME2(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
+                    if(phy_info_qq_rx_new.RSSI != wrxh->rssi){
+                        phy_info_qq_rx_new.RSSI = wrxh->rssi;
+                        
+                        //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+                        phy_info_qq_rx_new.noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                        save_rssi(wrxh->rssi,phy_info_qq_rx_new.noiselevel);						
+                        memcpy(phy_info_qq_rx_new.rssi_ring_buffer, rssi_ring_buffer_cur, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
+                        
+
+                        kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                        struct phy_info_qq *phy_info_qq_cur = NULL;
+                        phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+                        phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                        phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+                        memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                        debugfs_set_info_qq(2, info_qq, 1);
+                        MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                    }
+                    
                 }
-                
             }
         }
     }
@@ -5246,6 +5273,59 @@ wlc_recv_bcn(wlc_info_t *wlc, osl_t *osh, wlc_bsscfg_t *bsscfg_current, wlc_bssc
     }
 
     body_len = plen - delta;
+    /* dump_flag_qqdx */
+
+    if(start_game_is_on){
+        if(OSL_SYSUPTIME()%10000>=9500){
+            wlc_bss_info_t bi_qq;
+            wlc_recv_scan_parse_bcn_prb(wlc, wrxh, &hdr->bssid, TRUE, body,
+                        body_len, &bi_qq);
+            //if((bi_qq.qbss_load_chan_free<255)&&((bi_qq.chanspec & WL_CHANSPEC_CHAN_MASK) > 30)&&((bi_qq.chanspec & WL_CHANSPEC_CHAN_MASK) <168)){
+                
+            if(((bi_qq.chanspec & WL_CHANSPEC_CHAN_MASK) > 30)&&((bi_qq.chanspec & WL_CHANSPEC_CHAN_MASK) <168)){
+                
+                // 创建一个足够大的字符数组来容纳SSID和结尾的空字符（'\0'）
+                char ssid_str[33];
+                // 将SSID复制到字符数组中
+                memcpy(ssid_str, bi_qq.SSID, bi_qq.SSID_len);
+                // 在SSID字符串的末尾添加空字符（'\0'），以便正确打印
+                ssid_str[bi_qq.SSID_len] = '\0';
+                printk("wlc_rx:WiFi Name(%s);qbss_load_aac(%u);qbss_load_chan_free(%u);"
+                            "chanspec(0x%04x:%u:%u:%s);MAC address (%02x:%02x:%02x:%02x:%02x:%02x)----\n"
+                            ,ssid_str,bi_qq.qbss_load_aac,bi_qq.qbss_load_chan_free,
+                            bi_qq.chanspec,bi_qq.chanspec & WL_CHANSPEC_CHAN_MASK,CHSPEC_BW(bi_qq.chanspec),
+                            wf_chspec_bw_str[CHSPEC_BW(bi_qq.chanspec)>> WL_CHANSPEC_BW_SHIFT],
+                            bi_qq.BSSID.octet[0],
+                            bi_qq.BSSID.octet[1],
+                            bi_qq.BSSID.octet[2],
+                            bi_qq.BSSID.octet[3],
+                            bi_qq.BSSID.octet[4],
+                            bi_qq.BSSID.octet[5]);
+
+
+
+                // 更新全局AP列表
+                update_global_AP_list(&bi_qq);
+                
+                // 删除过期的AP
+                remove_expired_APinfo_qq();
+
+            }
+        }
+
+
+
+
+        /*
+        // 打印WiFi名称
+        //printf("WiFi Name: %s\n", ssid_str);
+        if(OSL_SYSUPTIME()%1000>=1900){
+
+            
+        }*/
+    }
+    
+    /* dump_flag_qqdx */
 
     ASSERT(ISALIGNED(body, sizeof(uint16)));
 

@@ -1137,9 +1137,12 @@ wlc_qos_doiovar(void *ctx, uint32 actionid,
         break;
     case IOV_GVAL(IOV_WME_AC_IP):{
         wme_param_ac_ip_t *prms;
-        int i;
 
-        prms = (wme_param_ac_ip_t *)arg
+    /* dump_flag_qqdx *///增加；
+        prms = (wme_param_ac_ip_t *)arg;
+    /* dump_flag_qqdx */
+    /* dump_flag_qqdx *//*
+        int i;
         WL_WNM(("itemid\t\tsrcip:srcport\t\tdesip:dstport\tprotocol \t\tpri\n"));
         for (i = 0; i < NUM_ACIP; i++) {
             WL_WNM(("%d\t\t%08x:%d\t\t%08x:%d\t\t%s\t\t%d\n",
@@ -1159,6 +1162,7 @@ wlc_qos_doiovar(void *ctx, uint32 actionid,
                 prms[i].priority = wlc->wme_ac_ip[i].priority;
                 prms[i].action = wlc->wme_ac_ip[i].action;
         }
+    *//* dump_flag_qqdx */
 		
         break;
     }

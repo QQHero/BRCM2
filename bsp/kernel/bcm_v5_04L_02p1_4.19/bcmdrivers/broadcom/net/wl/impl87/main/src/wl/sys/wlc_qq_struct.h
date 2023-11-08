@@ -17,6 +17,7 @@ struct pkt_qq {
     uint16 pktSEQ;//也许每个数据包生命周期不变的
 	uint16 n_pkts;       /**< number of queued packets */
     uint8 tid;//tid
+    uint8 APnum;//AP数量
     uint32 pkt_qq_chain_len_add_start;//记录是第几个送入硬件的包
     uint32 pkt_qq_chain_len_add_end;//记录数据包被释放时有多少包被送入硬件
     uint32 pktnum_to_send_start;//本包送入硬件时硬件待发送队列包量

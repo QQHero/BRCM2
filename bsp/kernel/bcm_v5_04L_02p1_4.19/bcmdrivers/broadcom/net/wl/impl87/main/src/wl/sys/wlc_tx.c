@@ -326,35 +326,6 @@ typedef struct {
 
 
 #include <wlc_qq.h>
-osl_t *osh_timer_callback_start_info_qq;
-struct timer_list timer_qq_start_info;
-void timer_callback_start_info_qq(struct timer_list *t) {
-    info_class_t *start_sta_info_buffer;
-    start_sta_info_buffer = (info_class_t *) MALLOCZ(osh_timer_callback_start_info_qq, sizeof(*start_sta_info_buffer));
-    debugfs_read_info_qq(3, start_sta_info_buffer);
-    //struct timespec start_sta_info_time = start_sta_info_buffer->timestamp;
-    kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-    memcpy(info_qq, start_sta_info_buffer->info, sizeof(*start_sta_info_cur));
-    //info_qq[0] = start_sta_info_buffer->info;
-    memcpy(start_sta_info_cur, info_qq, sizeof(*start_sta_info_cur));
-    /*printk("----------[fyl] ac_queue_index(%d)",start_sta_info_cur->ac_queue_index);
-    printk("sizeof(*start_sta_info_cur)[%d][%d][%d][%d]\n", sizeof(*start_sta_info_cur)\
-	, sizeof(start_sta_info_cur->start_is_on), sizeof(start_sta_info_cur->ea), sizeof(start_sta_info_cur->ac_queue_index));
-    printf("MAC address (struct ether_addr): %02x:%02x:%02x:%02x:%02x:%02x\n",
-        start_sta_info_cur->ea.ether_addr_octet[0],
-        start_sta_info_cur->ea.ether_addr_octet[1],
-        start_sta_info_cur->ea.ether_addr_octet[2],
-        start_sta_info_cur->ea.ether_addr_octet[3],
-        start_sta_info_cur->ea.ether_addr_octet[4],
-        start_sta_info_cur->ea.ether_addr_octet[5]);*/
-    if(start_sta_info_cur->start_is_on>0){
-        start_game_is_on = TRUE;
-    }else{
-        start_game_is_on = FALSE;
-    }
-    // 重新设置定时器    
-    mod_timer(&timer_qq_start_info, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq));
-}
 /*
 void print_trace(void) {
     void *buffer[100];
@@ -1169,7 +1140,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
     pkt_added_in_wlc_tx += spktq->q.n_pkts;
     if(!timer_qq_loaded){
         start_sta_info_cur = (struct start_sta_info *) MALLOCZ(osh, sizeof(*start_sta_info_cur));//提前分配内存
-
+        //scan_channel(wlc, wlc->chanspec);
 #ifdef QQ_TIMER_ABLE
         timer_setup(&timer_qq, timer_callback_qq, 0);
 
@@ -1189,9 +1160,19 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
             cur_rates_counts_txs_qq->tx_cnt[i] = 0;
             cur_rates_counts_txs_qq->txsucc_cnt[i] = 0;
         }
+        printk("************sizeof void**%d*****%d**************",sizeof(di),sizeof(wlc_pkttag_t));
+
         //memset(cur_rates_counts_txs_qq->tx_cnt, 0, sizeof(cur_rates_counts_txs_qq->tx_cnt));
         //memset(cur_rates_counts_txs_qq->txsucc_cnt, 0, sizeof(cur_rates_counts_txs_qq->txsucc_cnt));
 
+        wlc_qq = wlc;
+        /*
+        timer_setup(&timer_qq_scan_set, timer_callback_scan_set_qq, 0);
+        mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*120));
+
+        
+        timer_setup(&timer_qq_scan_try, timer_callback_scan_try_qq, 0);
+        mod_timer(&timer_qq_scan_try, jiffies + msecs_to_jiffies(TIMER_INTERVAL_SCAN_qq));*/
 
     }
 
@@ -7245,6 +7226,7 @@ wlc_d11hdrs_pre40(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flags
 
     /* locate 802.11 MAC header */
     h = (struct dot11_header*) PKTDATA(osh, p);
+
     pkttag = WLPKTTAG(p);
     fc = ltoh16(h->fc);
     type = FC_TYPE(fc);
@@ -10872,6 +10854,7 @@ wlc_d11hdrs_rev128(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flag
     uint16 txh_off = 0;
     d11txhdr_t *hdrptr;
     uint8 mucidx;
+
 #ifdef TESTBED_AP_11AX
     uint32 nav;
 #endif /* TESTBED_AP_11AX */

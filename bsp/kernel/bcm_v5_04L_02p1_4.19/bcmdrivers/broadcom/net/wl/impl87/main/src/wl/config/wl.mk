@@ -76,7 +76,9 @@ else
 #ifdef WLTEST
 	# mfgtest builds
 	ifeq ($(WLTEST),1)
+#dump_flag_qqdx   -DBCMDBG add -DBCMDBG delete
 		WLFLAGS += -DWLTEST -DWL_EXPORT_CURPOWER
+#dump_flag_qqdx   -DBCMDBG add
 	endif
 #endif
 endif

@@ -966,7 +966,13 @@ ifeq ($(call opt,buzzz_func),1)
 	BCM_BUZZZ := 1
 	BCM_BUZZZ_FUNC := 1
 endif
-
+#dump_flag_qqdx
+#opt_debug := 1
+#opt_debug = 1
+#debug := 1
+#debug = 1
+#BCMDBG := 1
+#dump_flag_qqdx
 # include stuff under BCMDBG conditional
 ifeq ($(call opt,debug),1)
 	BCMDBG := 1

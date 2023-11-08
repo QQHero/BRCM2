@@ -131,6 +131,7 @@ extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
 extern uint rssi_ring_buffer_index;
 extern DataPoint_qq rssi_ring_buffer_cur[RSSI_RING_SIZE];
+void process_beacon_packet(struct dot11_header *h);
 /**
  * XXX NIC Mode
  *
@@ -2385,6 +2386,66 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 
 		wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc->osh, p);
 
+		/* dump_flag_qqdx */
+		#if 0
+            if(start_game_is_on){
+		phy_rssi_compute_rssi(WLC_PI(wlc), wrxh);
+        if(wrxh->rssi<0){
+                //printk("----------[fyl] OSL_SYSUPTIME17(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
+                //struct ether_addr *ea_cur = &(h_qq->a2);
+                
+#if defined(DONGLEBUILD)
+		/* Get to dot11 header */
+		h = (struct dot11_header *)PKTPULL(wlc->osh, p, D11_RXPLCP_LEN_GE128);
+#else /* ! DONGLEBUILD */
+		/* Get to dot11 header */
+		h = (struct dot11_header *)PKTPULL(wlc->osh, p,
+			D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
+#endif /* ! DONGLEBUILD */
+				struct ether_addr *ea_cur = &(h->a2);
+
+    			uint16 fc_qq, fk_qq;
+				fc_qq = ltoh16(h->fc);
+				//ft = FC_TYPE(fc);
+				fk_qq = (fc_qq & FC_KIND_MASK);
+				//if((fk_qq == FC_BLOCKACK) || (FC_TYPE(fc_qq) == FC_BLOCKACK)){
+				//if((FC_TYPE(fc_qq) != FC_TYPE_DATA)){
+					printk("fc_qq(%u);fk_qq (%u);FC_TYPE(fc_qq)(%u);h->fc(%u);FC_SUBTYPE(fc)(%u);scb->rssi(%d),wrxh->rssi(%d)",fc_qq,fk_qq,FC_TYPE(fc_qq),h->fc,FC_SUBTYPE(fc_qq),scb->rssi,wrxh->rssi);
+					/*printk("MAC address (hdr): %02x:%02x:%02x:%02x:%02x:%02x----(%d)\n",
+								hdr->sa.octet[0],
+								hdr->sa.octet[1],
+								hdr->sa.octet[2],
+								hdr->sa.octet[3],
+								hdr->sa.octet[4],
+								hdr->sa.octet[5],wrxh->rssi);*/
+					if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
+						//printk("----------[fyl] cfp_OSL_SYSUPTIME111(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
+						if(phy_info_qq_rx_new.RSSI != wrxh->rssi){
+							phy_info_qq_rx_new.RSSI = wrxh->rssi;
+							//struct phy_info_qq *phy_info_qq_cur = NULL;
+							printk("fc_qq(%u);fk_qq (%u);FC_TYPE(fc_qq)(%u);h->fc(%u);FC_SUBTYPE(fc)(%u);scb->rssi(%d),wrxh->rssi(%d)",fc_qq,fk_qq,FC_TYPE(fc_qq),h->fc,FC_SUBTYPE(fc_qq),scb->rssi,wrxh->rssi);
+
+							//printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+							phy_info_qq_rx_new.noiselevel = wlc_lq_chanim_phy_noise(wlc);
+							save_rssi(wrxh->rssi,phy_info_qq_rx_new.noiselevel);						
+							memcpy(phy_info_qq_rx_new.rssi_ring_buffer, rssi_ring_buffer_cur, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
+							
+							kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+							struct phy_info_qq *phy_info_qq_cur = NULL;
+							phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+							phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+							phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+							memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+							debugfs_set_info_qq(2, info_qq, 1);
+							MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+						}
+					}
+				//}
+            }
+        }
+		#endif
+/* dump_flag_qqdx */
+
 		/* dot11header from the head MSDU and ucode/phyrxstatus from last MSDU */
 		pad = RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc);
 
@@ -2508,31 +2569,43 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
                 //struct ether_addr *ea_cur = &(h_qq->a2);
                 struct ether_addr *ea_cur = &(h->a2);
 
-                /*printk("MAC address (hdr): %02x:%02x:%02x:%02x:%02x:%02x----(%d)\n",
-                            hdr->sa.octet[0],
-                            hdr->sa.octet[1],
-                            hdr->sa.octet[2],
-                            hdr->sa.octet[3],
-                            hdr->sa.octet[4],
-                            hdr->sa.octet[5],wrxh->rssi);*/
-                if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
-                    //printk("----------[fyl] cfp_OSL_SYSUPTIME111(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
-                    if(phy_info_qq_rx_new.RSSI != wrxh->rssi){
-						phy_info_qq_rx_new.RSSI = wrxh->rssi;
-						//struct phy_info_qq *phy_info_qq_cur = NULL;
-						//phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-										
-						//phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
-						//printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
-						phy_info_qq_rx_new.noiselevel = wlc_lq_chanim_phy_noise(wlc);
-						save_rssi(wrxh->rssi,phy_info_qq_rx_new.noiselevel);						
-                    	memcpy(phy_info_qq_rx_new.rssi_ring_buffer, rssi_ring_buffer_cur, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
-						/*kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-						memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-						debugfs_set_info_qq(2, info_qq, 1);
-						MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));*/
+    			uint16 fc_qq, fk_qq;
+				fc_qq = ltoh16(h->fc);
+				//ft = FC_TYPE(fc);
+				fk_qq = (fc_qq & FC_KIND_MASK);
+				//if((fk_qq == FC_BLOCKACK) || (FC_TYPE(fc_qq) == FC_BLOCKACK)){
+				//if((FC_TYPE(fc_qq) != FC_TYPE_DATA)){
+					//printk("fc_qq(%u);fk_qq (%u);FC_TYPE(fc_qq)(%u);h->fc(%u);FC_SUBTYPE(fc)(%u);scb->rssi(%d),wrxh->rssi(%d)",fc_qq,fk_qq,FC_TYPE(fc_qq),h->fc,FC_SUBTYPE(fc_qq),scb->rssi,wrxh->rssi);
+					/*printk("MAC address (hdr): %02x:%02x:%02x:%02x:%02x:%02x----(%d)\n",
+								hdr->sa.octet[0],
+								hdr->sa.octet[1],
+								hdr->sa.octet[2],
+								hdr->sa.octet[3],
+								hdr->sa.octet[4],
+								hdr->sa.octet[5],wrxh->rssi);*/
+					if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
+						//printk("----------[fyl] cfp_OSL_SYSUPTIME111(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
+						if(phy_info_qq_rx_new.RSSI != wrxh->rssi){
+							phy_info_qq_rx_new.RSSI = wrxh->rssi;
+							//struct phy_info_qq *phy_info_qq_cur = NULL;
+							//printk("fc_qq(%u);fk_qq (%u);FC_TYPE(fc_qq)(%u);h->fc(%u);FC_SUBTYPE(fc)(%u);scb->rssi(%d),wrxh->rssi(%d)",fc_qq,fk_qq,FC_TYPE(fc_qq),h->fc,FC_SUBTYPE(fc_qq),scb->rssi,wrxh->rssi);
+
+							//printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+							phy_info_qq_rx_new.noiselevel = wlc_lq_chanim_phy_noise(wlc);
+							save_rssi(wrxh->rssi,phy_info_qq_rx_new.noiselevel);						
+							memcpy(phy_info_qq_rx_new.rssi_ring_buffer, rssi_ring_buffer_cur, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
+							
+							kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+							struct phy_info_qq *phy_info_qq_cur = NULL;
+							phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+							phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+							phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
+							memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+							debugfs_set_info_qq(2, info_qq, 1);
+							MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+						}
 					}
-                }
+				//}
             }
         }
 /* dump_flag_qqdx */

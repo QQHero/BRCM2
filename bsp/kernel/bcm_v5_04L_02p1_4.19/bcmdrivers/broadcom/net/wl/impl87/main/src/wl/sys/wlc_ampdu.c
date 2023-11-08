@@ -214,6 +214,7 @@ static INLINE void * __wlc_ampdu_pktq_penq_head(wlc_info_t *wlc, scb_ampdu_tx_t 
     /* dump_flag_qqdx */
 //#include <wlc_qq.h>
 #include <wlc_qq_struct.h>
+#define OPERAND_SHIFT			4
 extern void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t *ini, ampdu_tx_info_t *ampdu_tx, struct scb *scb, tx_status_t *txs, wlc_pkttag_t* pkttag, wlc_txh_info_t *txh_info,bool was_acked,osl_t *osh, void *p, bool use_last_pkt,uint cur_mpdu_index, ratesel_txs_t rs_txs, uint32 receive_time,uint32 *ccastats_qq_cur);
 static bool pspretend_qq_flag = FALSE;//用来判断是否出现了发送失败的情况，进而得出PPS 是否符合预期的结论
 
@@ -9810,10 +9811,14 @@ free_and_next:
 
         }
         //update_cur_rates_counts_txs_qq(wlc, txs_mutype, txs_mu, fix_rate, txs, ncons, nlost);
-        //printk("RxAckRSSI: 0x%04x ", (txs->ackphyrxsh & PRXS1_JSSI_MASK) >> PRXS1_JSSI_SHIFT);
+        
         //printk("update_cur_rates_counts_txs_qq16");
     /* dump_flag_qqdx */
         if(start_game_is_on){
+            /*printk("RxAckRSSI: 0x%04x;%d;%d;0x%04x ", (txs->ackphyrxsh & PRXS1_JSSI_MASK) >> PRXS1_JSSI_SHIFT,
+            (txs->ackphyrxsh & PRXS1_JSSI_MASK) >> PRXS1_JSSI_SHIFT,(txs->ackphyrxsh & PRXS1_JSSI_MASK),txs->ackphyrxsh);
+            printk("RxAckSQ: 0x%04x;%d;%d", (txs->ackphyrxsh & PRXS1_SQ_MASK) >> PRXS1_SQ_SHIFT,
+            (txs->ackphyrxsh & PRXS1_SQ_MASK) >> PRXS1_SQ_SHIFT,(txs->ackphyrxsh & PRXS1_SQ_MASK));*/
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
                 //ack_update_qq(txh_info->TxFrameID,was_acked,wlc->osh);
                 ack_update_qq(wlc, ini,ampdu_tx, scb, txs, pkttag, txh_info,was_acked\
@@ -9823,7 +9828,27 @@ free_and_next:
                 #ifdef PROP_TXSTATUS
                             printk("----------[fyl] PROP_TXSTATUS----------");
                 #endif
-                //ack_update_qq(pkttag->seq,was_acked,wlc->osh);
+                /*
+                if(OSL_SYSUPTIME()%10000>9900){
+                    int16 rssi1 = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(txs));
+                    int16 rssi2 = ((rssi1) & PHYRSSI_SIGN_MASK) ? (rssi1 - PHYRSSI_2SCOMPLEMENT) : rssi1;
+                    int16 rssi3 = rssi2;
+                    if (rssi2 < 0) {
+                        rssi3 = -rssi2;
+                    }
+                    int16 rssi4 = rssi3 >> 2;
+                    int16 rssi5 = (rssi3 & 0x3) * 25;
+                    
+                    int16 phyrssi1 = (rssi1 - ((rssi1 >= PHYRSSI_SIGN_MASK) << PHYRSSI_2SCOMPLEMENT_SHIFT)) << OPERAND_SHIFT;
+                    
+                    int16 trssi = D11TRIGUI_TRSSI(TGTXS_USRINFOP3(TX_STATUS_MACTXS_ACK_MAP2(txs)));
+                    printk("rssi1(%d);rssi2(%d);rssi3(%d);rssi4(%d);rssi5(%d);phyrssi1(%d);trssi(%d)"
+                        , rssi1,rssi2,rssi3,rssi4,rssi5,phyrssi1,trssi);
+                    wlc_print_txstatus(wlc, txs);
+                }*/
+
+
+
             }
         }
         first_pkt_flag_qqdx = FALSE;

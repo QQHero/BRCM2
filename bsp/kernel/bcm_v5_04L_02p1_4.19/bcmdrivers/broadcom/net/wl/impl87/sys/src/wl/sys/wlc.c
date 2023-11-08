@@ -25817,6 +25817,11 @@ wlc_weakest_link_rssi_chan_stats_upd(wlc_info_t *wlc)
 				if (SCB_ASSOCIATED(scb) ||
 					(!bsscfg->BSS && !ETHER_ISBCAST(&scb->ea))) {
 					scb->rssi = rssi = wlc_lq_rssi_get(wlc, bsscfg, scb);
+
+/* dump_flag_qqdx */
+					print("watchdog scb->rssi(%d)",wrxh->rssi);
+
+/* dump_flag_qqdx */
 				if (rssiArray[j] > rssi) {
 					rssiArray[j] = rssi;
 				}

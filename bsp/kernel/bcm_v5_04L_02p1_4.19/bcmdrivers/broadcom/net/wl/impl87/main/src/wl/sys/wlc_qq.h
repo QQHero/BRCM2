@@ -442,6 +442,36 @@ bool start_game_is_on = FALSE;
 /*定时器初始化相关*/
 bool timer_qq_loaded = FALSE;
 
+osl_t *osh_timer_callback_start_info_qq;
+struct timer_list timer_qq_start_info;
+void timer_callback_start_info_qq(struct timer_list *t) {
+    info_class_t *start_sta_info_buffer;
+    start_sta_info_buffer = (info_class_t *) MALLOCZ(osh_timer_callback_start_info_qq, sizeof(*start_sta_info_buffer));
+    debugfs_read_info_qq(3, start_sta_info_buffer);
+    //struct timespec start_sta_info_time = start_sta_info_buffer->timestamp;
+    kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+    memcpy(info_qq, start_sta_info_buffer->info, sizeof(*start_sta_info_cur));
+    //info_qq[0] = start_sta_info_buffer->info;
+    memcpy(start_sta_info_cur, info_qq, sizeof(*start_sta_info_cur));
+    /*printk("----------[fyl] ac_queue_index(%d)",start_sta_info_cur->ac_queue_index);
+    printk("sizeof(*start_sta_info_cur)[%d][%d][%d][%d]\n", sizeof(*start_sta_info_cur)\
+	, sizeof(start_sta_info_cur->start_is_on), sizeof(start_sta_info_cur->ea), sizeof(start_sta_info_cur->ac_queue_index));
+    printf("MAC address (struct ether_addr): %02x:%02x:%02x:%02x:%02x:%02x\n",
+        start_sta_info_cur->ea.ether_addr_octet[0],
+        start_sta_info_cur->ea.ether_addr_octet[1],
+        start_sta_info_cur->ea.ether_addr_octet[2],
+        start_sta_info_cur->ea.ether_addr_octet[3],
+        start_sta_info_cur->ea.ether_addr_octet[4],
+        start_sta_info_cur->ea.ether_addr_octet[5]);*/
+    if(start_sta_info_cur->start_is_on>0){
+        start_game_is_on = TRUE;
+    }else{
+        start_game_is_on = FALSE;
+    }
+    // 重新设置定时器    
+    mod_timer(&timer_qq_start_info, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq));
+    
+}
 
 
 #include <wlc_lq.h>
@@ -595,6 +625,108 @@ uint wf_rspec_to_mcs_qq(ratespec_t rspec)
 }
 
 
+/*用于根据beacon包来统计周围的AP数量。*/
+#define MAX_NUM_ROUTERS 100
+#define ONE_HOUR_SECONDS 103 //beacon帧发送周期
+#define MAX_NUM_ROUTERS_RING_BUFFER 100
+
+typedef struct {
+    uint8 bssid[6]; // 路由器的 MAC 地址
+    uint32 last_seen; // 最后一次检测到的时间
+} router_info_t;
+
+router_info_t routers[MAX_NUM_ROUTERS];
+int num_routers = 0;
+uint8 num_routers_ring_buffer[MAX_NUM_ROUTERS_RING_BUFFER];
+uint8 num_routers_ring_buffer_index = 0;
+
+bool is_new_router(const uint8_t *bssid) {
+    for (int i = 0; i < num_routers; i++) {
+        if (memcmp(routers[i].bssid, bssid, 6) == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void update_router_list(const uint8_t *bssid) {
+
+    uint32 cur_time = OSL_SYSUPTIME();
+    // 遍历路由器列表，检查是否有超过一小时未检测到的路由器
+    for (int i = 0; i < num_routers; i++) {
+        if (cur_time - routers[i].last_seen >= ONE_HOUR_SECONDS) {
+            // 将最后一个路由器移到当前位置，然后递减 num_routers
+            num_routers--;
+            routers[i] = routers[num_routers];
+            i--; // 重新检查当前位置
+        }
+    }
+
+    if (is_new_router(bssid)) {
+        if (num_routers < MAX_NUM_ROUTERS) {
+            memcpy(routers[num_routers].bssid, bssid, 6);
+            routers[num_routers].last_seen = cur_time;
+            num_routers++;
+            num_routers_ring_buffer[num_routers_ring_buffer_index] = num_routers;
+            num_routers_ring_buffer_index = (num_routers_ring_buffer_index + 1) % MAX_NUM_ROUTERS_RING_BUFFER;
+            //printf("New router detected. Total number of routers in the last hour: %d\n", num_routers);
+        } else {
+            //printf("Router list is full. Cannot add new router.\n");
+        }
+    } else {
+        // 更新已知路由器的 last_seen 时间戳
+        for (int i = 0; i < num_routers; i++) {
+            if (memcmp(routers[i].bssid, bssid, 6) == 0) {
+                routers[i].last_seen = cur_time;
+                break;
+            }
+        }
+    }
+}
+
+void process_beacon_packet(struct dot11_header *h) {
+    // 假设 h 已经指向有效的 802.11 头部结构
+    // 提取 BSSID（在头部的地址 1 字段）
+    const uint8_t *bssid = (const uint8_t *)&h->a2; // 根据 802.11 头部结构调整偏移量
+    if (is_new_router(bssid)) {
+        /*
+        printk("MAC address (a1): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                    h->a1.octet[0],
+                    h->a1.octet[1],
+                    h->a1.octet[2],
+                    h->a1.octet[3],
+                    h->a1.octet[4],
+                    h->a1.octet[5]);
+        printk("MAC address (a2): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                    h->a2.octet[0],
+                    h->a2.octet[1],
+                    h->a2.octet[2],
+                    h->a2.octet[3],
+                    h->a2.octet[4],
+                    h->a2.octet[5]);
+        printk("MAC address (a3): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                    h->a3.octet[0],
+                    h->a3.octet[1],
+                    h->a3.octet[2],
+                    h->a3.octet[3],
+                    h->a3.octet[4],
+                    h->a3.octet[5]);
+        printk("MAC address (a4): %02x:%02x:%02x:%02x:%02x:%02x\n",
+                    h->a4.octet[0],
+                    h->a4.octet[1],
+                    h->a4.octet[2],
+                    h->a4.octet[3],
+                    h->a4.octet[4],
+                    h->a4.octet[5]);
+                    */
+    }
+    // 更新路由器列表
+    update_router_list(bssid);
+}
+
+
+
+
 struct rates_counts_txs_qq *cur_rates_counts_txs_qq;
 /*
 void update_cur_rates_counts_txs_qq(ratesel_txs_t rs_txs){
@@ -711,6 +843,637 @@ void save_rssi(int8 RSSI,int8 noiselevel) {
 }
 
 
+//160MHz方案
+#define RECENT_BEACON_NUM 10
+#define MAX_AP_LIST_SIZE 100
+#define MAX_CHANNELS 13
+#define EXPIRATION_TIME 5000 // 5秒
+int china_5GHz_channels[] = {36, 40, 44, 48, 52, 56, 60, 64, 149, 153, 157, 161, 165};
+const uint8 wf_chspec_bw_num[] =
+{
+	1,
+	2,
+	20,
+	40,
+	80,
+	160,
+	7,
+	8
+};
+typedef struct {
+struct ether_addr BSSID;
+char SSID_str[33];
+int occupied_channels[MAX_CHANNELS];
+uint8 num_channels;
+int recent_RSSI[RECENT_BEACON_NUM];
+chanspec_t recent_chanspec[RECENT_BEACON_NUM];
+uint8 recent_qbss_load_chan_free[RECENT_BEACON_NUM];
+int16 avg_RSSI;
+int16 avg_chanspec;
+int16 avg_qbss_load_chan_free;
+uint32 last_update_timestamp;
+uint32 first_update_timestamp; // 添加第一次更新的时间戳
+} APinfo_qq;
+
+APinfo_qq global_AP_list[MAX_AP_LIST_SIZE];
+int global_AP_list_size = 0;
+
+// 0. 编写函数，实现输入一个wlc_bss_info_t结构体，以数组形式输出该结构体对应的WiFi路由器所占据的WiFi信道有哪些
+//我的做法是让occupied_channels与china_5GHz_channels对应起来，如果为0就无该信道编号，否则有
+void get_occupied_channels(int center_channel, int bandwidth, int *occupied_channels, uint8 *num_channels) {
+    uint8 start_channel, start_channel_index, end_channel;
+    //occupied_channels = {0};
+    // 计算信道起始编号和结束编号
+    start_channel = center_channel - (bandwidth / 20);
+
+    start_channel_index = 0;
+    for(uint8 i = 0;i<MAX_CHANNELS;i++){
+        if(china_5GHz_channels[i] == start_channel){
+            start_channel_index = i;
+            occupied_channels[i] = china_5GHz_channels[i];
+        }
+        occupied_channels[i] = 0;
+    }
+
+    end_channel = center_channel + (bandwidth / 20);
+
+    // 生成包含从起始信道编号到结束信道编号的所有信道的数组
+    *num_channels = bandwidth / 20;
+    for (int i = start_channel_index; i < start_channel_index+*num_channels; i++) {
+        occupied_channels[i] = china_5GHz_channels[i];
+    }
+}
+
+
+// 1. 为每个WiFi路由器建立新的结构体APinfo_qq
+void create_APinfo_qq_from_wlc_bss_info(wlc_bss_info_t *bss_info, APinfo_qq *ap_info) {
+    memcpy(&ap_info->BSSID, &bss_info->BSSID, sizeof(struct ether_addr));
+    memcpy(ap_info->SSID_str, bss_info->SSID, bss_info->SSID_len);
+    ap_info->SSID_str[bss_info->SSID_len] = '\0';
+
+    get_occupied_channels(bss_info->chanspec & WL_CHANSPEC_CHAN_MASK,
+            wf_chspec_bw_num[CHSPEC_BW(bss_info->chanspec)>> WL_CHANSPEC_BW_SHIFT],
+            ap_info->occupied_channels,&(ap_info->num_channels));
+
+    // 初始化recent_RSSI、recent_chanspec和recent_qbss_load_chan_free数组
+    for (int i = 0; i < RECENT_BEACON_NUM; i++) {
+        ap_info->recent_RSSI[i] = bss_info->RSSI;
+        ap_info->recent_chanspec[i] = bss_info->chanspec;
+        ap_info->recent_qbss_load_chan_free[i] = bss_info->qbss_load_chan_free;
+    }
+
+    // 初始化avg_RSSI、avg_chanspec和avg_qbss_load_chan_free
+    ap_info->avg_RSSI = bss_info->RSSI;
+    ap_info->avg_chanspec = bss_info->chanspec;
+    ap_info->avg_qbss_load_chan_free = bss_info->qbss_load_chan_free;
+
+    // 初始化last_update_timestamp和first_update_timestamp
+    ap_info->last_update_timestamp = OSL_SYSUPTIME();
+    ap_info->first_update_timestamp = OSL_SYSUPTIME();
+}
+
+// 2. 将所有APinfo_qq安置在一个全局列表中
+void add_APinfo_qq_to_global_list(APinfo_qq *ap_info) {
+    if (global_AP_list_size < MAX_AP_LIST_SIZE) {
+        memcpy(&global_AP_list[global_AP_list_size], ap_info, sizeof(APinfo_qq));
+        global_AP_list_size++;
+    } else {
+        printf("Error: Global AP list is full.\n");
+    }
+}
+
+// 3. 编写函数，每次收到一个wlc_bss_info结构体，根据其BSSID取值判断是否在全局列表中，如果在全局列表中便对全局列表进行更新，如果收到了全局列表中没有的新的wlc_bss_info结构体，但全局列表大小不足以将其添加进去，就删掉最久未更新的路由器信息，再将新的添加进去。
+void update_global_AP_list(wlc_bss_info_t *bss_info) {
+    // 检查全局列表中是否已有相同BSSID的AP
+    int index = -1;
+    for (int i = 0; i < global_AP_list_size; i++) {
+        /*printk("global_AP_list MAC address (%02x:%02x:%02x:%02x:%02x:%02x)----\n",
+                            global_AP_list[i].BSSID.octet[0],
+                            global_AP_list[i].BSSID.octet[1],
+                            global_AP_list[i].BSSID.octet[2],
+                            global_AP_list[i].BSSID.octet[3],
+                            global_AP_list[i].BSSID.octet[4],
+                            global_AP_list[i].BSSID.octet[5]);
+        printk("bss_info MAC address (%02x:%02x:%02x:%02x:%02x:%02x)----\n",
+                            bss_info->BSSID.octet[0],
+                            bss_info->BSSID.octet[1],
+                            bss_info->BSSID.octet[2],
+                            bss_info->BSSID.octet[3],
+                            bss_info->BSSID.octet[4],
+                            bss_info->BSSID.octet[5]);*/
+        if (memcmp(&global_AP_list[i].BSSID, &bss_info->BSSID, sizeof(struct ether_addr)) == 0) {
+            index = i;
+            break;
+        }
+    }
+
+    // 如果找到了相同BSSID的AP，则更新其信息；否则，将新的AP添加到全局列表中
+    if (index != -1) {
+        // 更新AP信息
+        APinfo_qq *ap_info = &global_AP_list[index];
+
+        // 更新recent_RSSI、recent_chanspec和recent_qbss_load_chan_free数组
+        for (int i = RECENT_BEACON_NUM - 1; i > 0; i--) {
+            ap_info->recent_RSSI[i] = ap_info->recent_RSSI[i - 1];
+            ap_info->recent_chanspec[i] = ap_info->recent_chanspec[i - 1];
+            ap_info->recent_qbss_load_chan_free[i] = ap_info->recent_qbss_load_chan_free[i - 1];
+        }
+        ap_info->recent_RSSI[0] = bss_info->RSSI;
+        ap_info->recent_chanspec[0] = bss_info->chanspec;
+        ap_info->recent_qbss_load_chan_free[0] = bss_info->qbss_load_chan_free;
+
+        // 更新avg_RSSI、avg_chanspec和avg_qbss_load_chan_free
+        int16 sum_RSSI = 0;
+        int16 sum_chanspec = 0;
+        int16 sum_qbss_load_chan_free = 0;
+        for (int i = 0; i < RECENT_BEACON_NUM; i++) {
+            sum_RSSI += ap_info->recent_RSSI[i];
+            sum_chanspec += ap_info->recent_chanspec[i];
+            sum_qbss_load_chan_free += ap_info->recent_qbss_load_chan_free[i];
+        }
+        ap_info->avg_RSSI = sum_RSSI / RECENT_BEACON_NUM;
+        ap_info->avg_chanspec = sum_chanspec / RECENT_BEACON_NUM;
+        ap_info->avg_qbss_load_chan_free = sum_qbss_load_chan_free / RECENT_BEACON_NUM;
+        /*printf("ap_info->avg(%d:%d:%d:%d)\n",
+                ap_info->avg_RSSI,bss_info->chanspec & WL_CHANSPEC_CHAN_MASK,
+                wf_chspec_bw_num[CHSPEC_BW(bss_info->chanspec)>> WL_CHANSPEC_BW_SHIFT],ap_info->avg_qbss_load_chan_free);
+        */
+        // 更新last_update_timestamp
+        ap_info->last_update_timestamp = OSL_SYSUPTIME();
+    } else {
+        // 如果全局列表已满，找到最久未更新的AP并将其删除
+        if (global_AP_list_size >= MAX_AP_LIST_SIZE) {
+            int oldest_index = 0;
+            uint32 oldest_timestamp = global_AP_list[0].last_update_timestamp;
+            for (int i = 1; i < global_AP_list_size; i++) {
+                if (global_AP_list[i].last_update_timestamp < oldest_timestamp) {
+                    oldest_index = i;
+                    oldest_timestamp = global_AP_list[i].last_update_timestamp;
+                }
+            }
+            // 删除最久未更新的AP
+            memmove(&global_AP_list[oldest_index], &global_AP_list[oldest_index + 1],
+            (global_AP_list_size - oldest_index - 1) * sizeof(APinfo_qq));
+            global_AP_list_size--;
+        }
+
+        // 添加新的AP到全局列表中
+        APinfo_qq new_ap_info;
+        create_APinfo_qq_from_wlc_bss_info(bss_info, &new_ap_info);
+        add_APinfo_qq_to_global_list(&new_ap_info);
+    }
+}
+
+// 4. 删除最近5秒内未收到新的wlc_bss_info_t结构体的WiFi路由器在全局列表中对应的APinfo_qq结构体
+void remove_expired_APinfo_qq(void) {
+    uint32 current_timestamp = OSL_SYSUPTIME();
+    for (int i = 0; i < global_AP_list_size; ) {
+        if (current_timestamp - global_AP_list[i].last_update_timestamp > EXPIRATION_TIME) {
+            // 删除过期的AP
+            memmove(&global_AP_list[i], &global_AP_list[i + 1],
+            (global_AP_list_size - i - 1) * sizeof(APinfo_qq));
+            global_AP_list_size--;
+        } else {
+            i++;
+        }
+    }
+}
+
+void find_best_channels(int *best_40MHz_channels, int *best_80MHz_channels) {
+    int16 max_avg_qbss_load_chan_free[MAX_CHANNELS] = {-120};
+
+    int8 max_avg_RSSI[MAX_CHANNELS] = {-120};
+    int num_channels = MAX_CHANNELS;
+
+    // 步骤一: 记录每个信道的最大平均RSSI的AP的qbss_load_chan_free值
+    for (int i = 0; i < global_AP_list_size; i++) {
+        APinfo_qq *ap_info = &global_AP_list[i];
+        if(ap_info->avg_RSSI>=0){
+            continue;
+        }
+        for (int j = 0; j < num_channels; j++) {
+            //if ((ap_info->occupied_channels[j] != 0) && ap_info->avg_qbss_load_chan_free > max_avg_qbss_load_chan_free[j]) {
+                
+            if ((ap_info->occupied_channels[j] != 0) && ap_info->avg_RSSI > max_avg_RSSI[j]) {
+                max_avg_qbss_load_chan_free[j] = ap_info->avg_qbss_load_chan_free;
+                max_avg_RSSI[j] = ap_info->avg_RSSI;
+
+            printf("RSSI0(%d:%d:%d)\n",
+                china_5GHz_channels[j],ap_info->avg_RSSI, max_avg_qbss_load_chan_free[j]);
+            }
+            printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
+                china_5GHz_channels[j],ap_info->occupied_channels[j] ,ap_info->avg_RSSI, max_avg_RSSI[j], max_avg_qbss_load_chan_free[j],ap_info->avg_qbss_load_chan_free);
+    
+        }
+    }
+
+    // 步骤二: 找到40 MHz大信道的最佳组合
+    int8 best_40MHz_score = -120;
+    for (int i = 0; i < num_channels - 1; i++) {
+        if((china_5GHz_channels[i]%8 == 4)||(china_5GHz_channels[i]%8 == 5)){
+            int8 score = (max_avg_qbss_load_chan_free[i] + max_avg_qbss_load_chan_free[i + 1]) / 2;
+            if (score > best_40MHz_score) {
+                best_40MHz_score = score;
+                best_40MHz_channels[0] = china_5GHz_channels[i];
+                best_40MHz_channels[1] = china_5GHz_channels[i + 1];
+            }
+            printf("40 MHz channels: channel num(%d:%d); free(%d, %d)\n",
+                china_5GHz_channels[i], china_5GHz_channels[i+1], max_avg_qbss_load_chan_free[i], max_avg_qbss_load_chan_free[i+1]);
+    
+
+        }
+        }
+
+    // 步骤三: 找到80 MHz大信道的最佳组合
+    int8 best_80MHz_score = -120;
+    for (int i = 0; i < num_channels - 3; i++) {
+        if((china_5GHz_channels[i]%16 == 4)||(china_5GHz_channels[i]%16 == 5)){
+            int8 score = (max_avg_qbss_load_chan_free[i] + max_avg_qbss_load_chan_free[i + 1] +
+            max_avg_qbss_load_chan_free[i + 2] + max_avg_qbss_load_chan_free[i + 3]) / 4;
+            if (score > best_80MHz_score) {
+                best_80MHz_score = score;
+                best_80MHz_channels[0] = china_5GHz_channels[i];
+                best_80MHz_channels[1] = china_5GHz_channels[i + 1];
+                best_80MHz_channels[2] = china_5GHz_channels[i + 2];
+                best_80MHz_channels[3] = china_5GHz_channels[i + 3];
+            }
+        }
+    }
+}
+
+
+wlc_info_t *wlc_qq;
+struct timer_list timer_qq_scan_set;
+void timer_callback_scan_set_qq(struct timer_list *t) {
+    if(start_game_is_on){
+        int best_40MHz_channels[2];
+        int best_80MHz_channels[4];
+
+        find_best_channels(best_40MHz_channels, best_80MHz_channels);
+
+        printf("Best 40 MHz channels: %d, %d\n", best_40MHz_channels[0], best_40MHz_channels[1]);
+        printf("Best 80 MHz channels: %d, %d, %d, %d\n", best_80MHz_channels[0], best_80MHz_channels[1], best_80MHz_channels[2], best_80MHz_channels[3]);
+        chanspec_t chanspec_cur = (best_40MHz_channels[0] << WL_CHANSPEC_CHAN_SHIFT) |
+                (WL_CHANSPEC_BAND_5G) |
+                (WL_CHANSPEC_BW_40) |
+                (WL_CHANSPEC_CTL_SB_NONE) |
+                (WL_CHANSPEC_BW_40);
+
+        printk("start switch(wlc->chanspec num(%u))----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
+        wlc_set_chanspec(wlc_qq, chanspec_cur, 0);
+        printk("end switch(wlc->chanspec num(%u))----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
+
+
+    }
+        // 重新设置定时器    
+        mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*120));
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+//scan_test
+#define MAX_APNUM_EACH_CHANNEL 20//超过了的话就不再添加新的
+#define MAX_CHANNEL_NUM 30//最大channel数量
+struct AP_info_each_channel_qq {
+    chanspec_t chanspec;
+    uint APnum;
+    wlc_bss_info_t wlc_bss_info[MAX_APNUM_EACH_CHANNEL];
+};
+struct AP_info_each_channel_qq AP_info_each_channel_qq_list[MAX_CHANNEL_NUM];//用来测试的或者中转数据的临时结构体
+static uint8 AP_info_each_channel_qq_list_len = 0;
+static uint8 active_time = 50;
+static uint8 scan_time = 0;
+//static uint8 home_time = 60;
+struct AP_info_each_channel_qq cur_AP_info_each_channel_qq;//用来测试的或者中转数据的临时结构体
+uint32 last_scan_time = 0;//用于避免短时间内很多次的scan
+uint16 min_scan_interval = 6000;//用于避免短时间内很多次的scan
+void update_AP_info_each_channel_qq(void){
+    
+    bool channel_has_scaned = FALSE;
+    if( AP_info_each_channel_qq_list_len>0){
+
+        for(uint8 j = 0; j <  AP_info_each_channel_qq_list_len; j++){
+            if(AP_info_each_channel_qq_list[j].chanspec == cur_AP_info_each_channel_qq.chanspec){
+                uint8 global_APnum = AP_info_each_channel_qq_list[j].APnum;
+                if(global_APnum>0){
+                    for(uint8 cur_index = 0; cur_index < cur_AP_info_each_channel_qq.APnum; cur_index++){
+                        bool AP_has_scaned = FALSE;
+                        for(uint8 global_index = 0; global_index < global_APnum; global_index++){
+                            //memcmp(cur_AP_info_each_channel_qq.wlc_bss_info[cur_index].BSSID, AP_info_each_channel_qq_list[j].wlc_bss_info[global_index].BSSID,6)
+                            if(memcmp(&(cur_AP_info_each_channel_qq.wlc_bss_info[cur_index].BSSID), &(AP_info_each_channel_qq_list[j].wlc_bss_info[global_index].BSSID),6)==0){
+                                memcpy(&AP_info_each_channel_qq_list[j].wlc_bss_info[global_index], &cur_AP_info_each_channel_qq.wlc_bss_info[cur_index], sizeof(wlc_bss_info_t));
+                                AP_has_scaned = TRUE;
+                                break;
+                            }
+                        }
+                        if(!AP_has_scaned){
+                            if(AP_info_each_channel_qq_list[j].APnum<MAX_CHANNEL_NUM - 1){
+                                memcpy(&AP_info_each_channel_qq_list[j].wlc_bss_info[AP_info_each_channel_qq_list[j].APnum], &cur_AP_info_each_channel_qq.wlc_bss_info[cur_index], sizeof(wlc_bss_info_t));
+                                AP_info_each_channel_qq_list[j].APnum++;
+
+                            }
+                        }
+                    }
+                }
+                else{
+                    memcpy(&AP_info_each_channel_qq_list[j], &cur_AP_info_each_channel_qq, sizeof(struct AP_info_each_channel_qq));
+
+                }
+                
+                
+                channel_has_scaned = TRUE;
+                break;
+            }
+
+        }
+
+    }
+    if(!channel_has_scaned){
+        if(AP_info_each_channel_qq_list_len<MAX_CHANNEL_NUM - 1){
+
+            memcpy(&AP_info_each_channel_qq_list[AP_info_each_channel_qq_list_len], &cur_AP_info_each_channel_qq, sizeof(struct AP_info_each_channel_qq));
+            AP_info_each_channel_qq_list_len++;
+        }
+    }
+}
+
+struct AP_info_each_channel_qq AP_info_each_channel_qq_1;
+uint8 avg_txop_each_channel(void){
+    uint8 valid_txop_num = 0;
+    uint16 valid_txop_sum = 0;
+    for(uint8 cur_index = 0; cur_index < AP_info_each_channel_qq_1.APnum; cur_index++){
+        if(AP_info_each_channel_qq_1.wlc_bss_info[cur_index].qbss_load_chan_free>0){
+            valid_txop_num++;
+            valid_txop_sum += AP_info_each_channel_qq_1.wlc_bss_info[cur_index].qbss_load_chan_free;
+        }
+    }
+    return(valid_txop_sum/valid_txop_num);
+}
+
+chanspec_t get_best_chanspec(void){
+    chanspec_t best_chanspec;
+    uint8 txop_of_best_chanspec;
+    if(AP_info_each_channel_qq_list_len<255){
+        best_chanspec = AP_info_each_channel_qq_list[0].chanspec;
+        txop_of_best_chanspec = AP_info_each_channel_qq_list[0].wlc_bss_info[0].qbss_load_chan_free;
+    }
+    else{
+        return 0;
+    }
+    
+    if(AP_info_each_channel_qq_list_len>=2){
+        for(uint8 j = 0; j <  AP_info_each_channel_qq_list_len; j++){
+            memcpy(&AP_info_each_channel_qq_1, &AP_info_each_channel_qq_list[j], sizeof(struct AP_info_each_channel_qq));
+
+            //AP_info_each_channel_qq_1 = AP_info_each_channel_qq_list[j];
+            uint8 avg_txop = avg_txop_each_channel();
+            if(avg_txop>txop_of_best_chanspec){
+                txop_of_best_chanspec = avg_txop;
+                best_chanspec = AP_info_each_channel_qq_list[j].chanspec;
+            }
+        }
+    }
+    return best_chanspec;
+
+}
+
+
+// 扫描结果回调函数
+//static void scan_result_callback_qq(void *ctx, int status, wlc_bsscfg_t *bsscfg) {
+void scan_result_callback_qq(void *ctx, int status, wlc_bsscfg_t *bsscfg) {
+// 在这里处理扫描结果，例如更新 g_scan_result 结构体
+    wlc_info_t *wlc = (wlc_info_t*)ctx;
+    wlc_bss_list_t cur_scan_results;
+    memcpy(&cur_scan_results, wlc->scan_results, sizeof(wlc_bss_list_t));
+
+    printk("start scan call back,status(%d)----------[fyl] OSL_SYSUPTIME()----------(%u)",status,OSL_SYSUPTIME());
+    //wlc_bss_list_t cur_scan_results = wlc->scan_results;
+    if(cur_scan_results.count>0){
+        if(cur_scan_results.count<MAX_APNUM_EACH_CHANNEL){
+            cur_AP_info_each_channel_qq.APnum = cur_scan_results.count;
+        }else{
+            cur_AP_info_each_channel_qq.APnum = MAX_APNUM_EACH_CHANNEL;
+        }
+        cur_AP_info_each_channel_qq.chanspec = cur_scan_results.ptrs[0]->chanspec;
+        for(uint8 i = 0; (i < cur_scan_results.count)&&(i<MAX_APNUM_EACH_CHANNEL); i++){
+            memcpy(&cur_AP_info_each_channel_qq.wlc_bss_info[i], cur_scan_results.ptrs[i], sizeof(wlc_bss_info_t));
+            //cur_AP_info_each_channel_qq.wlc_bss_info[i] = *cur_scan_results.ptrs[i];
+            struct ether_addr curAPea;
+            memcpy(&curAPea, &(cur_AP_info_each_channel_qq.wlc_bss_info[i].BSSID), sizeof(struct ether_addr));
+            //struct ether_addr curAPea = cur_AP_info_each_channel_qq.wlc_bss_info[i]->BSSID;
+            printk("status(%u);scan_time(%u);active_time(%u);qbss_load_aac(%u);qbss_load_chan_free(%u);\
+                    scan_channel(0x%04x:%u);chanspec(0x%04x:%u);MAC address (curAPea): %02x:%02x:%02x:%02x:%02x:%02x----\n"
+                    ,status,scan_time,active_time,cur_AP_info_each_channel_qq.wlc_bss_info[i].qbss_load_aac,cur_AP_info_each_channel_qq.wlc_bss_info[i].qbss_load_chan_free,
+                    cur_AP_info_each_channel_qq.chanspec,cur_AP_info_each_channel_qq.chanspec & WL_CHANSPEC_CHAN_MASK,
+                    cur_AP_info_each_channel_qq.wlc_bss_info[i].chanspec,cur_AP_info_each_channel_qq.wlc_bss_info[i].chanspec & WL_CHANSPEC_CHAN_MASK,
+                    curAPea.octet[0],
+                    curAPea.octet[1],
+                    curAPea.octet[2],
+                    curAPea.octet[3],
+                    curAPea.octet[4],
+                    curAPea.octet[5]);
+        }
+        update_AP_info_each_channel_qq();
+    }
+    
+
+#if 0
+    cur_AP_info_each_channel_qq.wlc_bss_info[0] = *bsscfg->target_bss;
+    cur_AP_info_each_channel_qq.wlc_bss_info[1] = *bsscfg->current_bss;
+    struct ether_addr targetea = bsscfg->target_bss->BSSID;
+    struct ether_addr currentea = bsscfg->current_bss->BSSID;
+    printk("status(%u);scan_time(%u);MAC address (currentea): %02x:%02x:%02x:%02x:%02x:%02x----\n",status,scan_time,
+                currentea.octet[0],
+                currentea.octet[1],
+                currentea.octet[2],
+                currentea.octet[3],
+                currentea.octet[4],
+                currentea.octet[5]);
+    printk("MAC address (targetea): %02x:%02x:%02x:%02x:%02x:%02x----\n",
+                targetea.octet[0],
+                targetea.octet[1],
+                targetea.octet[2],
+                targetea.octet[3],
+                targetea.octet[4],
+                targetea.octet[5]);
+
+
+
+
+
+    wlc_bss_info_t    *target_bss;    /**< BSS parms during tran. to ASSOCIATED state */
+    wlc_bss_info_t    *current_bss;    /**< BSS parms in ASSOCIATED state */
+
+    wlc_oce_info_t *oce = wlc->oce;
+    wlc_bsscfg_t *cfg;
+    uint8 idx;
+
+    ASSERT(oce);
+    ASSERT(bsscfg);
+    /* XXX: just one scanresults are sufficient to prepare neighbor info
+    * for all other BSSes.
+    */
+    FOREACH_UP_AP(wlc, idx, cfg) {
+        wlc_oce_update_rnr_nbr_ap_info(oce, cfg);
+        wlc_oce_update_ap_chrep(oce, cfg);
+        /* OCE Standard: 3.4 Reduced neighbor report and ap channel report
+        * Note: If an OCE AP is operating multiple BSS on the same channel
+        * (multiple VAPs), it is not required to transmit a Reduced
+        * Neighbor Report element on all the BSSs
+        */
+        break;
+    }
+
+    wlc_suspend_mac_and_wait(wlc);
+    wlc_bss_update_beacon(wlc, bsscfg, FALSE);
+    wlc_bss_update_probe_resp(wlc, bsscfg, FALSE);
+    wlc_enable_mac(wlc);
+#endif
+}
+
+
+
+// 函数1：扫描5GHz频段的某个信道
+void scan_channel(wlc_info_t *wlc, chanspec_t chanspec) {
+    //wlc_ssid_t ssid = {0, ""};
+    int err;
+    chanspec_t chanspec_list[1] = {chanspec};
+    wlc_ssid_t req_ssid;
+    bzero(&req_ssid, sizeof(req_ssid));
+    /*err = wlc_scan_request(wlc, DOT11_BSSTYPE_ANY, NULL, 1, &ssid, 0, NULL,
+    DOT11_SCANTYPE_ACTIVE, -1, -1, -1, -1, chanspec_list, 1, 0, FALSE,
+    scan_result_callback_qq, wlc, WLC_ACTION_SCAN, 0, *wlc->bsscfg, NULL, NULL);*/
+    //scan_time = 0;
+    uint8 scan_type = DOT11_SCANTYPE_PASSIVE;
+    /*
+    if(active_time>scan_time){
+        scan_type = DOT11_SCANTYPE_PASSIVE;
+    }
+	err = wlc_scan_request(wlc, DOT11_BSSTYPE_ANY, &ether_bcast, 1,
+		&req_ssid, 0, NULL, scan_type, -1, active_time, scan_time, -1, chanspec_list,
+		1, 0, FALSE, scan_result_callback_qq, wlc,
+		WLC_ACTION_SCAN, FALSE, NULL, NULL, NULL);*/
+    
+	err = wlc_scan_request(wlc, DOT11_BSSTYPE_ANY, &ether_bcast, 1,
+		&req_ssid, 0, NULL, scan_type, -1, active_time, scan_time, -1, chanspec_list,
+		1, 0, FALSE, scan_result_callback_qq, wlc,
+		WLC_ACTION_SCAN, FALSE, NULL, NULL, NULL);
+    if (err != BCME_OK) {
+        WL_ERROR(("wl%d: %s: scan request failed with error %d\n", wlc->pub->unit, __FUNCTION__, err));
+    }
+}
+
+
+#if 0
+typedef struct {
+    int channel;
+    int router_count;
+    int channel_condition;
+    int channel_utilization;
+} channel_info_t;
+
+typedef struct {
+channel_info_t channels_info[SCAN_MAX_CHANSPECS];
+int num_channels;
+int current_channel_index;
+} scan_result_t;
+
+scan_result_t g_scan_result;
+
+// 函数2：定时调用函数1并在所有信道扫描完毕后选择最优信道
+static void scan_timer_callback(void *arg) {
+wlc_info_t *wlc = (wlc_info_t *)arg;
+chanspec_t chanspec;
+
+// 如果所有信道已经扫描完毕，选择最优信道并切换
+if (g_scan_result.current_channel_index >= g_scan_result.num_channels) {
+chanspec = select_best_channel();
+wlc_set_chanspec(wlc, chanspec, 0);
+return;
+}
+
+// 扫描下一个信道
+chanspec = g_scan_result.channels_info[g_scan_result.current_channel_index].channel;
+scan_channel(wlc, chanspec);
+g_scan_result.current_channel_index++;
+
+// 重新设置定时器
+wl_add_timer(wlc->wl, scan_timer, 60000, FALSE);
+}
+
+// 选择最优信道
+static chanspec_t select_best_channel(void) {
+int i;
+int best_channel_index = 0;
+
+// 在这里实现选择最优信道的算法，例如根据信道利用率、路由器数量等指标
+
+return g_scan_result.channels_info[best_channel_index].channel;
+}
+
+// 初始化全局结构体
+g_scan_result.num_channels = init_channel_list(wlc, g_scan_result.channels_info, SCAN_MAX_CHANSPECS);
+g_scan_result.current_channel_index = 0;
+
+// 设置定时器
+scan_timer = wl_init_timer(wlc->wl, scan_timer_callback, wlc, "scan_timer");
+wl_add_timer(wlc->wl, scan_timer, 60000, FALSE);
+
+#endif
+
+
+
+
+
+
+
+
+
+
+
+//周期scan
+struct timer_list timer_qq_scan_try;
+uint8 scan_channel_index = 0;
+#define TIMER_INTERVAL_SCAN_qq (500) // 1s
+void timer_callback_scan_try_qq(struct timer_list *t) {
+    if(start_game_is_on){
+        chanspec_t chanspec_cur = (china_5GHz_channels[scan_channel_index] << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BAND_5G) |
+            (WL_CHANSPEC_BW_20) |
+            (WL_CHANSPEC_CTL_SB_NONE) |
+            (WL_CHANSPEC_BW_20);
+        printk("start scan----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+        scan_channel(wlc_qq, chanspec_cur);
+        //scan_channel(wlc, wlc->chanspec);
+        scan_channel_index = (scan_channel_index+1)%MAX_CHANNELS;
+
+
+    }
+    // 重新设置定时器    
+    mod_timer(&timer_qq_scan_try, jiffies + msecs_to_jiffies(TIMER_INTERVAL_SCAN_qq));
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 bool pkt_qq_chain_len_in_range(uint16 upper_bound,uint16 lower_bound){
     
@@ -788,6 +1551,16 @@ void pkt_qq_delete(struct pkt_qq *pkt_qq_cur,osl_t *osh){
         pkt_qq_last = (struct pkt_qq *)NULL;
         index_last = 0;
     }
+    read_lock(&pkt_qq_mutex_len); // 加锁
+    //printk("**************debug14*******************");
+    if(pkt_qq_chain_len<1){
+        //printk("****************wrong pkt_qq_chain_len----------(%u)",pkt_qq_chain_len);
+        read_unlock(&pkt_qq_mutex_len); // 解锁
+        return;
+
+    }
+    //printk("**************debug15*******************");
+    read_unlock(&pkt_qq_mutex_len); // 解锁
     if((pkt_qq_cur->FrameID == pkt_qq_chain_head->FrameID)&&(pkt_qq_cur->prev==(struct pkt_qq *)NULL)){
         //printk("**************debug12******************");
         if(pkt_qq_chain_head->next == (struct pkt_qq *)NULL){//防止删除节点时出错
@@ -897,6 +1670,17 @@ void pkt_qq_del_timeout_ergodic(osl_t *osh){
     //uint16 cur_pkt_qq_chain_len = pkt_qq_chain_len;
     read_unlock(&pkt_qq_mutex_len); // 解锁
     uint16 index = 0;
+
+    read_lock(&pkt_qq_mutex_len); // 加锁
+    //printk("**************debug14*******************");
+    if(pkt_qq_chain_len<1){
+        //printk("****************wrong pkt_qq_chain_len----------(%u)",pkt_qq_chain_len);
+        read_unlock(&pkt_qq_mutex_len); // 解锁
+        return;
+
+    }
+    //printk("**************debug15*******************");
+    read_unlock(&pkt_qq_mutex_len); // 解锁
     if(!pkt_qq_chain_len_in_range(max_pkt_qq_chain_len,0)){
             
         //bool sniffer_flag = FALSE;
@@ -1006,8 +1790,18 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
     read_unlock(&pkt_qq_mutex_len); // 解锁
     struct pkt_qq *pkt_qq_cur;
     uint16 index;
+    printk(KERN_ALERT"###########pkt_qq_chain_len debug-2(%u)",pkt_qq_chain_len);
     read_lock(&pkt_qq_mutex_len); // 加锁
+    if(pkt_qq_chain_len<1){
+        pkt_qq_chain_len_notfound++;
+
+        printk("----------[fyl] not found(%u:%u:%u)",OSL_SYSUPTIME(),curTxFrameID,pkttag->seq);
+        read_unlock(&pkt_qq_mutex_len); // 解锁
+        return;
+    }
 #ifdef USE_LAST_PKT/*如果use_last_pkt为false，或者后两个不对劲，就重新设置*/
+    printk(KERN_ALERT"###########pkt_qq_chain_len debug-1(%u)",pkt_qq_chain_len);
+
     if((!use_last_pkt)||(index_last <= 0) || (pkt_qq_last == (struct pkt_qq *)NULL)\
         ||(index_last>=cur_pkt_qq_chain_len)){
         /*如果use_last_pkt为false，或者后两个不对劲，就重新设置*/
@@ -1021,8 +1815,94 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
 
     }
 #endif
+    printk(KERN_ALERT"###########pkt_qq_chain_len debug-11(%u)",pkt_qq_chain_len);
     read_unlock(&pkt_qq_mutex_len); // 解锁
     bool found_pkt_node_qq = FALSE;
+
+    #if 0
+    if((pkt_qq_cur->pktnum_to_send_end<=0)&&(receive_time>last_scan_time+min_scan_interval)){
+
+        active_time = (active_time + 10) % 100;
+        scan_time = (scan_time + 10) % 100;
+        if(active_time<10){
+            active_time = 10;
+        }
+        if(scan_time<10){
+            scan_time = 10;
+        }
+        printk("start scan;scan_time(%u);active_time(%u);----------[fyl] OSL_SYSUPTIME()----------(%u)",scan_time,active_time,OSL_SYSUPTIME());
+        /*chanspec_t chanspec_cur = (48 << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BAND_5G) |
+            (WL_CHANSPEC_BW_20) |
+            (WL_CHANSPEC_CTL_SB_NONE) |
+            (WL_CHANSPEC_BW_20);
+        chanspec_t chanspec_cur = (36 << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BW_160 & WL_CHANSPEC_BW_MASK) |
+            (WL_CHANSPEC_BAND_5G & WL_CHANSPEC_BAND_MASK);
+        chanspec_t chanspec_cur = (50 & WL_CHANSPEC_CHAN_MASK) |
+            (WL_CHANSPEC_BW_160 & WL_CHANSPEC_BW_MASK) |
+            (WL_CHANSPEC_BAND_5G & WL_CHANSPEC_BAND_MASK);
+        chanspec_t chanspec_cur = (36 << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BAND_5G) |
+            (WL_CHANSPEC_BW_80) |
+            (WL_CHANSPEC_CTL_SB_NONE) |
+            (WL_CHANSPEC_BW_80);*/
+        uint8 primary_channel = receive_time%28 + 36;
+        chanspec_t chanspec_cur = (chanspec_t ) 0x8e0a;
+        if(receive_time%10==0){
+            chanspec_cur = (chanspec_t ) 0x8e0a;
+        }else if(receive_time%10==1){
+            chanspec_cur = (36 << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BAND_5G) |
+            (WL_CHANSPEC_BW_80) |
+            (WL_CHANSPEC_CTL_SB_NONE) |
+            (WL_CHANSPEC_BW_80);
+        }else if(receive_time%10==2){
+            chanspec_cur = (36 << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BAND_5G) |
+            (WL_CHANSPEC_BW_40) |
+            (WL_CHANSPEC_CTL_SB_NONE) |
+            (WL_CHANSPEC_BW_40);
+        }else if(receive_time%10==3){
+            chanspec_cur = wf_create_80MHz_chspec(52, 58,
+                       WL_CHANSPEC_BW_80);
+        }else if(receive_time%10==4){
+            chanspec_cur = wf_create_chspec_from_primary(primary_channel, WL_CHANSPEC_BW_40,
+                       WL_CHANSPEC_BAND_5G);
+        }else if(receive_time%10==5){
+            chanspec_cur = wf_create_chspec_from_primary(56, WL_CHANSPEC_BW_40,
+                       WL_CHANSPEC_BAND_5G);
+        }else if(receive_time%10==6){
+            chanspec_cur = wf_create_chspec_from_primary(primary_channel, WL_CHANSPEC_BW_160,
+                       WL_CHANSPEC_BAND_5G);
+        }else if(receive_time%10==7){
+            chanspec_cur = wf_create_chspec_from_primary(42, WL_CHANSPEC_BW_160,
+                       WL_CHANSPEC_BAND_5G);
+        }else if(receive_time%10==8){
+            chanspec_cur = wf_create_chspec_from_primary(primary_channel, WL_CHANSPEC_BW_80,
+                       WL_CHANSPEC_BAND_5G);
+        }else if(receive_time%10==9){
+            chanspec_cur = wf_create_chspec_from_primary(56, WL_CHANSPEC_BW_80,
+                       WL_CHANSPEC_BAND_5G);
+        }
+
+        //wf_create_chspec_from_primary
+        /*printk("receive_time10(%u);primary_channel(%u);chanspec(0x%04x:0x%04x,0x%04x,0x%04x)"
+            ,receive_time%10,primary_channel,chanspec_cur,(48 << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BAND_5G) |
+            (WL_CHANSPEC_BW_20) |
+            (WL_CHANSPEC_CTL_SB_NONE) |
+            (WL_CHANSPEC_BW_20),(36 << WL_CHANSPEC_CHAN_SHIFT) |
+            (WL_CHANSPEC_BW_160 & WL_CHANSPEC_BW_MASK) |
+            (WL_CHANSPEC_BAND_5G & WL_CHANSPEC_BAND_MASK),(50 & WL_CHANSPEC_CHAN_MASK) |
+            (WL_CHANSPEC_BW_160 & WL_CHANSPEC_BW_MASK) |
+            (WL_CHANSPEC_BAND_5G & WL_CHANSPEC_BAND_MASK));*/
+        //scan_channel(wlc, chanspec_cur);
+        //scan_channel(wlc, wlc->chanspec);
+        last_scan_time = receive_time;
+        //printk("end scan----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    #endif
     while((pkt_qq_cur != (struct pkt_qq *)NULL)&&(index<cur_pkt_qq_chain_len)){
         struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
         //printk("**************debug5*******************");
@@ -1039,6 +1919,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
         //if(pkt_qq_cur->pktSEQ == cur_pktSEQ ){//如果找到了这个数据包
         //if(pkt_qq_cur->FrameID == htol16(curTxFrameID) ){//如果找到了这个数据包
         if((pkt_qq_cur->FrameID == htol16(curTxFrameID)) && (pkt_qq_cur->pktSEQ == cur_pktSEQ)){//如果找到了这个数据包 
+                printk(KERN_ALERT"###########pkt_qq_chain_len debug0(%u)",pkt_qq_chain_len);
                 found_pkt_node_qq = TRUE;
             if((!was_acked)||((was_acked)&&(pkt_qq_cur_PHYdelay >= 17 || pkt_qq_cur->failed_cnt>=1))){//提前判断一下，降低总体计算量
                 pkt_qq_cur->airtime_self = cur_airtime;
@@ -1060,6 +1941,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                     dma_info_t *di = DI_INFO(tx_di);
                     pkt_qq_cur->pktnum_to_send_end = NTXDACTIVE(di->txin, di->txout) + 1;
                     pkt_qq_cur->pkt_added_in_wlc_tx_end = pkt_added_in_wlc_tx;
+                    pkt_qq_cur->APnum = num_routers;
                     pkt_qq_cur->free_time = cur_time;
                     pkt_qq_cur->free_txop = wlc_bmac_cca_read_counter(wlc->hw, M_CCA_TXOP_L_OFFSET(wlc), M_CCA_TXOP_H_OFFSET(wlc));
                     pkt_qq_cur->ps_dur_trans = 0;//当前帧发送期间PS 时间统计
@@ -1234,13 +2116,16 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
             if(pkt_qq_cur_PHYdelay > pkt_qq_ddl){//如果该节点并非所要找的节点，并且该数据包时延大于ddl，就删除该节点
                 //deleteNUM_delay++;
                 //struct pkt_qq *pkt_qq_cur_next = pkt_qq_cur->next;
+                printk(KERN_ALERT"###########pkt_qq_chain_len debug01(%u)",pkt_qq_chain_len);
 #ifdef PRINTTIMEOUTPKT
                 kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
                 pkt_qq_cur->droped_withoutACK_time = cur_time;
                 memcpy(info_qq, pkt_qq_cur, sizeof(*pkt_qq_cur));
                 debugfs_set_info_qq(0, info_qq, 1);
 #endif
+                printk(KERN_ALERT"###########pkt_qq_chain_len debug1(%u)",pkt_qq_chain_len);
                 pkt_qq_delete(pkt_qq_cur,osh);
+                printk(KERN_ALERT"###########pkt_qq_chain_len debug2(%u)",pkt_qq_chain_len);
                 pkt_qq_chain_len_timeout ++;
             
                 //pkt_qq_cur = pkt_qq_cur_next;
@@ -1249,7 +2134,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                 //continue;
             }
         }
-        
+        printk(KERN_ALERT"###########pkt_qq_chain_len debug3(%u)",pkt_qq_chain_len);
         pkt_qq_cur = pkt_qq_cur_next;     
         //printk("**************debug4*******************");
 
@@ -1258,7 +2143,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
             //printk("**************debug6*******************");
         }
         //printk("**************debug3*******************");
-
+printk(KERN_ALERT"###########pkt_qq_chain_len debug4(%u)",pkt_qq_chain_len);
 
         
     }
@@ -1273,11 +2158,20 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
     //printk("****************[fyl] index:deleteNUM_delay----------(%u:%u)",index,deleteNUM_delay);
 
     //printk("**************debug2*******************");
-    pkt_qq_del_timeout_ergodic(osh);
+
+    read_lock(&pkt_qq_mutex_len); // 加锁
+    //printk("**************debug14*******************");
+    if(pkt_qq_chain_len>0){
+        read_unlock(&pkt_qq_mutex_len); // 解锁
+        pkt_qq_del_timeout_ergodic(osh);
+    }else{
+        read_unlock(&pkt_qq_mutex_len); // 解锁
+
+    }
+printk(KERN_ALERT"###########pkt_qq_chain_len debug5(%u)",pkt_qq_chain_len);
+    //printk("**************debug15*******************");
+    
     //mutex_unlock(&pkt_qq_mutex); // 解锁
     //printk("**************debug8*******************");
     
 }
-
-
-
