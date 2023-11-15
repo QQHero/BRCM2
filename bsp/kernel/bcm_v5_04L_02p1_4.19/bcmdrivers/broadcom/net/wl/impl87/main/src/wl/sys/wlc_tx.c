@@ -326,6 +326,7 @@ typedef struct {
 
 
 #include <wlc_qq.h>
+uint32 recent_into_CFP_time = 0;
 /*
 void print_trace(void) {
     void *buffer[100];
@@ -1166,13 +1167,15 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         //memset(cur_rates_counts_txs_qq->txsucc_cnt, 0, sizeof(cur_rates_counts_txs_qq->txsucc_cnt));
 
         wlc_qq = wlc;
-        /*
+
+        
+        
         timer_setup(&timer_qq_scan_set, timer_callback_scan_set_qq, 0);
         mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*120));
 
         
         timer_setup(&timer_qq_scan_try, timer_callback_scan_try_qq, 0);
-        mod_timer(&timer_qq_scan_try, jiffies + msecs_to_jiffies(TIMER_INTERVAL_SCAN_qq));*/
+        mod_timer(&timer_qq_scan_try, jiffies + msecs_to_jiffies(TIMER_INTERVAL_SCAN_qq));
 
     }
 
@@ -1545,27 +1548,60 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         }
         
         //#if 0
+        wlc_qq = wlc;//这里如果不实时更新会是个大坑
         if(start_game_is_on){
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
+                
                 if(not_enough_flag_qq == FALSE){
 
                     //mutex_lock(&pkt_qq_mutex); // 加锁
 
                     /*用于记录出现重传包重传时，函数调用路径*/
                     /*遍历寻找是否被发送过*/
-                    bool retry_flag_qqdx = pkt_qq_retry_ergodic(htol16(TxFrameID), pkttag->seq, osh);
+                    //bool retry_flag_qqdx = pkt_qq_retry_ergodic(htol16(TxFrameID), pkttag->seq, osh);
+
+                    bool retry_flag_qqdx = FALSE;
+                    bool added_at_cfp_flag_qqdx = FALSE;
+                    /*
+                    if(pkttag->qq_pktinfo_pointer==(uint32)NULL){
+                        goto after_add_pkt;
+                    }*/
+                    struct pkt_qq *pkt_qq_cur0 = (struct pkt_qq *)(uintptr)pkttag->qq_pktinfo_pointer;
+                    if((pkt_qq_cur0!= NULL)&&\
+                        (((struct pkt_qq *)(uintptr)pkttag->qq_pktinfo_pointer)->FrameID == htol16(TxFrameID)) \
+                        && (((struct pkt_qq *)(uintptr)pkttag->qq_pktinfo_pointer)->pktSEQ == pkttag->seq)){//如果找到了这个数据包 {
+                        retry_flag_qqdx = TRUE;
+                    }
                     if(!retry_flag_qqdx){//如果不是重传包
                         struct pkt_qq *pkt_qq_cur = NULL;
                         uint32 cur_time = OSL_SYSUPTIME();
-                        pkt_qq_cur = (struct pkt_qq *) MALLOCZ(osh, sizeof(*pkt_qq_cur));
-                        if(pkt_qq_cur == NULL){
-                            printk("_______out of mem:::pkt_qq_chain_len(%u)",pkt_qq_chain_len);
+                        if(pkttag->qq_pktinfo_pointer==(uint32)NULL){
+
+                            pkt_qq_cur = (struct pkt_qq *) MALLOCZ(osh, sizeof(*pkt_qq_cur));
+                            if(pkt_qq_cur == NULL){
+                                printk("_______out of mem:::pkt_qq_chain_len(%u)",pkt_qq_chain_len);
+                            }
+                            //printk("****************tx pkt_qq_chain_len21----------(%u)",pkt_qq_chain_len);
+
+                            pkt_qq_cur->next = (struct pkt_qq *)NULL;
+                            pkt_qq_cur->prev = (struct pkt_qq *)NULL;
+                            pkt_qq_cur->into_CFP_time = recent_into_CFP_time;
+                            pkt_qq_cur->into_CFP_time_record_loc = 2;
+                            pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(pkttag);
+                            pkttag->qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+                        }else{
+                            pkt_qq_cur = (struct pkt_qq *)(uintptr)pkttag->qq_pktinfo_pointer;
+
+                            pkt_qq_cur->into_CFP_time_record_loc = 3;
+                            recent_into_CFP_time = pkt_qq_cur->into_CFP_time;
+                            added_at_cfp_flag_qqdx = TRUE;
+                            //printk("****************tx pkt_qq_chain_len22----------(%u)",pkt_qq_chain_len);
                         }
+
+                        pkt_qq_print_by_debugfs_ergodic(3);
                         pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME();
                         pkt_qq_cur->droped_withoutACK_time = 0;
                         pkt_qq_cur->free_time = 0;
-                        pkt_qq_cur->next = (struct pkt_qq *)NULL;
-                        pkt_qq_cur->prev = (struct pkt_qq *)NULL;
                         pkt_qq_cur->FrameID = htol16(TxFrameID);
                         pkt_qq_cur->pktSEQ = pkttag->seq;
                         pkt_qq_cur->failed_cnt = 0;
@@ -1580,7 +1616,8 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                         pkt_qq_cur->into_hw_txop = wlc_bmac_cca_read_counter(wlc->hw, M_CCA_TXOP_L_OFFSET(wlc), M_CCA_TXOP_H_OFFSET(wlc));
                         pkt_qq_cur->airtime_self = 0;
                         pkt_qq_cur->airtime_all = 0;
-                        scb_pps_info_t *pps_scb_qq = SCB_PPSINFO(wlc->pps_info, scb);            
+                        scb_pps_info_t *pps_scb_qq = SCB_PPSINFO(wlc->pps_info, scb);    
+                        pkt_qq_print_by_debugfs_ergodic(4);        
                         uint32 time_in_pretend_tot_qq = pps_scb_qq->ps_pretend_total_time_in_pps;
                         if (pps_scb_qq == NULL){
                             time_in_pretend_tot_qq += R_REG(wlc->osh, D11_TSFTimerLow(wlc)) - pps_scb_qq->ps_pretend_start;
@@ -1635,12 +1672,26 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                         for (int i = 0; i < CCASTATS_MAX; i++) {
                             pkt_qq_cur->ccastats_qq[i] = wlc_bmac_cca_read_counter(wlc->hw, 4 * i, (4 * i + 2));
                         }
-                        pkt_qq_add_at_tail(pkt_qq_cur);
-                        pkt_qq_del_timeout_ergodic(osh);
+                        if(!added_at_cfp_flag_qqdx){
+                            //rintk("**************tx_debug5*******************");
+                            pkt_qq_add_at_tail(pkt_qq_cur);
+                        }
+                        read_lock(&pkt_qq_mutex_len); // 加锁
+                        //printk("**************debug14*******************");
+                        if(pkt_qq_chain_len>max_pkt_qq_chain_len-50){
+                            read_unlock(&pkt_qq_mutex_len); // 解锁
+                            pkt_qq_del_timeout_ergodic(osh);
+                        }else{
+                            read_unlock(&pkt_qq_mutex_len); // 解锁
+
+                        }
+                        pkt_qq_print_by_debugfs_ergodic(5);
                         
                     }else{//如果是重传包，打印dump信息
                         pkt_qq_chain_len_soft_retry ++;
         #ifdef dump_stack_qqdx_print
+
+                        pkt_qq_print_by_debugfs_ergodic(6);
                         if(pkttag->seq!=0){//排除不知是啥的包的影响。
                                 printk(KERN_ALERT"----------[fyl] retry dump_stack start----------");
 
@@ -1779,9 +1830,19 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                     //mutex_unlock(&pkt_qq_mutex); // 解锁
                 }
             }
-        }//#endif
-        
+            else{
+                struct pkt_qq *pkt_qq_cur = NULL;
+                if(pkttag->qq_pktinfo_pointer==(uint32)NULL){
 
+                }else{
+                    pkt_qq_cur = (struct pkt_qq *)(uintptr)pkttag->qq_pktinfo_pointer;
+                    //recent_into_CFP_time = pkt_qq_cur->into_CFP_time;
+                    pkt_qq_delete(pkt_qq_cur,osh);
+                }
+
+                pkt_qq_print_by_debugfs_ergodic(7);
+            }
+        }//#endif
 
 
 #ifdef BCM_DMA_CT

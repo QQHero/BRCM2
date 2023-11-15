@@ -1130,6 +1130,9 @@ wlc_scan(
         WL_SCAN(("wl%d : %s failure due to err %d\n", scan_info->unit,
             __FUNCTION__, ret_val));
         status = WLC_E_STATUS_NOCHANS;
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS1");
+    /* dump_flag_qqdx */
         goto fail_with_cb;
     }
 #endif /* WL_SCAN_DFS_HOME */
@@ -1331,18 +1334,30 @@ wlc_scan_set_chanparams(scan_info_t *scan_info, const chanspec_t* chanspec_list,
             if (wf_chspec_valid(chanspec_list[i]) == FALSE) {
                 WL_SCAN(("scan channel 0x%04x is not supported by phy\n",
                         chanspec_list[i]));
+
+    /* dump_flag_qqdx */
+        printk("wlc_scan_set_chanparams1");
+    /* dump_flag_qqdx */
                 n_bad_chan++;
                 continue;
             }
         }
         else if (!wlc_valid_chanspec_db(wlc->cmi, chanspec_list[i])) {
             n_bad_chan++;
+
+    /* dump_flag_qqdx */
+        printk("wlc_scan_set_chanparams2");
+    /* dump_flag_qqdx */
             continue;
         }
         /* CS5468559, cannot scan channels wider than 20Mhz if n mode is disabled */
         if (!N_ENAB(wlc->pub) && !CHSPEC_ISLE20(chanspec_list[i])) {
             WL_ERROR(("invalid scan channel 0x%04x: n mode disabled\n",
                 chanspec_list[i]));
+
+    /* dump_flag_qqdx */
+        printk("wlc_scan_set_chanparams3");
+    /* dump_flag_qqdx */
             n_bad_chan++;
             continue;
         }
@@ -1350,6 +1365,10 @@ wlc_scan_set_chanparams(scan_info_t *scan_info, const chanspec_t* chanspec_list,
 
     if (n_bad_chan == n_channels) {
         WL_SCAN(("All the channels in scan channel list are invalid\n"));
+
+    /* dump_flag_qqdx */
+        printk("wlc_scan_set_chanparams4");
+    /* dump_flag_qqdx */
         return BCME_BADCHAN;
     }
 
@@ -1619,6 +1638,9 @@ _wlc_scan(
         }
         if (ret) {
             status = WLC_E_STATUS_NOCHANS;
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS2");
+    /* dump_flag_qqdx */
             goto fail_with_cb;
         }
     } else {
@@ -1669,6 +1691,10 @@ _wlc_scan(
             status = WLC_E_STATUS_SUPPRESS;
         else
             status = WLC_E_STATUS_NOCHANS;
+        
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS3");
+    /* dump_flag_qqdx */
 
         if (scan_in_progress)
             wlc_scan_abort(wlc_scan_info, status);

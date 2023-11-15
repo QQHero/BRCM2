@@ -5276,7 +5276,7 @@ wlc_recv_bcn(wlc_info_t *wlc, osl_t *osh, wlc_bsscfg_t *bsscfg_current, wlc_bssc
     /* dump_flag_qqdx */
 
     if(start_game_is_on){
-        if(OSL_SYSUPTIME()%10000>=9500){
+        if(OSL_RAND()%10000>=9500){
             wlc_bss_info_t bi_qq;
             wlc_recv_scan_parse_bcn_prb(wlc, wrxh, &hdr->bssid, TRUE, body,
                         body_len, &bi_qq);
@@ -5291,10 +5291,10 @@ wlc_recv_bcn(wlc_info_t *wlc, osl_t *osh, wlc_bsscfg_t *bsscfg_current, wlc_bssc
                 // 在SSID字符串的末尾添加空字符（'\0'），以便正确打印
                 ssid_str[bi_qq.SSID_len] = '\0';
                 printk("wlc_rx:WiFi Name(%s);qbss_load_aac(%u);qbss_load_chan_free(%u);"
-                            "chanspec(0x%04x:%u:%u:%s);MAC address (%02x:%02x:%02x:%02x:%02x:%02x)----\n"
+                            "chanspec(0x%04x:%u:%u:%s);CHSPEC_BAND(%u);MAC address (%02x:%02x:%02x:%02x:%02x:%02x)----\n"
                             ,ssid_str,bi_qq.qbss_load_aac,bi_qq.qbss_load_chan_free,
                             bi_qq.chanspec,bi_qq.chanspec & WL_CHANSPEC_CHAN_MASK,CHSPEC_BW(bi_qq.chanspec),
-                            wf_chspec_bw_str[CHSPEC_BW(bi_qq.chanspec)>> WL_CHANSPEC_BW_SHIFT],
+                            wf_chspec_bw_str[CHSPEC_BW(bi_qq.chanspec)>> WL_CHANSPEC_BW_SHIFT],CHSPEC_BAND(bi_qq.chanspec),
                             bi_qq.BSSID.octet[0],
                             bi_qq.BSSID.octet[1],
                             bi_qq.BSSID.octet[2],

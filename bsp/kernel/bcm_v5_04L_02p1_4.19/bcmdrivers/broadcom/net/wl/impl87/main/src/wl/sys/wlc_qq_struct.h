@@ -26,6 +26,8 @@ struct pkt_qq {
     uint32 pkt_added_in_wlc_tx_end;//数据包被释放时wlc_tx文件中实际准备发送的数据包量
     struct rates_counts_txs_qq rates_counts_txs_qq_start;
     struct rates_counts_txs_qq rates_counts_txs_qq_end;
+    uint32 into_CFP_time;/*进入CFP的时间*/
+    uint8 into_CFP_time_record_loc;/*记录进入CFP的时间的位置*/
     uint32 into_hw_time;/*进入硬件队列的时间*/
     uint32 free_time;/*传输成功被释放的时间*/
     uint32 into_hw_txop;/*进入硬件队列的txop*/
@@ -60,12 +62,18 @@ struct pkt_qq {
     4.scb_pps_info_t定义处（wlc_pspretend.c）
     5.本文件   PPS时间统计相关   部分
     */
-
+    uint32 qq_pkttag_pointer;
     struct pkt_qq *next;
     struct pkt_qq *prev;
     
 };
 
+struct pkt_ergodic {
+    uint8 print_loc;
+    uint32 pkt_len;
+    uint32 real_pkt_num;
+    uint16 pkt_FrameID[390];
+};
 
 struct wlc_pps_info {
 	wlc_info_t *wlc;

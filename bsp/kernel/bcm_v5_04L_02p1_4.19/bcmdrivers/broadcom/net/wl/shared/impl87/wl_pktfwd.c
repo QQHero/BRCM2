@@ -3260,6 +3260,12 @@ wl_pktfwd_llc_snap_insert(osl_t * osh, struct sk_buff * skb)
 
 }   /* wl_pktfwd_llc_snap_insert() */
 
+    /* dump_flag_qqdx */
+#include <wlc_rate_sel.h>
+#include <wlc_qq_struct.h>
+extern bool start_game_is_on;
+extern void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur);
+    /* dump_flag_qqdx */
 /**
  * Transpose a pktlist into a CFP compliant pkt list.
  *
@@ -3281,6 +3287,39 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
     wlc_cfp_pkttag_ext_prepare(wl->wlc, wl_pktfwd_pktlist->flowid, wl_pktfwd_pktlist->prio,
                 &pkttag, &wlanext);
 
+    /* dump_flag_qqdx */
+    #if 0
+    if(skb != (struct sk_buff *) NULL){
+
+    if(start_game_is_on){
+
+        //pkttag = ((wlc_pkttag_t*)osl_pkttag(wl_pktfwd_pktlist->head));
+        if(pkttag.qq_pktinfo_pointer==(uint32)0){
+            /*if(OSL_RAND()%10000>=9500){
+                printk("**************debug2*******************");
+
+            }*/
+
+            struct pkt_qq *pkt_qq_cur = NULL;
+            pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
+            pkt_qq_cur->into_CFP_time_record_loc = 1;
+            pkt_qq_cur->FrameID = (uint16)0;
+            pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(&pkttag);
+            pkttag.qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+            pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME();
+            pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
+            //printk("**************pktfwd_debug5*******************");
+            pkt_qq_add_at_tail(pkt_qq_cur);
+        }
+        else{
+            //printk("**************pktfwd_debug6*******************");
+        }
+
+    }
+    /* dump_flag_qqdx */
+    }
+    #endif
+
     while (skb != (struct sk_buff *) NULL)
     {
         bcm_prefetch(PKTDATA(wl->osh, skb));  /* for llc snap insert */
@@ -3296,6 +3335,110 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
         skb->dev  = net_device;
 
         PKTFWD_ASSERT(PKTLIST_PKT_SLL(skb, SKBUFF_PTR) == PKTLINK(skb));
+
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+
+
+
+            //printk("**************pktfwd_debug6*******************");
+            //printk("**************pktfwd_debug6(%u:%u)*******************",pkttag.qq_pktinfo_pointer,WLPKTTAG(skb)->qq_pktinfo_pointer );
+            struct pkt_qq *pkt_qq_cur = NULL;
+            pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
+            pkt_qq_cur->into_CFP_time_record_loc = 1;
+            pkt_qq_cur->FrameID = (uint16)0;
+            //printk("**************pktfwd_debug7*******************");
+            pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(WLPKTTAG(skb));
+            //printk("**************pktfwd_debug8*******************");
+            WLPKTTAG(skb)->qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+            //printk("**************pktfwd_debug10*******************");
+            pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
+            pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
+            pkt_qq_add_at_tail(pkt_qq_cur);
+
+
+
+    #if 0
+            //printk("**************pktfwd_debug5(%u)*******************",pkttag.qq_pktinfo_pointer);
+            struct pkt_qq *pkt_qq_cur = NULL;
+            pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
+            pkt_qq_cur->into_CFP_time_record_loc = 1;
+            pkt_qq_cur->FrameID = (uint16)0;
+            pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(&pkttag);
+            pkttag.qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+            pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
+            pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
+            pkt_qq_add_at_tail(pkt_qq_cur);
+
+
+
+
+
+
+
+
+            // && FALSE
+            //pkttag = ((wlc_pkttag_t*)osl_pkttag(wl_pktfwd_pktlist->head));
+            if(pkttag.qq_pktinfo_pointer==(uint32)0){
+                /*if(OSL_RAND()%10000>=9500){
+                    printk("**************debug2*******************");
+
+                }*/
+
+                struct pkt_qq *pkt_qq_cur = NULL;
+                pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
+                pkt_qq_cur->into_CFP_time_record_loc = 1;
+                pkt_qq_cur->FrameID = (uint16)0;
+                pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(&pkttag);
+                pkttag.qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+                pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
+                pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
+                //printk("**************pktfwd_debug5*******************");
+                pkt_qq_add_at_tail(pkt_qq_cur);
+            }
+            else{
+
+                if((struct pkt_qq *)(uintptr)(pkttag.qq_pktinfo_pointer) != (struct pkt_qq *)NULL){
+                    if(((struct pkt_qq *)(uintptr)(pkttag.qq_pktinfo_pointer))->into_hw_time >= ((struct pkt_qq *)(uintptr)pkttag.qq_pktinfo_pointer)->into_CFP_time){
+                            
+                        //printk("**************pktfwd_debug6*******************");
+                    }
+                    else{
+
+                        struct pkt_qq *pkt_qq_cur = NULL;
+                        pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
+                        //printk("****************wrong pkt_qq_chain_len21----------(%u)",pkt_qq_chain_len);
+                        pkt_qq_cur->into_CFP_time_record_loc = 1;
+                        pkt_qq_cur->FrameID = (uint16)0;
+                        pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(&pkttag);
+                        pkttag.qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+                        pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
+                        pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
+                        //printk("**************pktfwd_debug51*******************");
+                        pkt_qq_add_at_tail(pkt_qq_cur);
+
+                    }
+                }else{
+
+                    struct pkt_qq *pkt_qq_cur = NULL;
+                    pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
+                    //printk("****************wrong pkt_qq_chain_len21----------(%u)",pkt_qq_chain_len);
+                    pkt_qq_cur->into_CFP_time_record_loc = 1;
+                    pkt_qq_cur->FrameID = (uint16)0;
+                    pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(&pkttag);
+                    pkttag.qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+                    pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
+                    pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
+                    //printk("**************pktfwd_debug52*******************");
+                    pkt_qq_add_at_tail(pkt_qq_cur);
+
+                }
+                
+            }
+
+    #endif
+        }
+    /* dump_flag_qqdx */
         skb = PKTLIST_PKT_SLL(skb, SKBUFF_PTR);
     }
     /* osh::alloced add */

@@ -1184,7 +1184,14 @@ typedef struct {
             uint16 phystsbuf_idx;    /**< STS_FIFO_RXEN: sts_buff index */
             uint16 phyrxs_seqid;    /**<  PKTTAG ID of PhyRx Status buffer */
         };
-        uint16 rsvd[3];
+/* dump_flag_qqdx */
+        uint16 rsvd0;
+        uint32 qq_pktinfo_pointer;
+			/*struct {
+				
+				
+			};*/
+/* dump_flag_qqdx */
     };
 #endif /* ! DONGLEBUILD */
 

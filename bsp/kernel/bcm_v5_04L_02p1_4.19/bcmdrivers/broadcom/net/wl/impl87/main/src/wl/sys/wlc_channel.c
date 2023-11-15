@@ -6764,6 +6764,9 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     /* reject chanspec for band that is not enabled */
     /* For RNR, band could be different from current enabled band be vigilent */
     if (!CHSPEC_IS6G(chspec) && !BAND_ENABLED(wlc, CHSPEC_BANDUNIT(chspec))) {
+    /* dump_flag_qqdx */
+        //printk("wlc_valid_chanspec_ext2");
+    /* dump_flag_qqdx */
         return FALSE;
     }
 

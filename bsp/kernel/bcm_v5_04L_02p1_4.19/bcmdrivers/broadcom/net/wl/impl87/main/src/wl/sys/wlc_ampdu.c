@@ -9823,6 +9823,8 @@ free_and_next:
                 //ack_update_qq(txh_info->TxFrameID,was_acked,wlc->osh);
                 ack_update_qq(wlc, ini,ampdu_tx, scb, txs, pkttag, txh_info,was_acked\
                 ,wlc->osh,p, !first_pkt_flag_qqdx,tot_mpdu,rs_txs,receive_time, ccastats_qq_cur);
+                //printk("----------[fyl] ack_update_qq----------");
+                //printk("----------[fyl] ack_update_qq1----------");
                 
                 /*对于多包情况只需要第一次的时候从头开始，其他情况从上次开始*/
                 #ifdef PROP_TXSTATUS

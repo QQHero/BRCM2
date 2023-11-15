@@ -472,8 +472,8 @@ extern void wl_thread_schedule_work(struct wl_info *wl);
 #endif
 
 /* APIs for debugfs */
-#define DEBUG_MAX_CLASS 4
-#define DEBUG_CLASS_MAX_FIELD 200
+#define DEBUG_MAX_CLASS 5
+#define DEBUG_CLASS_MAX_FIELD 240
 
 /* define some info classes */
 #define DEBUG_CLASS_PHY 0

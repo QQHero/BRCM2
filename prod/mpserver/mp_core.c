@@ -339,7 +339,7 @@ int mp_start_session_without_report(char* session_id, char* sta_ip_addr, char* a
 #ifndef ETHER_ADDR_LEN
 #define ETHER_ADDR_LEN 6
 #endif
-#define DEBUG_CLASS_MAX_FIELD 200
+#define DEBUG_CLASS_MAX_FIELD 240
 
 struct start_sta_info{
 	int8_t start_is_on;//判断是否游戏正在运行
