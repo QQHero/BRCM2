@@ -1548,10 +1548,10 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         }
         
         //#if 0
-        wlc_qq = wlc;//这里如果不实时更新会是个大坑
         if(start_game_is_on){
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
                 
+                wlc_qq = wlc;//这里如果不实时更新会是个大坑
                 if(not_enough_flag_qq == FALSE){
 
                     //mutex_lock(&pkt_qq_mutex); // 加锁
@@ -1674,7 +1674,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                         }
                         if(!added_at_cfp_flag_qqdx){
                             //rintk("**************tx_debug5*******************");
-                            pkt_qq_add_at_tail(pkt_qq_cur);
+                            pkt_qq_add_at_tail(pkt_qq_cur,wlc->osh);
                         }
                         read_lock(&pkt_qq_mutex_len); // 加锁
                         //printk("**************debug14*******************");

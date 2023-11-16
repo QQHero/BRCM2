@@ -9581,7 +9581,7 @@ wlc_ampdu_dotxstatus_aqm_complete(ampdu_tx_info_t *ampdu_tx, struct scb *scb,
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
                 if(!was_acked){
                     pspretend_qq_flag = TRUE;
-                    printk("----------[fyl] startPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
+                    //printk("----------[fyl] startPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
                 /* dump_flag_qqdx */
                 }
             }
@@ -10073,7 +10073,7 @@ free_and_next:
         if(start_game_is_on){
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
                 if(pps_recvd_ack && pspretend_qq_flag){
-                    printk("----------[fyl] endPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
+                    //printk("----------[fyl] endPPS TIME(%u:%u:%u:%u:%u)",OSL_SYSUPTIME(),htol16(txh_info->TxFrameID),pkttag->seq,pkt_qq_chain_len_add,pkt_qq_chain_len_soft_retry);
                     pspretend_qq_flag = FALSE;
                 }
             }

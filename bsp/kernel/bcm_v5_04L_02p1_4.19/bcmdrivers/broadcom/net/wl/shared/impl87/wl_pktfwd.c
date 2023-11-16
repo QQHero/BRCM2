@@ -3264,7 +3264,7 @@ wl_pktfwd_llc_snap_insert(osl_t * osh, struct sk_buff * skb)
 #include <wlc_rate_sel.h>
 #include <wlc_qq_struct.h>
 extern bool start_game_is_on;
-extern void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur);
+extern void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur, osl_t *osh);
     /* dump_flag_qqdx */
 /**
  * Transpose a pktlist into a CFP compliant pkt list.
@@ -3309,7 +3309,7 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
             pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME();
             pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
             //printk("**************pktfwd_debug5*******************");
-            pkt_qq_add_at_tail(pkt_qq_cur);
+            pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
         }
         else{
             //printk("**************pktfwd_debug6*******************");
@@ -3354,7 +3354,7 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
             //printk("**************pktfwd_debug10*******************");
             pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
             pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
-            pkt_qq_add_at_tail(pkt_qq_cur);
+            pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
 
 
 
@@ -3368,7 +3368,7 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
             pkttag.qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
             pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
             pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
-            pkt_qq_add_at_tail(pkt_qq_cur);
+            pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
 
 
 
@@ -3394,7 +3394,7 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
                 pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
                 pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
                 //printk("**************pktfwd_debug5*******************");
-                pkt_qq_add_at_tail(pkt_qq_cur);
+                pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
             }
             else{
 
@@ -3415,7 +3415,7 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
                         pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
                         pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
                         //printk("**************pktfwd_debug51*******************");
-                        pkt_qq_add_at_tail(pkt_qq_cur);
+                        pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
 
                     }
                 }else{
@@ -3430,7 +3430,7 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
                     pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
                     pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
                     //printk("**************pktfwd_debug52*******************");
-                    pkt_qq_add_at_tail(pkt_qq_cur);
+                    pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
 
                 }
                 
