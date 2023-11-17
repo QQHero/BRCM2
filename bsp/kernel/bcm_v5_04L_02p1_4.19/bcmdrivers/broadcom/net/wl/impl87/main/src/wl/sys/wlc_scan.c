@@ -1509,6 +1509,9 @@ _wlc_scan(
             MALLOCED(scan_info->osh)));
         status = WLC_E_STATUS_ERROR;
         ret = BCME_NOMEM;
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS00");
+    /* dump_flag_qqdx */
         goto fail_with_cb;
     }
     if (nssid == 1) {
@@ -1607,6 +1610,9 @@ _wlc_scan(
             wlc->pub->unit, __FUNCTION__));
         status = WLC_E_STATUS_ERROR;
         ret = BCME_NOTUP;
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS0");
+    /* dump_flag_qqdx */
         goto fail_with_cb;
     }
 
@@ -1619,6 +1625,9 @@ _wlc_scan(
             wlc->pub->unit, __FUNCTION__, bandinfo));
         status = WLC_E_STATUS_ERROR;
         ret = BCME_BADARG;
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS1");
+    /* dump_flag_qqdx */
         goto fail_with_cb;
     }
 #if BAND6G
@@ -1703,6 +1712,9 @@ _wlc_scan(
         wlc_bss_list_free(wlc, wlc->scan_results);
         wlc_scan_ssidlist_free(scan_info);
         ret = BCME_EPERM;
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS4");
+    /* dump_flag_qqdx */
         goto fail_with_cb;
     }
 
@@ -1803,6 +1815,9 @@ _wlc_scan(
                 /* DUALBAND - Don't call wlc_scantimer() directly from DPC... */
                 /* send out AF as soon as possible to aid reliability of GON */
                 wlc_scan_abort(wlc_scan_info, WLC_SCAN_STATE_ABORT);
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS5");
+    /* dump_flag_qqdx */
                 goto fail;
             }
         }
@@ -1815,6 +1830,9 @@ _wlc_scan(
 
     /* if a scan is in progress, allow the next callback to restart the scan state machine */
     ASSERT(ret == BCME_OK);
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS6");
+    /* dump_flag_qqdx */
     return ret;
 
 fail_with_cb:

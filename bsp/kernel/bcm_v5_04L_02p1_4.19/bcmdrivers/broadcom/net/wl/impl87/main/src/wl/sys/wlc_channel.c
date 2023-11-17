@@ -6753,7 +6753,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
             return TRUE;
         }
     }
-#endif /* WL_AIR_IQ */
+#endif /* WL_AIR_IQ */               
+
 
     /* check the chanspec */
     if (!wf_chspec_valid(chspec)) {
@@ -6765,7 +6766,7 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     /* For RNR, band could be different from current enabled band be vigilent */
     if (!CHSPEC_IS6G(chspec) && !BAND_ENABLED(wlc, CHSPEC_BANDUNIT(chspec))) {
     /* dump_flag_qqdx */
-        //printk("wlc_valid_chanspec_ext2");
+        printk("wlc_valid_chanspec_ext2");
     /* dump_flag_qqdx */
         return FALSE;
     }
