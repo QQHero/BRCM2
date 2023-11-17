@@ -1133,7 +1133,7 @@ void find_best_channels(int *best_20MHz_channels, int *best_40MHz_channels, int 
                 //if ((ap_info->occupied_channels[j] != 0) && ap_info->avg_qbss_load_chan_free > max_avg_qbss_load_chan_free_20M[j]) {
                 if (ap_info->occupied_channels[j] > best_20MHz_score) {
                     best_20MHz_score = ap_info->occupied_channels[j];
-                    best_20MHz_channels = china_5GHz_channels[i];
+                    *best_20MHz_channels = china_5GHz_channels[i];
                 }
                 if ((ap_info->occupied_channels[j] != 0) && ap_info->avg_RSSI > max_avg_RSSI[j]) {
                     max_avg_qbss_load_chan_free_20M[j] = ap_info->avg_qbss_load_chan_free;
@@ -1212,7 +1212,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         int best_40MHz_channels[2];
         int best_80MHz_channels[4];
 
-        find_best_channels(best_20MHz_channels,best_40MHz_channels, best_80MHz_channels);
+        find_best_channels(&best_20MHz_channels,best_40MHz_channels, best_80MHz_channels);
         channel_set_print_flag_qqdx = OSL_SYSUPTIME() + 100;
         printf("Best 40 MHz channels: %d, %d\n", best_40MHz_channels[0], best_40MHz_channels[1]);
         printf("Best 80 MHz channels: %d, %d, %d, %d\n", best_80MHz_channels[0], best_80MHz_channels[1], best_80MHz_channels[2], best_80MHz_channels[3]);
