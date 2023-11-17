@@ -1212,7 +1212,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         int best_40MHz_channels[2];
         int best_80MHz_channels[4];
 
-        find_best_channels(best_40MHz_channels, best_80MHz_channels);
+        find_best_channels(best_20MHz_channels,best_40MHz_channels, best_80MHz_channels);
         channel_set_print_flag_qqdx = OSL_SYSUPTIME() + 100;
         printf("Best 40 MHz channels: %d, %d\n", best_40MHz_channels[0], best_40MHz_channels[1]);
         printf("Best 80 MHz channels: %d, %d, %d, %d\n", best_80MHz_channels[0], best_80MHz_channels[1], best_80MHz_channels[2], best_80MHz_channels[3]);
