@@ -1847,6 +1847,9 @@ fail:
     wlc_radio_mpc_upd(wlc);
     wlc_radio_upd(wlc);
 #endif /* STA */
+    /* dump_flag_qqdx */
+        printk("WLC_E_STATUS_NOCHANS7");
+    /* dump_flag_qqdx */
     return ret;
 } /* _wlc_scan */
 
