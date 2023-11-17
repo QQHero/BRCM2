@@ -6732,6 +6732,10 @@ wlc_channel_clm_chanspec_valid(wlc_cm_info_t *wlc_cmi, chanspec_t chspec)
     return FALSE;
 }
 
+    /* dump_flag_qqdx */
+extern bool start_game_is_on;
+extern uint32 channel_set_print_flag_qqdx;
+    /* dump_flag_qqdx */
 /**
  * Validate the chanspec for this locale, for 40MHz we need to also check that the sidebands
  * are valid 20MHz channels in this locale and they are also a legal HT combination
@@ -6744,13 +6748,20 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     uint8 cmn_bwcap = WLC_BW_CAP_20MHZ;
     enum wlc_bandunit bandunit;
     int bandtype;
-
+    
+    /* dump_flag_qqdx */
+    bool print_flag_qqdx = FALSE;
+    if(start_game_is_on&&(channel_set_print_flag_qqdx>OSL_SYSUPTIME())){
+        print_flag_qqdx = true;
+    }
+    /* dump_flag_qqdx */
     /* AirIQ uses chanspec 7/80, 14/80. Make exception */
 #if defined(WL_AIR_IQ)
     if (wlc->scan->state & SCAN_STATE_PROHIBIT) {
         if (CHSPEC_IS2G(chspec) && CHSPEC_IS80(chspec) && ((CHSPEC_CHANNEL(chspec) == 7) ||
             (CHSPEC_CHANNEL(chspec) == 14))) {
     /* dump_flag_qqdx */
+    if(print_flag_qqdx)
         printk("wlc_valid_chanspec_ext0");
     /* dump_flag_qqdx */
             return TRUE;
@@ -6763,6 +6774,7 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     if (!wf_chspec_valid(chspec)) {
         WL_NONE(("wl%d: invalid 802.11 chanspec 0x%x\n", wlc->pub->unit, chspec));
     /* dump_flag_qqdx */
+        if(print_flag_qqdx)
         printk("wlc_valid_chanspec_ext1");
     /* dump_flag_qqdx */
         return FALSE;
@@ -6772,6 +6784,7 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     /* For RNR, band could be different from current enabled band be vigilent */
     if (!CHSPEC_IS6G(chspec) && !BAND_ENABLED(wlc, CHSPEC_BANDUNIT(chspec))) {
     /* dump_flag_qqdx */
+        if(print_flag_qqdx)
         printk("wlc_valid_chanspec_ext2");
     /* dump_flag_qqdx */
         return FALSE;
@@ -6784,7 +6797,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     if (CHSPEC_BANDUNIT(WL_CHANNEL_2G5G_BAND(channel)) != CHSPEC_BANDUNIT(chspec) &&
             !CHSPEC_IS6G(chspec)){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext3");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext3");
         /* dump_flag_qqdx */
             return FALSE;
 
@@ -6792,7 +6806,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
 
     if (CHSPEC_IS5G(chspec) && IS_5G_CH_GRP_DISABLED(wlc, channel)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext4");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext4");
         /* dump_flag_qqdx */
         return FALSE;
     }
@@ -6803,20 +6818,23 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     /* Check a 20Mhz channel */
     if (CHSPEC_IS20(chspec)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext5");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext5");
         /* dump_flag_qqdx */
         return wlc_valid_channel20(wlc_cmi, chspec, current_bu);
     } else if (CHSPEC_IS40(chspec)) { /* Check a 40Mhz channel */
         if (!WL_BW_CAP_40MHZ(cmn_bwcap)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext6");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext6");
         /* dump_flag_qqdx */
             return FALSE;
         }
 
         if (!VALID_40CHANSPEC_IN_BAND(wlc, bandunit)){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext7");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext7");
         /* dump_flag_qqdx */
             return FALSE;
 
@@ -6829,7 +6847,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
              CH20MHZ_CHSPEC(UPPER_20_SB(channel),
                 BANDTYPE_CHSPEC(bandtype)), current_bu)){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ex8");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext8");
         /* dump_flag_qqdx */
             return FALSE;
 
@@ -6837,14 +6856,16 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
 
         if (!wlc_channel_clm_chanspec_valid(wlc_cmi, chspec)){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext9");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext9");
         /* dump_flag_qqdx */
             return FALSE;
 
         }
 
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext10");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext10");
         /* dump_flag_qqdx */
         return TRUE;
     } else if (CHSPEC_IS80(chspec)) { /* Check a 80MHz channel - only 5G band supports 80MHz */
@@ -6857,7 +6878,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
          */
         if (!BAND_5G6G(bandtype)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext11");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext11");
         /* dump_flag_qqdx */
             return FALSE;
         }
@@ -6867,7 +6889,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
          */
         if (!WL_BW_CAP_80MHZ(cmn_bwcap)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext12");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext12");
         /* dump_flag_qqdx */
             return FALSE;
         }
@@ -6875,14 +6898,16 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
         /* Ensure that vhtmode is enabled if applicable */
         if (!VHT_ENAB_BAND(wlc->pub, bandtype) && !HE_ENAB_BAND(wlc->pub, bandtype)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext13");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext13");
         /* dump_flag_qqdx */
             return FALSE;
         }
 
         if (!VALID_80CHANSPEC_IN_BAND(wlc, bandunit)){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext14");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext14");
         /* dump_flag_qqdx */
 
             return FALSE;
@@ -6890,7 +6915,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
 
         if (!wlc_channel_clm_chanspec_valid(wlc_cmi, chspec)){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext15");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext15");
         /* dump_flag_qqdx */
             return FALSE;
 
@@ -6908,7 +6934,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
                     "failed valid check\n",
                     wlc->pub->unit, __FUNCTION__, chspec, chspec40));
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext16");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext16");
         /* dump_flag_qqdx */
 
             return FALSE;
@@ -6924,12 +6951,14 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
                     wlc->pub->unit, __FUNCTION__, chspec, chspec40));
 
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext17");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext17");
         /* dump_flag_qqdx */
             return FALSE;
         }
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext18");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext18");
         /* dump_flag_qqdx */
 
         return TRUE;
@@ -6943,7 +6972,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
          */
         if (!BAND_5G6G(bandtype)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext19");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext19");
         /* dump_flag_qqdx */
             return FALSE;
         }
@@ -6953,7 +6983,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
          */
         if (!WL_BW_CAP_160MHZ(cmn_bwcap)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext20");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext20");
         /* dump_flag_qqdx */
             return FALSE;
         }
@@ -6961,7 +6992,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
         /* Ensure that vhtmode is enabled if applicable */
         if (!VHT_ENAB_BAND(wlc->pub, bandtype) && !HE_ENAB_BAND(wlc->pub, bandtype)) {
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext21");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext21");
         /* dump_flag_qqdx */
             return FALSE;
         }
@@ -6969,7 +7001,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
         if (CHSPEC_IS8080(chspec)) {
             if (!VALID_8080CHANSPEC_IN_BAND(wlc, bandunit)){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext22");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext22");
         /* dump_flag_qqdx */
                 return FALSE;
 
@@ -6979,7 +7012,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
         if (CHSPEC_IS160(chspec)) {
             if (!VALID_160CHANSPEC_IN_BAND(wlc, CHSPEC_BANDUNIT(chspec))){
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext23");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext23");
         /* dump_flag_qqdx */
                 return FALSE;
 
@@ -6996,7 +7030,8 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
                     wlc->pub->unit, __FUNCTION__, chspec, chspec80));
 
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext24");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext24");
         /* dump_flag_qqdx */
             return FALSE;
         }
@@ -7011,17 +7046,20 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
                     wlc->pub->unit, __FUNCTION__, chspec, chspec80));
 
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext25");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext25");
         /* dump_flag_qqdx */
             return FALSE;
         }
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext26");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext26");
         /* dump_flag_qqdx */
         return TRUE;
     }
         /* dump_flag_qqdx */
-            printk("wlc_valid_chanspec_ext27");
+            if(print_flag_qqdx)
+        printk("wlc_valid_chanspec_ext27");
         /* dump_flag_qqdx */
 
     return FALSE;

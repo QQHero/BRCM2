@@ -677,6 +677,7 @@ uint wf_rspec_to_mcs_qq(ratespec_t rspec)
 #define ONE_HOUR_SECONDS 103 //beacon帧发送周期
 #define MAX_NUM_ROUTERS_RING_BUFFER 100
 
+uint32 channel_set_print_flag_qqdx=0;
 typedef struct {
     uint8 bssid[6]; // 路由器的 MAC 地址
     uint32 last_seen; // 最后一次检测到的时间
@@ -1207,7 +1208,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         int best_80MHz_channels[4];
 
         find_best_channels(best_40MHz_channels, best_80MHz_channels);
-
+        channel_set_print_flag_qqdx = OSL_SYSUPTIME() + 100;
         printf("Best 40 MHz channels: %d, %d\n", best_40MHz_channels[0], best_40MHz_channels[1]);
         printf("Best 80 MHz channels: %d, %d, %d, %d\n", best_80MHz_channels[0], best_80MHz_channels[1], best_80MHz_channels[2], best_80MHz_channels[3]);
         chanspec_t chanspec_cur = (best_40MHz_channels[0] << WL_CHANSPEC_CHAN_SHIFT) |
