@@ -1277,7 +1277,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         else{
             chanspec_cur = chanspec_cur_40M;
         }
-        printk("start switch(from wlc->chanspec num(%u) to chanspec_cur(%u)) ----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),(chanspec_cur& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
+        printk("start switch(from wlc->chanspec num(%u) to chanspec_cur(%u:%u)) ----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),(chanspec_cur& WL_CHANSPEC_CHAN_MASK), wf_chspec_bw_num[CHSPEC_BW(bss_info->chanspec)>> WL_CHANSPEC_BW_SHIFT],OSL_SYSUPTIME());
 
         wlc_qq->home_chanspec = chanspec_cur;
 
