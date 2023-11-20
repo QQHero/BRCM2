@@ -1271,7 +1271,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         /* switch to first channel in the new band */
         wlc_pi_band_update(wlc_qq, bandunit);
         chanspec_t chanspec_cur;
-        if(best_20MHz_channel%2>0){
+        if(OSL_SYSUPTIME()%2>0){
             chanspec_cur = chanspec_cur_20M;
         }
         else{
