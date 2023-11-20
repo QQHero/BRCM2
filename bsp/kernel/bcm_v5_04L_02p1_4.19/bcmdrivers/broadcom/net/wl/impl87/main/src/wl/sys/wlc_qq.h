@@ -1105,7 +1105,7 @@ void remove_expired_APinfo_qq(void) {
     }
 }
 
-void find_best_channels(int *best_20MHz_channels, int *best_40MHz_channels, int *best_80MHz_channels) {
+void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *best_80MHz_channels) {
 
     int16 max_avg_qbss_load_chan_free_20M[MAX_CHANNELS_20M];
     memset(max_avg_qbss_load_chan_free_20M, -120, MAX_CHANNELS_20M * sizeof(int16));
@@ -1133,7 +1133,7 @@ void find_best_channels(int *best_20MHz_channels, int *best_40MHz_channels, int 
                 //if ((ap_info->occupied_channels[j] != 0) && ap_info->avg_qbss_load_chan_free > max_avg_qbss_load_chan_free_20M[j]) {
                 if (ap_info->occupied_channels[j] > best_20MHz_score) {
                     best_20MHz_score = ap_info->occupied_channels[j];
-                    *best_20MHz_channels = china_5GHz_channels[i];
+                    *best_20MHz_channel = china_5GHz_channels[i];
                 }
                 if ((ap_info->occupied_channels[j] != 0) && ap_info->avg_RSSI > max_avg_RSSI[j]) {
                     max_avg_qbss_load_chan_free_20M[j] = ap_info->avg_qbss_load_chan_free;
@@ -1208,15 +1208,16 @@ wlc_info_t *wlc_qq;
 struct timer_list timer_qq_scan_set;
 void timer_callback_scan_set_qq(struct timer_list *t) {
     if(start_game_is_on){
-        int best_20MHz_channels;
+        int best_20MHz_channel;
         int best_40MHz_channels[2];
         int best_80MHz_channels[4];
 
-        find_best_channels(&best_20MHz_channels,best_40MHz_channels, best_80MHz_channels);
+        find_best_channels(&best_20MHz_channel,best_40MHz_channels, best_80MHz_channels);
         channel_set_print_flag_qqdx = OSL_SYSUPTIME() + 100;
+        printf("Best 20 MHz channel: %d\n", best_20MHz_channel);
         printf("Best 40 MHz channels: %d, %d\n", best_40MHz_channels[0], best_40MHz_channels[1]);
         printf("Best 80 MHz channels: %d, %d, %d, %d\n", best_80MHz_channels[0], best_80MHz_channels[1], best_80MHz_channels[2], best_80MHz_channels[3]);
-        chanspec_t chanspec_cur_20M = wf_create_chspec_from_primary(best_20MHz_channels, WL_CHANSPEC_BW_20,
+        chanspec_t chanspec_cur_20M = wf_create_chspec_from_primary(best_20MHz_channel, WL_CHANSPEC_BW_20,
                         WL_CHANSPEC_BAND_5G);
         chanspec_t chanspec_cur_40M = wf_create_chspec_from_primary(best_40MHz_channels[0], WL_CHANSPEC_BW_40,
                         WL_CHANSPEC_BAND_5G);
@@ -1237,7 +1238,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         /* switch to first channel in the new band */
         wlc_pi_band_update(wlc_qq, bandunit);
         chanspec_t chanspec_cur;
-        if(best_20MHz_channels%2>0){
+        if(best_20MHz_channel%2>0){
             chanspec_cur = chanspec_cur_20M;
         }
         else{

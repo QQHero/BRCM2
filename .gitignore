@@ -3,4 +3,5 @@
 *.ko
 *.cmd
 *.bin
+*.mod
 targets/ax12_pro_nor/bin/
