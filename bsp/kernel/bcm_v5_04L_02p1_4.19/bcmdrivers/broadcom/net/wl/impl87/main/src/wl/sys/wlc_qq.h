@@ -1171,7 +1171,7 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
                         china_5GHz_channels[j*2],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_40M[j]);
                 }
                 printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
-                    china_5GHz_channels[j*2],ap_info->occupied_channels[j*2] ,ap_info->avg_RSSI, max_avg_RSSI[j], max_avg_qbss_load_chan_free_40M[j],ap_info->avg_qbss_load_chan_free);
+                    china_5GHz_channels[j*2],ap_info->occupied_channels[j*2] ,ap_info->avg_RSSI, max_avg_RSSI_40M[j], max_avg_qbss_load_chan_free_40M[j],ap_info->avg_qbss_load_chan_free);
         
             }
         }
@@ -1188,7 +1188,7 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
                         china_5GHz_channels[j*4],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_80M[j]);
                 }
                 printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
-                    china_5GHz_channels[j*4],ap_info->occupied_channels[j*4] ,ap_info->avg_RSSI, max_avg_RSSI[j], max_avg_qbss_load_chan_free_20M[j],ap_info->avg_qbss_load_chan_free);
+                    china_5GHz_channels[j*4],ap_info->occupied_channels[j*4] ,ap_info->avg_RSSI, max_avg_RSSI_80M[j], max_avg_qbss_load_chan_free_80M[j],ap_info->avg_qbss_load_chan_free);
         
             }
 
