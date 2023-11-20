@@ -6735,6 +6735,7 @@ wlc_channel_clm_chanspec_valid(wlc_cm_info_t *wlc_cmi, chanspec_t chspec)
     /* dump_flag_qqdx */
 extern bool start_game_is_on;
 extern uint32 channel_set_print_flag_qqdx;
+bool print_flag_qqdx = FALSE;
     /* dump_flag_qqdx */
 /**
  * Validate the chanspec for this locale, for 40MHz we need to also check that the sidebands
@@ -6750,9 +6751,10 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     int bandtype;
     
     /* dump_flag_qqdx */
-    bool print_flag_qqdx = FALSE;
     if(start_game_is_on&&(channel_set_print_flag_qqdx>OSL_SYSUPTIME())){
-        print_flag_qqdx = true;
+        print_flag_qqdx = TRUE;
+    }else{
+        print_flag_qqdx = FALSE;
     }
     /* dump_flag_qqdx */
     /* AirIQ uses chanspec 7/80, 14/80. Make exception */
