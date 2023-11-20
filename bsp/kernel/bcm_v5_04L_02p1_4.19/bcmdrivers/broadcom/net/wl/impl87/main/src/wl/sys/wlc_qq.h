@@ -1116,19 +1116,19 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
     int16 max_avg_qbss_load_chan_free_80M[MAX_CHANNELS_80M];
     memset(max_avg_qbss_load_chan_free_80M, -120, MAX_CHANNELS_80M * sizeof(int16));
     
-    int8 max_avg_RSSI_20M[MAX_CHANNELS_20M];
-    memset(max_avg_RSSI_20M, -120, MAX_CHANNELS_20M * sizeof(int8));
+    int16 max_avg_RSSI_20M[MAX_CHANNELS_20M];
+    memset(max_avg_RSSI_20M, -120, MAX_CHANNELS_20M * sizeof(int16));
 
     
-    int8 max_avg_RSSI_40M[MAX_CHANNELS_40M];
-    memset(max_avg_RSSI_40M, -120, MAX_CHANNELS_40M * sizeof(int8));
+    int16 max_avg_RSSI_40M[MAX_CHANNELS_40M];
+    memset(max_avg_RSSI_40M, -120, MAX_CHANNELS_40M * sizeof(int16));
 
     
-    int8 max_avg_RSSI_80M[MAX_CHANNELS_80M];
-    memset(max_avg_RSSI_80M, -120, MAX_CHANNELS_80M * sizeof(int8));
+    int16 max_avg_RSSI_80M[MAX_CHANNELS_80M];
+    memset(max_avg_RSSI_80M, -120, MAX_CHANNELS_80M * sizeof(int16));
     //int num_channels = MAX_CHANNELS_20M;
 
-    //int8 best_20MHz_score = -120;
+    //int16 best_20MHz_score = -120;
     // 步骤一: 记录每个信道的最大平均RSSI的AP的qbss_load_chan_free值
     for (int i = 0; i < global_AP_list_size; i++) {
         APinfo_qq *ap_info = &global_AP_list[i];
@@ -1146,7 +1146,6 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
                 }*/
                 if ((ap_info->occupied_channels[j] != 0) && ap_info->avg_RSSI > max_avg_RSSI_20M[j]) {
                     //best_20MHz_score = ap_info->avg_RSSI;
-                    *best_20MHz_channel = china_5GHz_channels[j];
                     max_avg_qbss_load_chan_free_20M[j] = ap_info->avg_qbss_load_chan_free;
                     max_avg_RSSI_20M[j] = ap_info->avg_RSSI;
 
@@ -1197,11 +1196,27 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
         }
     }
 
+    int16 best_20MHz_score = -120;
+    for (int i = 0; i < MAX_CHANNELS_20M - 1; i++) {
+        int16 score = max_avg_qbss_load_chan_free_20M[i];
+        if (score > best_20MHz_score) {
+            best_20MHz_score = score;
+            *best_20MHz_channel = china_5GHz_channels[i];
+        }
+        printf("20 MHz channels: channel num(%d); free(%d)\n",
+            best_20MHz_channel, max_avg_qbss_load_chan_free_20M[i]);
+    }   
+
+
+
+
+
+
     // 步骤二: 找到40 MHz大信道的最佳组合
-    int8 best_40MHz_score = -120;
+    int16 best_40MHz_score = -120;
     for (int i = 0; i < MAX_CHANNELS_20M - 1; i++) {
         if((china_5GHz_channels[i]%8 == 4)||(china_5GHz_channels[i]%8 == 5)){
-            int8 score = (max_avg_qbss_load_chan_free_20M[i] + max_avg_qbss_load_chan_free_20M[i + 1]) / 2;
+            int16 score = (max_avg_qbss_load_chan_free_20M[i] + max_avg_qbss_load_chan_free_20M[i + 1]) / 2;
             if (score > best_40MHz_score) {
                 best_40MHz_score = score;
                 best_40MHz_channels[0] = china_5GHz_channels[i];
@@ -1212,13 +1227,13 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
     
 
         }
-        }
+    }
 
     // 步骤三: 找到80 MHz大信道的最佳组合
-    int8 best_80MHz_score = -120;
+    int16 best_80MHz_score = -120;
     for (int i = 0; i < MAX_CHANNELS_20M - 3; i++) {
         if((china_5GHz_channels[i]%16 == 4)||(china_5GHz_channels[i]%16 == 5)){
-            int8 score = (max_avg_qbss_load_chan_free_20M[i] + max_avg_qbss_load_chan_free_20M[i + 1] +
+            int16 score = (max_avg_qbss_load_chan_free_20M[i] + max_avg_qbss_load_chan_free_20M[i + 1] +
             max_avg_qbss_load_chan_free_20M[i + 2] + max_avg_qbss_load_chan_free_20M[i + 3]) / 4;
             if (score > best_80MHz_score) {
                 best_80MHz_score = score;
