@@ -1234,8 +1234,14 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
 
 wlc_info_t *wlc_qq;
 struct timer_list timer_qq_scan_set;
+bool skiped_first_channel_set = FALSE;
 void timer_callback_scan_set_qq(struct timer_list *t) {
     if(start_game_is_on){
+        if(!skiped_first_channel_set){
+            skiped_first_channel_set = TRUE;
+            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*120));
+            return;
+        }
         int best_20MHz_channel;
         int best_40MHz_channels[2];
         int best_80MHz_channels[4];
