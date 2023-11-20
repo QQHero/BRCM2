@@ -1204,7 +1204,7 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
             *best_20MHz_channel = china_5GHz_channels[i];
         }
         printf("20 MHz channels: channel num(%d); free(%d)\n",
-            best_20MHz_channel, max_avg_qbss_load_chan_free_20M[i]);
+            *best_20MHz_channel, max_avg_qbss_load_chan_free_20M[i]);
     }   
 
 
