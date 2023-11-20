@@ -1277,7 +1277,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         else{
             chanspec_cur = chanspec_cur_40M;
         }
-        printk("start switch(from wlc->chanspec num(%u) to chanspec_cur(%u:%u)) ----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),(chanspec_cur& WL_CHANSPEC_CHAN_MASK), wf_chspec_bw_num[CHSPEC_BW(bss_info->chanspec)>> WL_CHANSPEC_BW_SHIFT],OSL_SYSUPTIME());
+        printk("start switch(from wlc->chanspec num(%u) to chanspec_cur((0x%04x)%u:%u)) ----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),chanspec_cur,(chanspec_cur& WL_CHANSPEC_CHAN_MASK), wf_chspec_bw_num[CHSPEC_BW(bss_info->chanspec)>> WL_CHANSPEC_BW_SHIFT],OSL_SYSUPTIME());
 
         wlc_qq->home_chanspec = chanspec_cur;
 
@@ -1603,7 +1603,7 @@ void timer_callback_scan_try_qq(struct timer_list *t) {
                         WL_CHANSPEC_BAND_5G);
             }               
             if(wf_chspec_valid(chanspec_cur)){
-                printk("start1 scan channel(%u:%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",
+                printk("start1 scan channel(chanspec_cur(0x%04x):%u:%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",chanspec_cur,
                     china_5GHz_channels[scan_channel_index],wf_chspec_bw_num[scan_bw_index+2],OSL_SYSUPTIME());
                 scan_channel(wlc_qq, chanspec_cur);
                 //scan_channel(wlc, wlc->chanspec);
