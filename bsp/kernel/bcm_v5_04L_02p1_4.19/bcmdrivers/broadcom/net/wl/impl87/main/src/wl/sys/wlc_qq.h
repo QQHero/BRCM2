@@ -1222,7 +1222,6 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         chanspec_t chanspec_cur_40M = wf_create_chspec_from_primary(best_40MHz_channels[0], WL_CHANSPEC_BW_40,
                         WL_CHANSPEC_BAND_5G);
 
-        printk("start switch(wlc->chanspec num(%u))----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
         //wlc_set_chanspec(wlc_qq, chanspec_cur, 0);
         //wlc_set_chanspec(wlc_qq, chanspec_cur, CHANSW_REASON(CHANSW_HOMECH_REQ));
         //wlc_set_chanspec(wlc_qq, chanspec_cur, CHANSW_REASON(CHANSW_APCS));
@@ -1244,6 +1243,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         else{
             chanspec_cur = chanspec_cur_40M;
         }
+        printk("start switch(from wlc->chanspec num(%u) to chanspec_cur(%u)) ----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),(chanspec_cur& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
 
         wlc_qq->home_chanspec = chanspec_cur;
 
