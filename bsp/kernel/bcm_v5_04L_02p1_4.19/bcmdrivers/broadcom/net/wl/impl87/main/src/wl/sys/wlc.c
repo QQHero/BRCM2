@@ -3907,7 +3907,10 @@ wlc_set_phy_chanspec(wlc_info_t *wlc, chanspec_t chanspec)
 void
 wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
 {
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec1");
+    dump_stack();
+    /* dump_flag_qqdx */
     enum wlc_bandunit bandunit;
     uint32 tsf_l;
 #if defined(BCMDBG) || defined(BCMDBG_ERR)
@@ -3938,7 +3941,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
     if (wlc->psm_watchdog_debug) {
         WL_INFORM(("wl%d: %s skip updating chanspec 0x%04x during psmwd\n",
             wlc->pub->unit, __FUNCTION__, chanspec));
+    /* dump_flag_qqdx */
         printk("wlc_set_chanspec2");
+    /* dump_flag_qqdx */
         return;
     }
 
@@ -3960,11 +3965,15 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
         !(wlc->scan->state & SCAN_STATE_PROHIBIT)) {
         WL_ERROR(("wl%d: %s: Bad chanspec %s\n",
             wlc->pub->unit, __FUNCTION__, wf_chspec_ntoa_ex(chanspec, chanbuf1)));
+    /* dump_flag_qqdx */
         printk("wlc_set_chanspec3");
+    /* dump_flag_qqdx */
         goto set_chanspec_done;
     }
 
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec4");
+    /* dump_flag_qqdx */
 #ifdef CCA_STATS
 #ifndef DONGLEBUILD
     /* to speed up roaming process, especially in dongle case, do not read
@@ -3986,7 +3995,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
         if (SCAN_IN_PROGRESS(wlc->scan))
             cca_send_event(wlc, 1);
     }
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec5");
+    /* dump_flag_qqdx */
 #endif /* CCA_STATS */
 #ifdef WLCHANIM
     if (WLC_CHANIM_ENAB(wlc->pub)) {
@@ -3999,7 +4010,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
 
     if (old_chanspec == chanspec) {
         WL_TSLOG(wlc, __FUNCTION__, TS_EXIT, 0);
+    /* dump_flag_qqdx */
         printk("wlc_set_chanspec6");
+    /* dump_flag_qqdx */
         return;
     }
 
@@ -4017,7 +4030,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
                 wlc->pub->unit, __FUNCTION__));
         }
     }
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec7");
+    /* dump_flag_qqdx */
 #endif /* WL_PWRSTATS */
 
     /* Switch bands if necessary */
@@ -4029,7 +4044,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
                     wlc->pub->unit, __FUNCTION__,
                     wf_chspec_ntoa_ex(chanspec, chanbuf1)));
 
+    /* dump_flag_qqdx */
                 printk("wlc_set_chanspec8");
+    /* dump_flag_qqdx */
                 goto set_chanspec_done;
             }
 #ifdef WL_BTCDYN
@@ -4046,7 +4063,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
             wlc_setband(wlc, bandunit);
         }
     }
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec9");
+    /* dump_flag_qqdx */
 
     ASSERT(VHT_ENAB_BAND(wlc->pub, CHSPEC_BANDTYPE(chanspec)) ||
            HE_ENAB_BAND(wlc->pub, CHSPEC_BANDTYPE(chanspec)) ||
@@ -4061,7 +4080,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
     }
 #endif  /* defined(WL_UCM) */
     /* sync up phy/radio chanspec */
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec10");
+    /* dump_flag_qqdx */
     wlc_set_phy_chanspec(wlc, chanspec);
 
     /* update state that depends on channel bandwidth */
@@ -4071,7 +4092,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
          */
         wlc_rateset_ht_bw_mcs_filter(&wlc->band->hw_rateset, CHSPEC_WLC_BW(chanspec));
     }
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec11");
+    /* dump_flag_qqdx */
 
     /* update some mac configuration since chanspec changed */
     wlc_ucode_mac_upd(wlc);
@@ -4084,7 +4107,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
             ASSERT(0);
         }
     }
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec12");
+    /* dump_flag_qqdx */
 #endif /* WL_UCM */
 #ifdef CCA_STATS
     /* update cca time */
@@ -4099,11 +4124,15 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
 
     /* update ED/CRS settings */
     wlc_bmac_ifsctl_edcrs_set(wlc->hw, FALSE);
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec13");
+    /* dump_flag_qqdx */
 
 set_chanspec_done:
     wlc_chansw_notif(wlc, reason_bitmap, old_chanspec, chanspec, tsf_l);
+    /* dump_flag_qqdx */
     printk("wlc_set_chanspec14");
+    /* dump_flag_qqdx */
 
 #ifdef BCMLTECOEX
     /* Update LTECX states on Channel Switch */
