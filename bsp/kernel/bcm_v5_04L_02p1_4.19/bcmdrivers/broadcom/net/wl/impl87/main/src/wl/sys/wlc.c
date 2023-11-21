@@ -3909,7 +3909,7 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
 {
     /* dump_flag_qqdx */
     printk("wlc_set_chanspec1");
-    dump_stack();
+    //dump_stack();
     /* dump_flag_qqdx */
     enum wlc_bandunit bandunit;
     uint32 tsf_l;
