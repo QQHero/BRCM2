@@ -1651,11 +1651,11 @@ void timer_callback_scan_try_qq(struct timer_list *t) {
                     OSL_SYSUPTIME());
             }
             
+            chanspec_scan_for_set = chanspec_cur;
+            scan_channel_index = (scan_channel_index+1)%MAX_CHANNELS_20M;
+            scan_bw_index = (scan_bw_index+1)%4;
 
         }
-        chanspec_scan_for_set = chanspec_cur;
-        scan_channel_index = (scan_channel_index+1)%MAX_CHANNELS_20M;
-        scan_bw_index = (scan_bw_index+1)%4;
 
     }
     // 重新设置定时器    
