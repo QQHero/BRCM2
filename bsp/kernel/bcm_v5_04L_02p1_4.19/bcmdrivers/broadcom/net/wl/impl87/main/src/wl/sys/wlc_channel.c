@@ -6754,7 +6754,7 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     if(start_game_is_on&&(channel_set_print_flag_qqdx>OSL_SYSUPTIME())&&(channel_set_print_flag_qqdx<(OSL_SYSUPTIME()+100))){
         print_flag_qqdx = TRUE;
         printk("wlc_valid_chanspec_ext_time:(%u;%u)",channel_set_print_flag_qqdx,OSL_SYSUPTIME());
-        dump_stack();
+        //dump_stack();
     }else{
         print_flag_qqdx = FALSE;
     }
