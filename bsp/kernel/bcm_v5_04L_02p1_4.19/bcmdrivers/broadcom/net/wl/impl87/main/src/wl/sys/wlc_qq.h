@@ -1258,6 +1258,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
             mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*30));
             return;
         }
+        mod_timer(&timer_qq_scan_try, jiffies +1000);//防止两个timer冲突
         int best_20MHz_channel;
         int best_40MHz_channels[2];
         int best_80MHz_channels[4];
