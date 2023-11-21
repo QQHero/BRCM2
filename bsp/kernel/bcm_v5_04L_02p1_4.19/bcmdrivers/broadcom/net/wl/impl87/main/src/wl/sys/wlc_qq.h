@@ -1249,6 +1249,7 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
 
 wlc_info_t *wlc_qq;
 struct timer_list timer_qq_scan_set;
+chanspec_t chanspec_scan_for_set;
 bool skiped_first_channel_set = FALSE;
 void timer_callback_scan_set_qq(struct timer_list *t) {
     if(start_game_is_on){
@@ -1293,6 +1294,15 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         else{
             chanspec_cur = chanspec_cur_40M;
         }
+
+        if(OSL_SYSUPTIME()%10>5){
+            chanspec_cur = chanspec_scan_for_set;
+        }
+
+
+
+
+
         printk("start switch(from wlc->chanspec num(%u) to chanspec_cur((0x%04x)%u:%u)) ----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),chanspec_cur,(chanspec_cur& WL_CHANSPEC_CHAN_MASK), wf_chspec_bw_num[CHSPEC_BW(chanspec_cur)>> WL_CHANSPEC_BW_SHIFT],OSL_SYSUPTIME());
 
         wlc_qq->home_chanspec = chanspec_cur;
@@ -1643,7 +1653,7 @@ void timer_callback_scan_try_qq(struct timer_list *t) {
             
 
         }
-        
+        chanspec_scan_for_set = chanspec_cur;
         scan_channel_index = (scan_channel_index+1)%MAX_CHANNELS_20M;
         scan_bw_index = (scan_bw_index+1)%4;
 
