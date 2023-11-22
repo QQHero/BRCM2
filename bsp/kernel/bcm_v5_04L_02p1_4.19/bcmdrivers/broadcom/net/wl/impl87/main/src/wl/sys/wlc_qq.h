@@ -1263,7 +1263,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
             return;
         }
         if(chanspec_origin != wlc_qq->chanspec){
-            printk("last channel set is successful");
+            printk("last channel set is successful:from(0x%04x)to(0x%04x)",chanspec_origin, wlc_qq->chanspec);
             return;
         }
         mod_timer(&timer_qq_scan_try, jiffies +1000);//防止两个timer冲突
