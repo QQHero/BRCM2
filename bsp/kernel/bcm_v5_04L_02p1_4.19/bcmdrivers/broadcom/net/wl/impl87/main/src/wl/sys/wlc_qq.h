@@ -1250,6 +1250,7 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
 wlc_info_t *wlc_qq;
 struct timer_list timer_qq_scan_set;
 struct timer_list timer_qq_scan_try;
+bool in_scan_qq = FALSE;//用于判断当前是否正处于scan中，避免信道切换受到scan的影响。
 chanspec_t chanspec_scan_for_set;
 chanspec_t chanspec_real_set;
 chanspec_t chanspec_origin;//记录最开始的chanspec，用于将其与当前的进行对比，从而判断上次是否成功转换信道。
@@ -1264,6 +1265,12 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         }
         if(chanspec_origin != wlc_qq->chanspec){
             printk("last channel set is successful:from(0x%04x)to(0x%04x)",chanspec_origin, wlc_qq->chanspec);
+            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*20));
+            return;
+        }
+        if(in_scan_qq){
+            
+            printk("under scan qq");
             mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*20));
             return;
         }
@@ -1548,6 +1555,7 @@ void scan_result_callback_update_qq(void *ctx, int status, wlc_bsscfg_t *bsscfg)
         update_AP_info_each_channel_qq();
     }
     
+    in_scan_qq = FALSE;//用于判断当前是否正处于scan中，避免信道切换受到scan的影响。
 
 }
 
@@ -1650,6 +1658,7 @@ uint8 scan_channel_index = 0;
 uint8 scan_bw_index = 0;
 #define TIMER_INTERVAL_SCAN_qq (1000) // 1s
 void timer_callback_scan_try_qq(struct timer_list *t) {
+    in_scan_qq = TRUE;//用于判断当前是否正处于scan中，避免信道切换受到scan的影响。
         //printk("scan test1(%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",scan_channel_index,OSL_SYSUPTIME());
     if(start_game_is_on){
         //printk("scan test2(%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",scan_channel_index,OSL_SYSUPTIME());
