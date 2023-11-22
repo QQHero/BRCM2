@@ -1312,11 +1312,49 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
 
         if (wlc_qq->pub->up) {
 
-            printk("switch1");
 
-            wlc_suspend_mac_and_wait(wlc_qq);
-            wlc_set_chanspec(wlc_qq, chanspec_cur, CHANSW_REASON(CHANSW_APCS));
-            wlc_enable_mac(wlc_qq);
+            if(OSL_RAND()%100>50){
+                printk("switch1");
+
+                wlc_suspend_mac_and_wait(wlc_qq);
+                wlc_set_chanspec(wlc_qq, chanspec_cur, CHANSW_REASON(CHANSW_APCS));
+                wlc_enable_mac(wlc_qq);
+            }
+            else{
+                printk("switch3");
+                //copy from wlc_ap_acs_update
+
+                wlc_set_home_chanspec(wlc_qq, chanspec_cur);
+                wlc_suspend_mac_and_wait(wlc_qq);
+
+                wlc_set_chanspec(wlc_qq, chanspec_cur, CHANSW_REASON(CHANSW_IOVAR));
+                if (AP_ENAB(wlc_qq->pub)) {
+                    wlc_qq->bcn_rspec = wlc_lowest_basic_rspec(wlc_qq,
+                        &wlc_qq->primary_bsscfg->current_bss->rateset);
+                    if (CHSPEC_IS6G(wlc_qq->chanspec) &&
+                        ((wlc_qq->lpi_mode == AUTO && wlc_qq->stf->psd_limit_indicator) ||
+                        (wlc_qq->lpi_mode == ON))) {
+                        wlc_qq->bcn_rspec &= ~WL_RSPEC_BW_MASK;
+                        wlc_qq->bcn_rspec |= CHSPECBW_TO_RSPECBW(CHSPEC_BW(wlc_qq->chanspec));
+                    }
+                    ASSERT(wlc_valid_rate(wlc_qq, wlc_qq->bcn_rspec,
+                        CHSPEC_BANDTYPE(wlc_qq->primary_bsscfg->current_bss->chanspec), TRUE));
+                    wlc_beacon_phytxctl(wlc_qq, wlc_qq->bcn_rspec, wlc_qq->chanspec);
+                    wlc_beacon_upddur(wlc_qq, wlc_qq->bcn_rspec, wlc_qq->bcn_len);
+                }
+
+                if (wlc_qq->pub->associated) {
+                    wlc_update_beacon(wlc_qq);
+                    wlc_update_probe_resp(wlc_qq, FALSE);
+                }
+                wlc_enable_mac(wlc_qq);
+            }
+
+
+
+
+
+
         } else {
             printk("switch2");
             /* In down state, only update the software chanspec. Don't call
