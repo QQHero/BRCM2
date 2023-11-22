@@ -4190,6 +4190,9 @@ set_chanspec_done:
 #endif /* WL_MMOPS_CFG */
 
     WL_TSLOG(wlc, __FUNCTION__, TS_EXIT, 0);
+    /* dump_flag_qqdx */
+    printk("wlc_set_chanspec15:wlc->home_chanspec(0x%04x)",wlc->home_chanspec);
+    /* dump_flag_qqdx */
 } /* wlc_set_chanspec */
 
 #ifdef PHYCAL_CACHING
