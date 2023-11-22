@@ -1263,7 +1263,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
             return;
         }
         if(chanspec_origin != wlc_qq->chanspec){
-            printk("last scan set is successful");
+            printk("last channel set is successful");
             return;
         }
         mod_timer(&timer_qq_scan_try, jiffies +1000);//防止两个timer冲突
@@ -1304,7 +1304,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
             chanspec_cur = chanspec_cur_40M;
         }
 
-        if(OSL_SYSUPTIME()%10>5){
+        if((OSL_SYSUPTIME()%10>5) && (wf_chspec_bw_num[CHSPEC_BW(chanspec_scan_for_set)>> WL_CHANSPEC_BW_SHIFT] < 160)){
             chanspec_cur = chanspec_scan_for_set;
         }
         chanspec_real_set = chanspec_cur;
