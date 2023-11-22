@@ -1252,12 +1252,18 @@ struct timer_list timer_qq_scan_set;
 struct timer_list timer_qq_scan_try;
 chanspec_t chanspec_scan_for_set;
 chanspec_t chanspec_real_set;
+chanspec_t chanspec_origin;//记录最开始的chanspec，用于将其与当前的进行对比，从而判断上次是否成功转换信道。
 bool skiped_first_channel_set = FALSE;
 void timer_callback_scan_set_qq(struct timer_list *t) {
     if(start_game_is_on){
         if(!skiped_first_channel_set){
             skiped_first_channel_set = TRUE;
             mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*30));
+            chanspec_origin = wlc_qq->chanspec;
+            return;
+        }
+        if(chanspec_origin != wlc_qq->chanspec){
+            printk("last scan set is successful");
             return;
         }
         mod_timer(&timer_qq_scan_try, jiffies +1000);//防止两个timer冲突
