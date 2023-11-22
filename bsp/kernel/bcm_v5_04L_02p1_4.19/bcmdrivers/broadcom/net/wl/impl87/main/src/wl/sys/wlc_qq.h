@@ -1258,7 +1258,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
     if(start_game_is_on){
         if(!skiped_first_channel_set){
             skiped_first_channel_set = TRUE;
-            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*30));
+            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*10));
             chanspec_origin = wlc_qq->chanspec;
             return;
         }
