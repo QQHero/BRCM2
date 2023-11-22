@@ -1251,6 +1251,7 @@ wlc_info_t *wlc_qq;
 struct timer_list timer_qq_scan_set;
 struct timer_list timer_qq_scan_try;
 chanspec_t chanspec_scan_for_set;
+chanspec_t chanspec_real_set;
 bool skiped_first_channel_set = FALSE;
 void timer_callback_scan_set_qq(struct timer_list *t) {
     if(start_game_is_on){
@@ -1300,7 +1301,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         if(OSL_SYSUPTIME()%10>5){
             chanspec_cur = chanspec_scan_for_set;
         }
-
+        chanspec_real_set = chanspec_cur;
 
 
 

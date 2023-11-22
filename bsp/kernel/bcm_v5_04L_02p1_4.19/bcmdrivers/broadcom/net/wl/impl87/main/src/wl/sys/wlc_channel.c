@@ -6736,6 +6736,7 @@ wlc_channel_clm_chanspec_valid(wlc_cm_info_t *wlc_cmi, chanspec_t chspec)
 extern bool start_game_is_on;
 extern uint32 channel_set_print_flag_qqdx;
 bool print_flag_qqdx = FALSE;
+extern chanspec_t chanspec_real_set;
     /* dump_flag_qqdx */
 /**
  * Validate the chanspec for this locale, for 40MHz we need to also check that the sidebands
@@ -6754,7 +6755,9 @@ wlc_valid_chanspec_ext(wlc_cm_info_t *wlc_cmi, chanspec_t chspec, bool current_b
     if(start_game_is_on&&(channel_set_print_flag_qqdx>OSL_SYSUPTIME())&&(channel_set_print_flag_qqdx<(OSL_SYSUPTIME()+100))){
         print_flag_qqdx = TRUE;
         printk("wlc_valid_chanspec_ext_time:(%u;%u)",channel_set_print_flag_qqdx,OSL_SYSUPTIME());
-        //dump_stack();
+        if(chanspec_real_set != chspec){
+            dump_stack();//仅打印未知来源的chspec来源。
+        }
     }else{
         print_flag_qqdx = FALSE;
     }
