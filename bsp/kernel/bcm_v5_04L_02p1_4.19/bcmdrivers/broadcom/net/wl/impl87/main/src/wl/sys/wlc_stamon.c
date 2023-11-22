@@ -1289,7 +1289,7 @@ wlc_offchan_timer_delete(wlc_stamon_info_t *ctxt)
 	if (ctxt->chspec_return) {
 		wlc_bmac_suspend_mac_and_wait(wlc->hw);	
 		/* dump_flag_qqdx */
-		printk("wlc_offchan_timer_delete:(0x%04x:0x%04x)",wlc->chanspec, ctxt->chspec_return);
+		printk("wlc_stamon:wlc_offchan_timer_delete:(0x%04x:0x%04x)",wlc->chanspec, ctxt->chspec_return);
 		/* dump_flag_qqdx */
 		wlc_channel_set_chanspec(wlc->cmi, ctxt->chspec_return);	
 		wlc_bmac_enable_mac(wlc->hw);
@@ -1308,7 +1308,7 @@ wlc_stamon_offchan_timer(void *arg)
 	if (ctxt->chspec_return) {
 		wlc_bmac_suspend_mac_and_wait(wlc->hw);
 		/* dump_flag_qqdx */
-		printk("wlc_stamon_offchan_timer1:(0x%04x:0x%04x)",wlc->chanspec, ctxt->chspec_return);
+		printk("wlc_stamon:wlc_stamon_offchan_timer1:(0x%04x:0x%04x)",wlc->chanspec, ctxt->chspec_return);
 		/* dump_flag_qqdx */
 		wlc_channel_set_chanspec(wlc->cmi, ctxt->chspec_return);
 		wlc_bmac_enable_mac(wlc->hw);
@@ -1344,7 +1344,7 @@ wlc_stamon_offchan_timer(void *arg)
 
 			wlc_bmac_suspend_mac_and_wait(wlc->hw);
 		/* dump_flag_qqdx */
-		printk("wlc_stamon_offchan_timer2:(0x%04x:0x%04x)",wlc->chanspec,ctxt->stacfg[i].chanspec);
+		printk("wlc_stamon:wlc_stamon_offchan_timer2:(0x%04x:0x%04x)",wlc->chanspec,ctxt->stacfg[i].chanspec);
 		/* dump_flag_qqdx */
 			wlc_channel_set_chanspec(wlc->cmi, ctxt->stacfg[i].chanspec);
 			wlc_bmac_enable_mac(wlc->hw);
