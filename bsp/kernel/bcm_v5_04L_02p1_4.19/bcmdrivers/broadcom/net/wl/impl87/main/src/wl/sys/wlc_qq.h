@@ -1256,6 +1256,12 @@ chanspec_t chanspec_real_set;
 chanspec_t chanspec_origin;//记录最开始的chanspec，用于将其与当前的进行对比，从而判断上次是否成功转换信道。
 bool skiped_first_channel_set = FALSE;
 void timer_callback_scan_set_qq(struct timer_list *t) {
+        if(in_scan_qq){
+            
+            printk("under scan qq");
+            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*20));
+            return;
+        }
     if(start_game_is_on){
         if(!skiped_first_channel_set){
             skiped_first_channel_set = TRUE;
@@ -1265,12 +1271,6 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         }
         if(chanspec_origin != wlc_qq->chanspec){
             printk("last channel set is successful:from(0x%04x)to(0x%04x)",chanspec_origin, wlc_qq->chanspec);
-            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*20));
-            return;
-        }
-        if(in_scan_qq){
-            
-            printk("under scan qq");
             mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*20));
             return;
         }
