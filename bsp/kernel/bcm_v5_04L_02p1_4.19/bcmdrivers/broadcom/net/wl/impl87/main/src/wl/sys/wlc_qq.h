@@ -1369,7 +1369,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
 
 
 
-        printk("end switch(wlc->chanspec num(%u))----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
+        printk("end switch(wlc->chanspec num(%u))(wlc->home_chanspec num(%u))----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),(wlc_qq->home_chanspec& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
 
 
     }
