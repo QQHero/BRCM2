@@ -951,6 +951,9 @@ wlc_bsscfg_up(wlc_info_t *wlc, wlc_bsscfg_t *cfg)
 
 #ifdef STA
         if (APSTA_ENAB(wlc->pub) && !(wlc->primary_bsscfg->associated)) {
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc_bsscfg:wlc_bsscfg_up:(0x%04x:0x%04x)",wlc->home_chanspec,  cfg->target_bss->chanspec);
+		/* dump_flag_qqdx */
             wlc_set_home_chanspec(wlc, cfg->target_bss->chanspec);
         }
 

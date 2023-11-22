@@ -8165,6 +8165,9 @@ wlc_ap_acs_update(wlc_info_t *wlc)
 
     WL_INFORM(("wl%d: %s: changing chanspec to %d\n",
         wlc->pub->unit, __FUNCTION__, appvt->chanspec_selected));
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc_ap:wlc_set_home_chanspec:(0x%04x:0x%04x)",wlc->home_chanspec, appvt->chanspec_selecte);
+		/* dump_flag_qqdx */
     wlc_set_home_chanspec(wlc, appvt->chanspec_selected);
     wlc_suspend_mac_and_wait(wlc);
 

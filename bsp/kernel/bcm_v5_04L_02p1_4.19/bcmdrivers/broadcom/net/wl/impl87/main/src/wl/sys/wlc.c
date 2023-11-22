@@ -3789,6 +3789,9 @@ wlc_set_home_chanspec(wlc_info_t *wlc, chanspec_t chanspec)
          */
         wlc_stamon_delete_stations_matching_chanspec(wlc, wlc->home_chanspec);
 
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_set_home_chanspec:(0x%04x:0x%04x)",wlc->home_chanspec, chanspec);
+		/* dump_flag_qqdx */
         wlc->home_chanspec = chanspec;
         if (BSSCFG_STA(wlc->primary_bsscfg)) {
             wlc->primary_bsscfg->target_bss->chanspec = chanspec;
@@ -5156,12 +5159,18 @@ wlc_BSSinit(wlc_info_t *wlc, wlc_bss_info_t *bi, wlc_bsscfg_t *cfg, int type)
 #endif /* WL_MIMOPS_CFG */
             wlc_update_bandwidth(wlc, cfg, current_bss->chanspec);
         } else if (!BSSCFG_AP(cfg)) {
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_BSSinit1:(0x%04x:0x%04x)",wlc->home_chanspec,  current_bss->chanspec);
+		/* dump_flag_qqdx */
             wlc_set_home_chanspec(wlc, current_bss->chanspec);
             wlc_set_chanspec(wlc, current_bss->chanspec,
                     CHANSW_REASON(CHANSW_ASSOC));
         }
     } else if (!BSSCFG_AP(cfg)) {
         if (wlc->home_chanspec != phy_utils_get_chanspec(WLC_PI(wlc))) {
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_BSSinit2:(0x%04x:0x%04x)",wlc->home_chanspec, phy_utils_get_chanspec(WLC_PI(wlc)));
+		/* dump_flag_qqdx */
             wlc->home_chanspec = phy_utils_get_chanspec(WLC_PI(wlc));
             /* sync up phy/radio chanspec */
             wlc_set_phy_chanspec(wlc, wlc->home_chanspec);
@@ -5464,6 +5473,9 @@ wlc_bandinit_ordered(wlc_info_t *wlc, chanspec_t chanspec)
             break;
     }
 
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_bandinit_ordered:(0x%04x:0x%04x)",wlc->home_chanspec,  chanspec);
+		/* dump_flag_qqdx */
     wlc_set_home_chanspec(wlc, chanspec);
 
 #ifdef WLCHANIM
@@ -10851,6 +10863,9 @@ wlc_change_band(wlc_info_t *wlc, enum wlc_bandunit new_band)
         }
     }
 
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_change_bandt:(0x%04x:0x%04x)",wlc->home_chanspec, chspec);
+		/* dump_flag_qqdx */
     wlc->home_chanspec = chspec;
 
     if (wlc->pub->up) {
@@ -12976,6 +12991,9 @@ wlc_validate_set_chanspec(wlc_info_t *wlc, chanspec_t chspec)
             !AS_IN_PROGRESS(wlc) &&
             !SCAN_IN_PROGRESS(wlc->scan) &&
             (phy_utils_get_chanspec(wlc->pi) != chspec)) {
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_validate_set_chanspec:(0x%04x:0x%04x)",wlc->home_chanspec,  chspec);
+		/* dump_flag_qqdx */
         wlc_set_home_chanspec(wlc, chspec);
         wlc_suspend_mac_and_wait(wlc);
         wlc_set_chanspec(wlc, chspec, CHANSW_REASON(CHANSW_IOVAR));
@@ -20117,6 +20135,9 @@ wlc_do_chanswitch(wlc_bsscfg_t *cfg, chanspec_t newchspec)
 
     /* Skip for proxySTA bsscfg */
     if (!BSSCFG_PSTA(wlc->primary_bsscfg)) { /* checking primary cfg */
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_do_chanswitch:(0x%04x:0x%04x)",wlc->home_chanspec, newchspec);
+		/* dump_flag_qqdx */
         wlc_set_home_chanspec(wlc, newchspec);
 #ifdef STA
         /* change in chanspec, re-register with the scheduler
@@ -20423,6 +20444,9 @@ wlc_update_bandwidth(wlc_info_t *wlc, wlc_bsscfg_t *bsscfg,
      * update the phy chanspec
      */
     if (wlc->chanspec != new_chspec) {
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_update_bandwidth:(0x%04x:0x%04x)",wlc->home_chanspec, new_chspec);
+		/* dump_flag_qqdx */
         wlc->home_chanspec = new_chspec;
 
         if (BSSCFG_AP(bsscfg)) {
@@ -24844,6 +24868,9 @@ BCMATTACHFN(wlc_bss_default_init)(wlc_info_t *wlc)
         chanspec = phy_utils_chanspec_band_firstch(WLC_PI(wlc),
             wlc->band->bandtype);
 
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc:wlc_bss_default_in:(0x%04x:0x%04x)",wlc->home_chanspec, chanspec);
+		/* dump_flag_qqdx */
     wlc->home_chanspec = bi->chanspec = chanspec;
 
     /* find the band of our default channel */

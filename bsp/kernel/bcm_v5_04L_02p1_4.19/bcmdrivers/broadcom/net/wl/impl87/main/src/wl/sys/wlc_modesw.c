@@ -3938,6 +3938,9 @@ wlc_modesw_chansw_opmode_upd_cb(void *arg, wlc_chansw_notif_data_t *data)
     }
 
     /* On BW change, update the home_chanspec as done in wlc_update_bandwidth */
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc_modesw:wlc_modesw_chansw_opmode_upd_cb:(0x%04x:0x%04x)",wlc->home_chanspec, new_chspec);
+		/* dump_flag_qqdx */
     wlc->home_chanspec = new_chspec;
 #ifdef WL_BEAMFORMING
     if (TXBF_ENAB(wlc->pub)) {

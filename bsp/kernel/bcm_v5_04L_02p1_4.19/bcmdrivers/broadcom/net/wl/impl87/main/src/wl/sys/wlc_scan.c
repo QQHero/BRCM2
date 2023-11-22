@@ -2695,6 +2695,9 @@ wlc_scantimer(void *arg)
     if (!bss_up) {
         WL_SCAN(("%s: All BSS's down. Return to home channel 0x%04x\n",
             __FUNCTION__, wlc->home_chanspec));
+		/* dump_flag_qqdx */
+		printk("change wlc->home_chanspec:wlc_scan:wlc_scantimer:(0x%04x:0x%04x)",wlc->home_chanspec,  wlc->home_chanspec);
+		/* dump_flag_qqdx */
         wlc_set_home_chanspec(wlc, wlc->home_chanspec);
         wlc_suspend_mac_and_wait(wlc);
         wlc_set_chanspec(wlc, wlc->home_chanspec, CHANSW_REASON(CHANSW_SCAN));

@@ -3224,6 +3224,9 @@ wlc_channel_set_chanspec(wlc_cm_info_t *wlc_cmi, chanspec_t chanspec)
 #endif
 
     /* Save our copy of the chanspec */
+		/* dump_flag_qqdx */
+		printk("change wlc->chanspec:wlc_scan:wlc_channel_set_chanspe:(0x%04x:0x%04x)",wlc->chanspec,chanspec);
+		/* dump_flag_qqdx */
     wlc->chanspec = chanspec;
 
     WLDURATION_ENTER(wlc_hw->wlc, DUR_CHAN_SET_CHSPEC);
