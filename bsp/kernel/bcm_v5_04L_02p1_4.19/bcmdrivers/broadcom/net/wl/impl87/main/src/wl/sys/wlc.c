@@ -3861,12 +3861,21 @@ wlc_set_phy_chanspec(wlc_info_t *wlc, chanspec_t chanspec)
     wlc_phy_t *pi;
     BCM_REFERENCE(pi);
 
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec1:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
 #ifdef FCC_PWR_LIMIT_2G
     if (FCC_PWR_LIMIT_2G_ENAB(wlc->pub)) {
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec2:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
         wlc_phy_prev_chanspec_set(WLC_PI(wlc), wlc->chanspec);
     }
 #endif /* FCC_PWR_LIMIT_2G */
     if (wlc->default_bss) {
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspe3:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
         wlc->default_bss->chanspec = chanspec;
     }
 
@@ -3879,27 +3888,48 @@ wlc_set_phy_chanspec(wlc_info_t *wlc, chanspec_t chanspec)
     wlc_channel_set_chanspec(wlc->cmi, chanspec);
 #ifdef WL11AC
     wlc_stf_chanspec_upd(wlc);
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec4:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
 #endif /* WL11AC */
 #ifdef WL_ULMU
     wlc_ulmu_chanspec_upd(wlc);
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec5:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
 #endif /* WL_ULMU */
 #ifdef WL11AX
     wlc_he_chanspec_upd(wlc);
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec6:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
 #endif /* WL11AX */
 #ifdef SRHWVSDB
     if (SRHWVSDB_ENAB(wlc->pub)) {
         wlc_srvsdb_stf_ss_algo_chan_get(wlc, chanspec);
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec7:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
     }
     else
 #endif
     if (wlc->stf->ss_algosel_auto) {
         /* following code brings ~3ms delay for split driver */
         wlc_stf_ss_algo_channel_get(wlc, &wlc->stf->ss_algo_channel, chanspec);
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec8:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
     }
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec9:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
     wlc_stf_ss_update(wlc, wlc->band);
     wlc_bmac_txbw_update(wlc->hw);
 #ifdef WL_BEAMFORMING
     wlc_txbf_impbf_upd(wlc->txbf);
+    /* dump_flag_qqdx */
+    printk("wlc_set_phy_chanspec10:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
 #endif
     WL_TSLOG(wlc, __FUNCTION__, TS_EXIT, 0);
 } /* wlc_set_phy_chanspec */
@@ -4090,6 +4120,9 @@ wlc_set_chanspec(wlc_info_t *wlc, chanspec_t chanspec, int reason_bitmap)
         /* Fix the hardware rateset based on bw.
          * Mainly add MCS32 for 40Mhz, remove MCS 32 for 20Mhz
          */
+    /* dump_flag_qqdx */
+        printk("wlc_set_chanspec10+:(0x%04x)",chanspec);
+    /* dump_flag_qqdx */
         wlc_rateset_ht_bw_mcs_filter(&wlc->band->hw_rateset, CHSPEC_WLC_BW(chanspec));
     }
     /* dump_flag_qqdx */
