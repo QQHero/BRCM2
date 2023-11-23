@@ -1396,8 +1396,8 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         printk("end switch(wlc->chanspec num(%u))(wlc->home_chanspec num(%u))----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),(wlc_qq->home_chanspec& WL_CHANSPEC_CHAN_MASK),OSL_SYSUPTIME());
 
 
+        recent_channel_set_end_time = OSL_SYSUPTIME();//探查channel switch 时延来源
     }
-    recent_channel_set_end_time = OSL_SYSUPTIME();//探查channel switch 时延来源
         // 重新设置定时器    
         mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*30));
     

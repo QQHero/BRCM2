@@ -1549,7 +1549,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         
         //#if 0
         if(start_game_is_on){
-            if((recent_channel_set_end_time<OSL_SYSUPTIME()+1000)&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+            if((recent_channel_set_end_time>(OSL_SYSUPTIME()+1000))&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
                 printk("recent_channel_set_end_time(%u);OSL_SYSUPTIME()----------(%u)",recent_channel_set_end_time,OSL_SYSUPTIME());
                 recent_channel_set_end_time = 0;
             }
