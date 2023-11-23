@@ -2122,6 +2122,11 @@ void /* Wireless CFP capable Transmit fastpath entry point. */
 wlc_cfp_tx_sendup(int cfp_unit, uint16 flowid, uint8 prio,
 	void *pktlist_head, void *pktlist_tail, uint16 pkt_count)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_cfp_tx_sendup:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
 	wlc_info_t *wlc;
 	scb_cfp_t *scb_cfp; /* SCB CFP cubby */
 	struct scb* scb;

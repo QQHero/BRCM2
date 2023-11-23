@@ -3549,6 +3549,11 @@ void
 wl_pktfwd_pktlist_xmit(struct net_device * net_device,
                        wl_pktfwd_pktlist_t * wl_pktfwd_pktlist)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wl_pktfwd_pktlist_xmit:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
 #ifdef PKTC
     struct sk_buff    * skb_chain;
 #endif
@@ -3819,6 +3824,11 @@ wl_pktfwd_runq_schedule(wl_info_t * wl)
 void
 wl_pktfwd_dnstream(wl_info_t * wl)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wl_pktfwd_dnstream:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     if (!WL_PKTFWD_SUPPORTED(wl->unit)) {
         /* PKTFWD is not supported for this radio */
         return;

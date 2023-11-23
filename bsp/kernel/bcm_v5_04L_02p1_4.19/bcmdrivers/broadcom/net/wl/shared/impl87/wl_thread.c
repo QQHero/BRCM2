@@ -84,6 +84,19 @@ wl_worker_thread_func(void *data)
 
 #if defined(PKTC_TBL)
 #if defined(BCM_PKTFWD)
+
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        if(wl->txq_dispatche){
+
+            printk("channel switch time:wl_worker_thread_func:txq_dispatche:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+        }
+        if(wl->rxq_dispatched){
+
+            printk("channel switch time:wl_worker_thread_func:rxq_dispatched:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+        }
+    }
+    /* dump_flag_qqdx */
         wl_pktfwd_dnstream(wl); /* independent of txq_txchain_dispatched */
 #else  /* ! BCM_PKTFWD */
         {

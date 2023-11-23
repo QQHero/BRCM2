@@ -5052,6 +5052,11 @@ static bool BCMFASTPATH
 wlc_ampdu_txeval(ampdu_tx_info_t *ampdu_tx, scb_ampdu_tx_t *scb_ampdu,
                  scb_ampdu_tid_ini_t *ini, bool force)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_ampdu_txeval:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     struct scb *scb = scb_ampdu->scb;
     wlc_info_t *wlc = ampdu_tx->wlc;
 
@@ -15072,6 +15077,11 @@ wlc_cfp_ampdu_release(scb_cfp_t *scb_cfp, ampdu_tx_info_t *ampdu_tx, scb_ampdu_t
     scb_ampdu_tid_ini_t *ini, uint16 release_cnt, bool amsdu_in_ampdu,
     taf_scheduler_public_t* taf)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_cfp_ampdu_release:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     wlc_info_t *wlc;
     void *pkt = NULL;
     void *sf0, *sf1;
@@ -15776,6 +15786,11 @@ static INLINE void
 wlc_cfp_ampdu_evaluate(scb_cfp_t *scb_cfp, ampdu_tx_info_t *ampdu_tx, scb_ampdu_tx_t *scb_ampdu,
     scb_ampdu_tid_ini_t *ini, const bool force_release)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_cfp_ampdu_evaluate:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     wlc_info_t *wlc;
     struct scb * scb;
     /* Wlc Core Tx FIFO state */
@@ -15962,6 +15977,11 @@ static INLINE void
 wlc_cfp_ampdu_schedule(scb_cfp_t *scb_cfp, ampdu_tx_info_t *ampdu_tx, scb_ampdu_tx_t *scb_ampdu,
     scb_ampdu_tid_ini_t *ini, const bool force_release)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_cfp_ampdu_schedule:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     wlc_info_t *wlc;
     uint16 in_transit, max_release;
     struct scb *scb = SCB_CFP_SCB(scb_cfp);
@@ -16093,6 +16113,11 @@ wlc_cfp_ampdu_entry(wlc_info_t *wlc, uint8 prio,
     void *pktlist_head, void *pktlist_tail, uint16 pktlist_count,
     scb_cfp_t *scb_cfp)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_cfp_ampdu_entry:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     const uint8 tid = prio; /* same as pkt prio */
     const bool force_release = FALSE;
     scb_ampdu_tx_t *scb_ampdu;
