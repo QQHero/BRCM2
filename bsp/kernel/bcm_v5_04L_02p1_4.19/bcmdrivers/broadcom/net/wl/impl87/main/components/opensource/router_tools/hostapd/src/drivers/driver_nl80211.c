@@ -4926,6 +4926,9 @@ static int nl80211_put_freq_params(struct nl_msg *msg,
 static int nl80211_set_channel(struct i802_bss *bss,
 			       struct hostapd_freq_params *freq, int set_chan)
 {
+    /* dump_flag_qqdx */
+    printk("nl80211_set_channel start----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
 	struct wpa_driver_nl80211_data *drv = bss->drv;
 	struct nl_msg *msg;
 	int ret;
@@ -4939,16 +4942,25 @@ static int nl80211_set_channel(struct i802_bss *bss,
 			      NL80211_CMD_SET_WIPHY);
 	if (!msg || nl80211_put_freq_params(msg, freq) < 0) {
 		nlmsg_free(msg);
+    /* dump_flag_qqdx */
+    printk("nl80211_set_channel end1----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
 		return -1;
 	}
 
 	ret = send_and_recv_msgs(drv, msg, NULL, NULL, NULL, NULL);
 	if (ret == 0) {
 		bss->freq = freq->freq;
+    /* dump_flag_qqdx */
+    printk("nl80211_set_channel end2----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
 		return 0;
 	}
 	wpa_printf(MSG_DEBUG, "nl80211: Failed to set channel (freq=%d): "
 		   "%d (%s)", freq->freq, ret, strerror(-ret));
+    /* dump_flag_qqdx */
+    printk("nl80211_set_channel end3----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
 	return -1;
 }
 

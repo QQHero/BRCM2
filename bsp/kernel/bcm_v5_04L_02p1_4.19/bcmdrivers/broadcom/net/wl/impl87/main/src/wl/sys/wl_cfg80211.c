@@ -20945,6 +20945,9 @@ _Pragma("GCC diagnostic pop")
 s32
 wl_cfg80211_up(struct net_device *net)
 {
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_up start----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
     struct bcm_cfg80211 *cfg;
     s32 err = 0;
     int val = 1;
@@ -20957,22 +20960,38 @@ wl_cfg80211_up(struct net_device *net)
     WL_DBG(("In\n"));
     cfg = wl_get_cfg(net);
 
-    if (cfg == NULL)
+    if (cfg == NULL){
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_up end1----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
+
         return BCME_OK;
+    }
 
     /* cfg80211_up calls once for a radio */
-    if (bcmcfg_to_prmry_ndev(cfg) != net)
+    if (bcmcfg_to_prmry_ndev(cfg) != net){
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_up end2----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
+
         return BCME_OK;
 
+    }
     if ((err = wldev_ioctl_get(bcmcfg_to_prmry_ndev(cfg), WLC_GET_VERSION, &val,
         sizeof(int)) < 0)) {
         WL_ERR(("WLC_GET_VERSION failed, err=%d\n", err));
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_up end3----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
         return err;
     }
     val = dtoh32(val);
     if (val != WLC_IOCTL_VERSION && val != 1) {
         WL_ERR(("Version mismatch, please upgrade. Got %d, expected %d or 1\n",
             val, WLC_IOCTL_VERSION));
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_up end4----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
         return BCME_VERSION;
     }
     ioctl_version = val;
@@ -20983,6 +21002,9 @@ wl_cfg80211_up(struct net_device *net)
         err = wl_cfg80211_attach_post(bcmcfg_to_prmry_ndev(cfg));
         if (unlikely(err)) {
             mutex_unlock(&cfg->usr_sync);
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_up end5----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
             return err;
         }
     }
@@ -21047,6 +21069,9 @@ wl_cfg80211_up(struct net_device *net)
     wl_cfg80211_create_iface(cfg->wdev->wiphy, WL_INTERFACE_TYPE_STA, NULL, "wlan%d");
 #endif /* DUAL_STA_STATIC_IF */
 
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_up end6----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
     return err;
 }
 
@@ -24623,6 +24648,9 @@ static int wl_chspec_chandef(chanspec_t chanspec,
 void
 wl_cfg80211_ch_switch_notify(struct net_device *dev, uint16 chanspec, struct bcm_cfg80211 *cfg)
 {
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_ch_switch_notify start----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
     u32 freq;
     struct cfg80211_chan_def chandef;
     struct wiphy *wiphy = bcmcfg_to_wiphy(cfg);
@@ -24630,12 +24658,18 @@ wl_cfg80211_ch_switch_notify(struct net_device *dev, uint16 chanspec, struct bcm
 
     if (!wiphy) {
         WL_ERR(("wiphy is null\n"));
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_ch_switch_notify end1----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
         return;
     }
 #if defined(BCA_HNDROUTER) || defined(STBAP)
 #ifndef ALLOW_CHSW_EVT
     /* Channel switch support is only for AP/GO/ADHOC/MESH */
     if (dev->ieee80211_ptr->iftype == NL80211_IFTYPE_P2P_CLIENT) {
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_ch_switch_notify end2----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
         return;
     }
 #endif /* !ALLOW_CHSW_EVT */
@@ -24644,12 +24678,18 @@ wl_cfg80211_ch_switch_notify(struct net_device *dev, uint16 chanspec, struct bcm
     if ((!dev->ieee80211_ptr->current_bss) &&
         (dev->ieee80211_ptr->iftype != NL80211_IFTYPE_AP)) {
         WL_ERR(("non-cfg path, need not notify nl80211 layer\n"));
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_ch_switch_notify end3----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
         return;
     }
 
     memset(&chandef, 0, sizeof(struct cfg80211_chan_def));
     if (wl_get_mode_by_netdev(cfg, dev) == WL_MODE_AP) {
         if (!cfg->ap_oper_channel || (cfg->ap_oper_channel == channel)) {
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_ch_switch_notify end4----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
             return;
         }
         cfg->ap_oper_channel = channel;
@@ -24657,6 +24697,9 @@ wl_cfg80211_ch_switch_notify(struct net_device *dev, uint16 chanspec, struct bcm
 
     if (wl_chspec_chandef(chanspec, &chandef, wiphy)) {
         WL_ERR(("chspec_chandef failed\n"));
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_ch_switch_notify end5----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
         return;
     }
 
@@ -24664,6 +24707,9 @@ wl_cfg80211_ch_switch_notify(struct net_device *dev, uint16 chanspec, struct bcm
     cfg80211_ch_switch_notify(dev, &chandef);
 
     WL_INFORM(("Channel switch notification for freq: %d chanspec: 0x%x\n", freq, chanspec));
+    /* dump_flag_qqdx */
+    printk("wl_cfg80211_ch_switch_notify end6----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
     return;
 }
 #endif /* KERNEL >= 3.8 */
