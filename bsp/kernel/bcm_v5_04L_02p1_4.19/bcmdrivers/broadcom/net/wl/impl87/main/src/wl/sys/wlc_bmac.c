@@ -21257,6 +21257,12 @@ wlc_bmac_hwa_txfifo_ring_full(wlc_info_t *wlc, bool isfull)
 int BCMFASTPATH
 wlc_bmac_dma_txfast(wlc_info_t *wlc, uint fifo, void *p, bool commit)
 {
+    
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_bmac_dma_txfast:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     /* dump_flag_qqdx */
 #ifdef dump_stack_qqdx_print
     int dump_rand_flag = OSL_RAND() % 10000;
