@@ -1331,13 +1331,13 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
 
         printk("start switch(from wlc->chanspec num(%u) to chanspec_cur((0x%04x)%u:%u)) ----------[fyl] OSL_SYSUPTIME()----------(%u)",(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK),chanspec_cur,(chanspec_cur& WL_CHANSPEC_CHAN_MASK), wf_chspec_bw_num[CHSPEC_BW(chanspec_cur)>> WL_CHANSPEC_BW_SHIFT],OSL_SYSUPTIME());
 
-        wlc_qq->home_chanspec = chanspec_cur;
 
         if (wlc_qq->pub->up) {
 
 
             if(OSL_RAND()%100>50){
                 printk("switch1");
+                wlc_qq->home_chanspec = chanspec_cur;
 
                 wlc_suspend_mac_and_wait(wlc_qq);
                 wlc_set_chanspec(wlc_qq, chanspec_cur, CHANSW_REASON(CHANSW_APCS));
