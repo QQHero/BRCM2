@@ -167,6 +167,9 @@ dma_txreclaim(hnddma_t *dmah, txd_range_t range)
 	return pktcnt;
 }
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /**
  * !! tx entry routine
  * WARNING: call must check the return value for error.
