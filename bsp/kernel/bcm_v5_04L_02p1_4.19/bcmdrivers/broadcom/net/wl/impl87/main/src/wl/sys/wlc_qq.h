@@ -1264,6 +1264,10 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         }
     if(start_game_is_on){
         if(!skiped_first_channel_set){
+            if((wlc_qq->chanspec != 0x0000)){
+                mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*10));
+                return;
+            }
             skiped_first_channel_set = TRUE;
             mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*10));
             chanspec_origin = wlc_qq->chanspec;
@@ -1661,7 +1665,7 @@ void timer_callback_scan_try_qq(struct timer_list *t) {
     in_scan_qq = TRUE;//用于判断当前是否正处于scan中，避免信道切换受到scan的影响。
         //printk("scan test1(%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",scan_channel_index,OSL_SYSUPTIME());
     if(start_game_is_on){
-        if(chanspec_origin != wlc_qq->chanspec){//保证一旦信道切换成功，就不再scan了
+        if((chanspec_origin != 0x0000)&&(chanspec_origin != wlc_qq->chanspec)){//保证一旦信道切换成功，就不再scan了
             printk("scan_try last channel set is successful:from(0x%04x)to(0x%04x)",chanspec_origin, wlc_qq->chanspec);
             mod_timer(&timer_qq_scan_try, jiffies + msecs_to_jiffies(TIMER_INTERVAL_SCAN_qq *10+OSL_RAND() % 103));
             return;
