@@ -90,7 +90,7 @@ wl_worker_thread_func(void *data)
 
     /* dump_flag_qqdx */
     if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
-        if(wl->txq_dispatche){
+        if(wl->txq_dispatched){
 
             printk("channel switch time:wl_worker_thread_func:txq_dispatche:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
         }
