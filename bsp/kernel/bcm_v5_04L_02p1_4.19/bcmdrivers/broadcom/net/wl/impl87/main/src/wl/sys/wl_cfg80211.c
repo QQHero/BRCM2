@@ -14626,6 +14626,9 @@ static s32
 wl_dfs_cac_notify_status(struct bcm_cfg80211 *cfg,
     bcm_struct_cfgdev *cfgdev, const wl_event_msg_t *e, void *data)
 {
+    /* dump_flag_qqdx */
+    printk("wl_dfs_cac_notify_status start----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
     wlc_cac_event_t *cac_event = (wlc_cac_event_t *)data;
     wl_dfs_status_all_t *scan_status;
     wl_dfs_sub_status_t  *dfs_sub_status;
@@ -14691,6 +14694,9 @@ wl_dfs_cac_notify_status(struct bcm_cfg80211 *cfg,
         break;
     }
     ndev->ieee80211_ptr->chandef = cur_chandef;
+    /* dump_flag_qqdx */
+    printk("wl_dfs_cac_notify_status end----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    /* dump_flag_qqdx */
     return BCME_OK;
 }
 #endif /* KERNEL_VERSION(4, 19, 0) */
