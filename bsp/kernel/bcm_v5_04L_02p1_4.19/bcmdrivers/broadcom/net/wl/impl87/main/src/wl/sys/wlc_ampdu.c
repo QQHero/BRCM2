@@ -5056,7 +5056,7 @@ wlc_ampdu_txeval(ampdu_tx_info_t *ampdu_tx, scb_ampdu_tx_t *scb_ampdu,
                  scb_ampdu_tid_ini_t *ini, bool force)
 {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=160)){//探查channel switch 时延来源
         printk("channel switch time:wlc_ampdu_txeval:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -15081,7 +15081,7 @@ wlc_cfp_ampdu_release(scb_cfp_t *scb_cfp, ampdu_tx_info_t *ampdu_tx, scb_ampdu_t
     taf_scheduler_public_t* taf)
 {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=160)){//探查channel switch 时延来源
         printk("channel switch time:wlc_cfp_ampdu_release:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -15790,7 +15790,7 @@ wlc_cfp_ampdu_evaluate(scb_cfp_t *scb_cfp, ampdu_tx_info_t *ampdu_tx, scb_ampdu_
     scb_ampdu_tid_ini_t *ini, const bool force_release)
 {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=160)){//探查channel switch 时延来源
         printk("channel switch time:wlc_cfp_ampdu_evaluate:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -15981,7 +15981,7 @@ wlc_cfp_ampdu_schedule(scb_cfp_t *scb_cfp, ampdu_tx_info_t *ampdu_tx, scb_ampdu_
     scb_ampdu_tid_ini_t *ini, const bool force_release)
 {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=160)){//探查channel switch 时延来源
         printk("channel switch time:wlc_cfp_ampdu_schedule:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -16117,7 +16117,7 @@ wlc_cfp_ampdu_entry(wlc_info_t *wlc, uint8 prio,
     scb_cfp_t *scb_cfp)
 {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=160)){//探查channel switch 时延来源
         printk("channel switch time:wlc_cfp_ampdu_entry:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */

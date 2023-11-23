@@ -175,6 +175,11 @@ dma_txreclaim(hnddma_t *dmah, txd_range_t range)
 static int BCMFASTPATH
 _dma_txfast(dma_info_t *di, void *p0, bool commit)
 {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_ampdu_txeval:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
 	void *p, *next;
 	uchar *data;
 	uint len;

@@ -2126,7 +2126,7 @@ wlc_cfp_tx_sendup(int cfp_unit, uint16 flowid, uint8 prio,
 	void *pktlist_head, void *pktlist_tail, uint16 pkt_count)
 {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=160)){//探查channel switch 时延来源
         printk("channel switch time:wlc_cfp_tx_sendup:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */

@@ -2128,6 +2128,11 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
 
     //mutex_lock(&pkt_qq_mutex); // 加锁
     //printk("**************debug1*******************");
+    if((recent_channel_set_end_time>(OSL_SYSUPTIME()-1000))&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("recent_channel_set_end_time(%u);OSL_SYSUPTIME()----------(%u)",recent_channel_set_end_time,OSL_SYSUPTIME());
+        recent_channel_set_end_time = 0;
+    }
+            
     uint slottime_qq = APHY_SLOT_TIME;
     ampdu_tx_config_t *ampdu_tx_cfg = ampdu_tx->config;
     if (wlc->band->gmode && !wlc->shortslot)
