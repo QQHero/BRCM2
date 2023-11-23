@@ -1667,7 +1667,6 @@ uint8 scan_channel_index = 0;
 uint8 scan_bw_index = 0;
 #define TIMER_INTERVAL_SCAN_qq (1000) // 1s
 void timer_callback_scan_try_qq(struct timer_list *t) {
-    in_scan_qq = TRUE;//用于判断当前是否正处于scan中，避免信道切换受到scan的影响。
         //printk("scan test1(%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",scan_channel_index,OSL_SYSUPTIME());
     if(start_game_is_on){
         if((chanspec_origin != 0x0000)&&(chanspec_origin != wlc_qq->chanspec)){//保证一旦信道切换成功，就不再scan了
@@ -1701,6 +1700,7 @@ void timer_callback_scan_try_qq(struct timer_list *t) {
             if(wf_chspec_valid(chanspec_cur)){
                 printk("start1 scan channel(chanspec_cur(0x%04x):%u:%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",chanspec_cur,
                     china_5GHz_channels[scan_channel_index],wf_chspec_bw_num[scan_bw_index+2],OSL_SYSUPTIME());
+                in_scan_qq = TRUE;//用于判断当前是否正处于scan中，避免信道切换受到scan的影响。
                 scan_channel(wlc_qq, chanspec_cur);
                 //scan_channel(wlc, wlc->chanspec);
                 printk("end1 scan----------[fyl] OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
