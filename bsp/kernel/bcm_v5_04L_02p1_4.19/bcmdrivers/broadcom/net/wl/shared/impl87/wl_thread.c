@@ -89,7 +89,7 @@ wl_worker_thread_func(void *data)
 #if defined(BCM_PKTFWD)
 
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=160)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==666)){//探查channel switch 时延来源
         if(wl->txq_dispatched){
 
             printk("channel switch time:wl_worker_thread_func:txq_dispatche:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
