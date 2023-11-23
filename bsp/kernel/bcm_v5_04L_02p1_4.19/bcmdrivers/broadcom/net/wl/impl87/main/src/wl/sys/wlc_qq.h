@@ -1335,7 +1335,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         if (wlc_qq->pub->up) {
 
 
-            if(OSL_RAND()%100>50){
+            if(OSL_RAND()%100>=0){
                 printk("switch1");
                 wlc_qq->home_chanspec = chanspec_cur;
 
