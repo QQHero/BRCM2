@@ -2118,6 +2118,9 @@ wlc_cfp_pkt_prepare(int cfp_unit, uint16 flowid, uint8 prio,
 		WLC_CFPMOD_ARG("PKTPREPARE"), scb));
 }
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 void /* Wireless CFP capable Transmit fastpath entry point. */
 wlc_cfp_tx_sendup(int cfp_unit, uint16 flowid, uint8 prio,
 	void *pktlist_head, void *pktlist_tail, uint16 pkt_count)

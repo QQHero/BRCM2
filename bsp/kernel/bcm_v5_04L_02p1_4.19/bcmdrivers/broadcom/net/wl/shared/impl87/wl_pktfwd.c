@@ -3530,6 +3530,9 @@ wl_pktfwd_pktlist_xmit_single_pkt(wl_info_t * wl, struct net_device * net_device
 }   /* wl_pktfwd_pktlist_xmit_single_pkt */
 #endif /* !defined(PKTC) */
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /*
  * -----------------------------------------------------------------------------
  *

@@ -49,6 +49,9 @@ extern void BCMFASTPATH wl_start_txchain_txqwork(pktc_info_t *pktci);
 #endif
 
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 
 static int
 wl_worker_thread_func(void *data)

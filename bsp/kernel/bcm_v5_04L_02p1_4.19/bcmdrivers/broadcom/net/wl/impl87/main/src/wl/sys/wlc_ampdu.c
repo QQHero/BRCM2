@@ -5042,6 +5042,9 @@ wlc_ampdu_txeval_action(ampdu_tx_info_t *ampdu_tx, scb_ampdu_tx_t *scb_ampdu,
     return FALSE;
 } /* wlc_ampdu_txeval_action */
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /* Select one of the eval routines
  * 1. TAF based unified scheduler[ Used with TAF enabled]
  * 2. SQS based ampdu scheduler  [ Used in non TAF builds]
