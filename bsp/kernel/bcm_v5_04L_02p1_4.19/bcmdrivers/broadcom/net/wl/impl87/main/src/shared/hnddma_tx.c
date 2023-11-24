@@ -210,6 +210,11 @@ _dma_txfast(dma_info_t *di, void *p0, bool commit)
 #ifdef BCMLFRAG
 	if (BCMLFRAG_ENAB()) {
 		if (PKTISTXFRAG(di->osh, p0)) {
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:_dma_txfast:dma64_txfast_lfrag(di, p0, commit);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
 			return dma64_txfast_lfrag(di, p0, commit);
 		}
 	}
@@ -444,12 +449,22 @@ _dma_txfast(dma_info_t *di, void *p0, bool commit)
 	/* tx flow control */
 	di->hnddma.txavail = di->ntxd - NTXDACTIVE(di->txin, di->txout) - 1;
 
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:_dma_txfast:return (0);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
 	return (0);
 
 outoftxd:
 	DMA_ERROR(("%s: dma_txfast: out of txds !!!\n", di->name));
 	di->hnddma.txavail = 0;
 	di->hnddma.txnobuf++;
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:_dma_txfast:return (-1);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
 	return (-1);
 }
 
