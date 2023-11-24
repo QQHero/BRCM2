@@ -1961,6 +1961,9 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
     }
 }
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /**
  * Drains UTXDs from the caller supplied queue and feeds them to the d11 core
  * using DMA.
@@ -2046,6 +2049,11 @@ txq_hw_fill_utxd(txq_info_t *txqi, txq_t *txq)
 
         commit = spktq_peek(spktq) ? FALSE : TRUE;
 
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:txq_hw_fill_utxd:if (wlc_bmac_dma_txfast(wlc, fifo, p, commit) < 0) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
         if (wlc_bmac_dma_txfast(wlc, fifo, p, commit) < 0) {
             /* the dma did not have enough room to take the pkt */
 

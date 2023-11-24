@@ -1196,6 +1196,9 @@ wlc_mbss_dump_spt_pkt_state(wlc_info_t *wlc, wlc_bsscfg_t *cfg, int i)
 }
 #endif /* BCMDBG */
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /* Under MBSS, this routine handles all TX dma done packets from the ATIM fifo. */
 void
 wlc_mbss_dotxstatus(wlc_info_t *wlc, tx_status_t *txs, void *pkt, uint16 fc,
@@ -1234,6 +1237,11 @@ wlc_mbss_dotxstatus(wlc_info_t *wlc, tx_status_t *txs, void *pkt, uint16 fc,
             int txerr;
 
             WLCNTINCR(bmi->cnt->prb_resp_retrx);
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_mbss_dotxstatus:txerr = wlc_bmac_dma_txfast(wlc, TX_ATIM_FIFO, pkt, TRUE);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
             txerr = wlc_bmac_dma_txfast(wlc, TX_ATIM_FIFO, pkt, TRUE);
 
             if (txerr < 0) {

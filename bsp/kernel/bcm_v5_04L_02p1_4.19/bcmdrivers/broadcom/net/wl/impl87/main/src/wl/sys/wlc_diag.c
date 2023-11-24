@@ -565,6 +565,9 @@ struct buf_info {
 	uint32 len;
 } tx_bi[MAX_LOOPBACK_PKTS], rx_bi[MAX_LOOPBACK_PKTS];
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /**
  * Enhanced loopback test. Performs a loopback test of one frame
  * on one particular tx and one particular rx FIFO.
@@ -693,6 +696,11 @@ wlc_diag_lb_int_ext(wlc_info_t *wlc, uint32 lb_int)
 			if (txavail == 0)
 				break;
 
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_diag_lb_int_ext:if (wlc_bmac_dma_txfast(wlc, TX_DATA_FIFO, p, TRUE)) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
 			if (wlc_bmac_dma_txfast(wlc, TX_DATA_FIFO, p, TRUE)) {
 				PKTFREE(wlc->osh, p, TRUE);
 			}

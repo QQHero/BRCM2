@@ -2559,6 +2559,9 @@ wlc_p2p_bmac_int_proc(wlc_hw_info_t *wlc_hw)
 } /* wlc_p2p_bmac_int_proc */
 #endif /* WLP2P_UCODE */
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /**
  * Used for test functionality (packet engine / diagnostics), or for BMAC and offload firmware
  * builds.
@@ -2595,6 +2598,11 @@ wlc_bmac_txfifo(wlc_hw_info_t *wlc_hw, uint fifo, void *p,
         wlc_bmac_write_shm(wlc_hw, M_BCMC_FID(wlc_hw), frameid);
     }
 
+    /* dump_flag_qqdx */
+    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+        printk("channel switch time:wlc_bmac_txfifo:if (wlc_bmac_dma_txfast(wlc_hw->wlc, fifo, p, commit) < 0) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+    }
+    /* dump_flag_qqdx */
     if (wlc_bmac_dma_txfast(wlc_hw->wlc, fifo, p, commit) < 0) {
         TX_PKTDROP_COUNT(wlc_hw->wlc, scb, TX_PKTDROP_RSN_DMA_ERR);
         PKTFREE(wlc_hw->osh, p, TRUE);
