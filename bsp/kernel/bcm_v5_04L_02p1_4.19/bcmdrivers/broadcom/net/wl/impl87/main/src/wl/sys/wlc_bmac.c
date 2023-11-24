@@ -21257,6 +21257,7 @@ wlc_bmac_hwa_txfifo_ring_full(wlc_info_t *wlc, bool isfull)
 
 /* dump_flag_qqdx */
 extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+extern bool via_txq_hw_fill;//探查channel switch 时延来源
 /* dump_flag_qqdx */
 /**
  * This function encapsulates the call to dma_txfast.
@@ -21270,8 +21271,17 @@ wlc_bmac_dma_txfast(wlc_info_t *wlc, uint fifo, void *p, bool commit)
 {
     
     /* dump_flag_qqdx */
+    
     if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
         printk("channel switch time:wlc_bmac_dma_txfast:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+        if(!via_txq_hw_fill){
+            dump_stack();
+        }
+        /* dump_flag_qqdx */
+        via_txq_hw_fill = FALSE;//探查channel switch 时延来源
+        /* dump_flag_qqdx */
+
+
     }
     /* dump_flag_qqdx */
     /* dump_flag_qqdx */

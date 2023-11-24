@@ -1547,6 +1547,9 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
             break;
         }
         
+        /* dump_flag_qqdx */
+        via_txq_hw_fill = TRUE;//探查channel switch 时延来源
+        /* dump_flag_qqdx */
         //#if 0
         if(start_game_is_on){
             /* dump_flag_qqdx */

@@ -1256,6 +1256,7 @@ chanspec_t chanspec_real_set;
 chanspec_t chanspec_origin;//记录最开始的chanspec，用于将其与当前的进行对比，从而判断上次是否成功转换信道。
 bool skiped_first_channel_set = FALSE;
 uint32 recent_channel_set_end_time = 0;//探查channel switch 时延来源
+bool via_txq_hw_fill = TRUE;//探查channel switch 时延来源
 void timer_callback_scan_set_qq(struct timer_list *t) {
     
     printk("Start channel set!");
