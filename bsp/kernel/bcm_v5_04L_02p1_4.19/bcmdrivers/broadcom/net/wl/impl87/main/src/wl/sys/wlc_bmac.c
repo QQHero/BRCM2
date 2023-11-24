@@ -21247,6 +21247,9 @@ wlc_bmac_hwa_txfifo_ring_full(wlc_info_t *wlc, bool isfull)
 
 #endif /* BCMHWA && HWA_TXFIFO_BUILD */
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 /**
  * This function encapsulates the call to dma_txfast.
  * In case cut through DMA is enabled, this function will also format necessary information
