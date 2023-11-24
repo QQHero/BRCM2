@@ -1535,6 +1535,11 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
 #endif /* CFP_DEBUG */
         /* dump_flag_qqdx */
         bool not_enough_flag_qq = FALSE;
+        /* dump_flag_qqdx */
+        if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+            printk("channel switch time:txq_hw_fill:if (wlc_bmac_dma_txfast(wlc, fifo, p, commit) < 0) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+        }
+        /* dump_flag_qqdx */
         if (wlc_bmac_dma_txfast(wlc, fifo, p, commit) < 0) {
             /* the dma did not have enough room to take the pkt */
             not_enough_flag_qq = TRUE;
