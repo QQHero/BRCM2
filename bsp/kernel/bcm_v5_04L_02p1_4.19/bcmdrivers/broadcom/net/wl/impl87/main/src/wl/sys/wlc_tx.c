@@ -1550,17 +1550,17 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         //#if 0
         if(start_game_is_on){
             /* dump_flag_qqdx */
-            if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
-                printk("channel switch time:txq_hw_fill:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
-            }
-            
-            if((recent_channel_set_end_time<(OSL_SYSUPTIME()-16000))&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
-                printk("recent_channel_set_end_time(%u);OSL_SYSUPTIME()----------(%u)",recent_channel_set_end_time,OSL_SYSUPTIME());
-                recent_channel_set_end_time = 0;
-            }
-            /* dump_flag_qqdx */
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
+                    
+                /* dump_flag_qqdx */
+                if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+                    printk("channel switch time:txq_hw_fill:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+                }
                 
+                if((recent_channel_set_end_time<(OSL_SYSUPTIME()-16000))&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+                    printk("recent_channel_set_end_time(%u);OSL_SYSUPTIME()----------(%u)",recent_channel_set_end_time,OSL_SYSUPTIME());
+                    recent_channel_set_end_time = 0;
+                }
                 wlc_qq = wlc;//这里如果不实时更新会是个大坑
                 if(not_enough_flag_qq == FALSE){
 
