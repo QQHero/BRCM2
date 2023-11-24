@@ -646,6 +646,7 @@ dma_txcommit(hnddma_t *dmah)
     /* dump_flag_qqdx */
     if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
         printk("channel switch time:dma_txcommit:dma64_txcommit_local(DI_INFO(dmah));:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+		dump_stack();
     }
     /* dump_flag_qqdx */
 
