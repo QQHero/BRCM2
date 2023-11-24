@@ -2314,6 +2314,9 @@ dma_getpos(hnddma_t *dmah, bool direction)
 
 	return va;
 }
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+/* dump_flag_qqdx */
 
 /**
  * TX of unframed data
