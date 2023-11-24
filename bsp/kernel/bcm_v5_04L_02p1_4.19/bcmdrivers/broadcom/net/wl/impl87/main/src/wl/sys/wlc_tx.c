@@ -1557,8 +1557,8 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                     printk("channel switch time:txq_hw_fill:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
                 }
                 
-                if((recent_channel_set_end_time<(OSL_SYSUPTIME()-16000))&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
-                    printk("recent_channel_set_end_time(%u);OSL_SYSUPTIME()----------(%u)",recent_channel_set_end_time,OSL_SYSUPTIME());
+                if((recent_channel_set_end_time<(OSL_SYSUPTIME()-36000))&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+                    printk("txq_hw_fill:recent_channel_set_end_time(%u);OSL_SYSUPTIME()----------(%u)",recent_channel_set_end_time,OSL_SYSUPTIME());
                     recent_channel_set_end_time = 0;
                 }
                 wlc_qq = wlc;//这里如果不实时更新会是个大坑
@@ -1879,6 +1879,12 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
 #if defined(BCMHWA) && defined(HWA_TXFIFO_BUILD)
                 (void)wlc_bmac_hwa_txfifo_commit(wlc, fifo, __FUNCTION__);
 #else
+        /* dump_flag_qqdx */
+        if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+            printk("channel switch time:txq_hw_fill:dma_txcommit(di)1;:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+            //dump_stack();
+        }
+        /* dump_flag_qqdx */
                 dma_txcommit(di);
 #endif /* BCMHWA */
             }
@@ -1914,6 +1920,12 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
 #if defined(BCMHWA) && defined(HWA_TXFIFO_BUILD)
         (void)wlc_bmac_hwa_txfifo_commit(wlc, fifo, __FUNCTION__);
 #else
+        /* dump_flag_qqdx */
+        if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+            printk("channel switch time:txq_hw_fill:dma_txcommit(di)2;:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
+            //dump_stack();
+        }
+        /* dump_flag_qqdx */
         dma_txcommit(di);
 #endif /* BCMHWA && HWA_TXFIFO_BUILD */
     }
