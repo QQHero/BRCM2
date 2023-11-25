@@ -1536,7 +1536,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         /* dump_flag_qqdx */
         bool not_enough_flag_qq = FALSE;
         /* dump_flag_qqdx */
-        if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+        if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
             printk("channel switch time:txq_hw_fill:if (wlc_bmac_dma_txfast(wlc, fifo, p, commit) < 0) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
         }
         /* dump_flag_qqdx */
@@ -1561,7 +1561,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
                     
                 /* dump_flag_qqdx */
-                if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+                if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
                     printk("channel switch time:txq_hw_fill:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
                 }
                 
@@ -1888,7 +1888,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                 (void)wlc_bmac_hwa_txfifo_commit(wlc, fifo, __FUNCTION__);
 #else
         /* dump_flag_qqdx */
-        if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+        if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
             printk("channel switch time:txq_hw_fill:dma_txcommit(di)1;:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
             //dump_stack();
         }
@@ -1929,7 +1929,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         (void)wlc_bmac_hwa_txfifo_commit(wlc, fifo, __FUNCTION__);
 #else
         /* dump_flag_qqdx */
-        if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+        if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
             printk("channel switch time:txq_hw_fill:dma_txcommit(di)2;:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
             //dump_stack();
         }
@@ -2058,7 +2058,7 @@ txq_hw_fill_utxd(txq_info_t *txqi, txq_t *txq)
         commit = spktq_peek(spktq) ? FALSE : TRUE;
 
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:txq_hw_fill_utxd:if (wlc_bmac_dma_txfast(wlc, fifo, p, commit) < 0) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */

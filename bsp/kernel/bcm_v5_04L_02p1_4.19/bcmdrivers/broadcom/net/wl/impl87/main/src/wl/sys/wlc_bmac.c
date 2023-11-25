@@ -2599,7 +2599,7 @@ wlc_bmac_txfifo(wlc_hw_info_t *wlc_hw, uint fifo, void *p,
     }
 
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:wlc_bmac_txfifo:if (wlc_bmac_dma_txfast(wlc_hw->wlc, fifo, p, commit) < 0) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -21272,7 +21272,7 @@ wlc_bmac_dma_txfast(wlc_info_t *wlc, uint fifo, void *p, bool commit)
     
     /* dump_flag_qqdx */
     
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:wlc_bmac_dma_txfast:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
         if(!via_txq_hw_fill){
             dump_stack();

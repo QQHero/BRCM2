@@ -1238,7 +1238,7 @@ wlc_mbss_dotxstatus(wlc_info_t *wlc, tx_status_t *txs, void *pkt, uint16 fc,
 
             WLCNTINCR(bmi->cnt->prb_resp_retrx);
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:wlc_mbss_dotxstatus:txerr = wlc_bmac_dma_txfast(wlc, TX_ATIM_FIFO, pkt, TRUE);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */

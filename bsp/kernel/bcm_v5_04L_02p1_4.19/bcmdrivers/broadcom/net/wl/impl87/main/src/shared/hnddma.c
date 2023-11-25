@@ -2396,7 +2396,7 @@ dma_txunframed(hnddma_t *dmah, void *buf, uint len, bool commit)
 	/* kick the chip */
 	if (commit) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:hnddma.c:dma_txunframed:dma64_txcommit_local(di);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -2670,7 +2670,7 @@ dma_txrotate(hnddma_t *dmah)
 #endif
 	/* kick the chip */
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:hnddma.c:dma_txrotate:dma64_txcommit_local(di);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -3025,7 +3025,7 @@ dma_ptrbuf_txfast(hnddma_t *dmah, dma64addr_t p0, void *p, bool commit,
 	/* kick the chip */
 	if (commit) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:hnddma.c:dma_ptrbuf_txfast:dma64_txcommit_local(di);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -3102,7 +3102,7 @@ dma_msgbuf_txfast(hnddma_t *dmah, dma64addr_t p0, bool commit, uint32 len, bool 
 	/* kick the chip */
 	if (commit) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:hnddma.c:dma_msgbuf_txfast:dma64_txcommit_local(di);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -3316,7 +3316,7 @@ pcie_m2m_req_submit(hnddma_t *dmah, pcie_m2m_req_t *m2m_req, bool implicit)
 
 	if (m2m_req->commit) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:hnddma.c:pcie_m2m_req_submit:dma64_txcommit_local(di);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -3391,7 +3391,7 @@ dma_descptr_update(hnddma_t *dmah)
 	W_REG(di->osh, &di->d64rxregs->ptr,
 		(uint32)(di->rcvptrbase + I2B(di->rxout, di->dd64_size)));
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
         printk("channel switch time:hnddma.c:dma_descptr_update:dma64_txcommit_local(di);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
