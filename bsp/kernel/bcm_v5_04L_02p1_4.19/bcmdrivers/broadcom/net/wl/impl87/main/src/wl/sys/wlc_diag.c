@@ -697,7 +697,7 @@ wlc_diag_lb_int_ext(wlc_info_t *wlc, uint32 lb_int)
 				break;
 
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:wlc_diag_lb_int_ext:if (wlc_bmac_dma_txfast(wlc, TX_DATA_FIFO, p, TRUE)) {:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */

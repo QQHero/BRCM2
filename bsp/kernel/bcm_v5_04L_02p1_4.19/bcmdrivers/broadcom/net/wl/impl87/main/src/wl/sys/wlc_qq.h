@@ -1326,8 +1326,9 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         if((OSL_SYSUPTIME()%10>5) && (wf_chspec_bw_num[CHSPEC_BW(chanspec_scan_for_set)>> WL_CHANSPEC_BW_SHIFT] < 160)){
             chanspec_cur = chanspec_scan_for_set;
         }
+        chanspec_cur = wf_create_chspec_from_primary(44, WL_CHANSPEC_BW_40,
+                        WL_CHANSPEC_BAND_5G);//临时切换到44信道40M，用于sniff
         chanspec_real_set = chanspec_cur;
-
 
 
 

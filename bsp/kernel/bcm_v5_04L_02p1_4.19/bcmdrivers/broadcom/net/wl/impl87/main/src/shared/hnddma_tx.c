@@ -179,7 +179,7 @@ static int BCMFASTPATH
 _dma_txfast(dma_info_t *di, void *p0, bool commit)
 {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:_dma_txfast:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -211,7 +211,7 @@ _dma_txfast(dma_info_t *di, void *p0, bool commit)
 	if (BCMLFRAG_ENAB()) {
 		if (PKTISTXFRAG(di->osh, p0)) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:_dma_txfast:dma64_txfast_lfrag(di, p0, commit);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -439,7 +439,7 @@ _dma_txfast(dma_info_t *di, void *p0, bool commit)
 	/* kick the chip */
 	if (commit) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:_dma_txfast:dma64_txcommit_local(di):OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -450,7 +450,7 @@ _dma_txfast(dma_info_t *di, void *p0, bool commit)
 	di->hnddma.txavail = di->ntxd - NTXDACTIVE(di->txin, di->txout) - 1;
 
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:_dma_txfast:return (0);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -461,7 +461,7 @@ outoftxd:
 	di->hnddma.txavail = 0;
 	di->hnddma.txnobuf++;
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:_dma_txfast:return (-1);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -593,7 +593,7 @@ _dma_bulk_tx(dma_info_t *di, void *tx_list, bool do_commit)
 
 	if (do_commit) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:_dma_bulk_tx:dma64_txcommit_local(di):OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
@@ -644,7 +644,7 @@ dma_txcommit(hnddma_t *dmah)
 		dma_set_indqsel(dmah, FALSE);
 	}
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:dma_txcommit:dma64_txcommit_local(DI_INFO(dmah));:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
 		//dump_stack();
     }
@@ -1367,7 +1367,7 @@ program_frags:
 	/* kick the chip */
 	if (commit) {
     /* dump_flag_qqdx */
-    if((recent_channel_set_end_time!=0)){//探查channel switch 时延来源
+    if((recent_channel_set_end_time!=6666)){//探查channel switch 时延来源
         printk("channel switch time:dma64_txfast_lfrag:dma64_txcommit_local(di);:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
     }
     /* dump_flag_qqdx */
