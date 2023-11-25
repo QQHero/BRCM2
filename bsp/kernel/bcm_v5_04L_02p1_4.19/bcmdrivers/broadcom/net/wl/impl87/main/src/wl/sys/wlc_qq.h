@@ -1937,10 +1937,10 @@ void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur, osl_t *osh){
     }
 
     if (pkt_qq_chain_head != NULL){
-        //printk("**************pkt_qq_add_at_tail-(%u;%u)*******************",pkt_qq_cur->FrameID,pkt_qq_chain_head->FrameID);
+        printk("**************pkt_qq_add_at_tail-(%u;%u)*******************",pkt_qq_cur->FrameID,pkt_qq_chain_head->FrameID);
     }
     else{
-        //printk("**************pkt_qq_add_at_tail-(%u)*******************",pkt_qq_cur->FrameID);
+        printk("**************pkt_qq_add_at_tail-(%u)*******************",pkt_qq_cur->FrameID);
     }
 
     read_lock(&pkt_qq_mutex_len); // 加锁
@@ -1956,19 +1956,19 @@ void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur, osl_t *osh){
     pkt_qq_cur->next = (struct pkt_qq *)NULL;
     pkt_qq_cur->prev = (struct pkt_qq *)NULL;
 
-    //printk(KERN_ALERT"###########pkt_qq_chain_len_add1(%u)",pkt_qq_chain_len);
+    printk(KERN_ALERT"###########pkt_qq_chain_len_add1(%u)",pkt_qq_chain_len);
     if (pkt_qq_chain_head == NULL){
-    //printk(KERN_ALERT"###########pkt_qq_chain_len_add11-1(%u)",pkt_qq_chain_len);
+    printk(KERN_ALERT"###########pkt_qq_chain_len_add11-1(%u)",pkt_qq_chain_len);
         mutex_lock(&pkt_qq_mutex_head); // 加锁
         pkt_qq_chain_head = (struct pkt_qq *)pkt_qq_cur;
         mutex_unlock(&pkt_qq_mutex_head); // 解锁
         mutex_lock(&pkt_qq_mutex_tail); // 加锁
         pkt_qq_chain_tail = (struct pkt_qq *)pkt_qq_cur;
         mutex_unlock(&pkt_qq_mutex_tail); // 解锁
-    //printk(KERN_ALERT"###########pkt_qq_chain_len_add11(%u)",pkt_qq_chain_len);
+    printk(KERN_ALERT"###########pkt_qq_chain_len_add11(%u)",pkt_qq_chain_len);
 
     }else if(pkt_qq_chain_head->next == NULL){
-    //printk(KERN_ALERT"###########pkt_qq_chain_len_add12-1(%u)",pkt_qq_chain_len);
+    printk(KERN_ALERT"###########pkt_qq_chain_len_add12-1(%u)",pkt_qq_chain_len);
         mutex_lock(&pkt_qq_mutex_head); // 加锁
         pkt_qq_chain_head->next = (struct pkt_qq *)pkt_qq_cur;
         mutex_unlock(&pkt_qq_mutex_head); // 解锁
@@ -1976,27 +1976,27 @@ void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur, osl_t *osh){
         mutex_lock(&pkt_qq_mutex_tail); // 解锁
         pkt_qq_chain_tail = (struct pkt_qq *)pkt_qq_cur;
         mutex_unlock(&pkt_qq_mutex_tail); // 解锁
-    //printk(KERN_ALERT"###########pkt_qq_chain_len_add12(%u)",pkt_qq_chain_len);
+    printk(KERN_ALERT"###########pkt_qq_chain_len_add12(%u)",pkt_qq_chain_len);
     }else{        
-        //printk(KERN_ALERT"###########pkt_qq_chain_len_add10(%u)",pkt_qq_chain_len);
+        printk(KERN_ALERT"###########pkt_qq_chain_len_add10(%u)",pkt_qq_chain_len);
         mutex_unlock(&pkt_qq_mutex_tail); // 解锁
         if(pkt_qq_chain_tail == NULL){
-            //printk(KERN_ALERT"###########pkt_qq_chain_len_add10+1(%u)",pkt_qq_chain_len);
+            printk(KERN_ALERT"###########pkt_qq_chain_len_add10+1(%u)",pkt_qq_chain_len);
         }
         pkt_qq_chain_tail->next = (struct pkt_qq *)pkt_qq_cur;
         mutex_unlock(&pkt_qq_mutex_tail); // 解锁
-        //printk(KERN_ALERT"###########pkt_qq_chain_len_add13(%u)",pkt_qq_chain_len);
+        printk(KERN_ALERT"###########pkt_qq_chain_len_add13(%u)",pkt_qq_chain_len);
         pkt_qq_cur->prev= (struct pkt_qq *)pkt_qq_chain_tail;
 
-        //printk(KERN_ALERT"###########pkt_qq_chain_len_add14(%u)",pkt_qq_chain_len);
+        printk(KERN_ALERT"###########pkt_qq_chain_len_add14(%u)",pkt_qq_chain_len);
         mutex_unlock(&pkt_qq_mutex_tail); // 解锁
 
         pkt_qq_chain_tail = (struct pkt_qq *)pkt_qq_cur;
         mutex_unlock(&pkt_qq_mutex_tail); // 解锁
 
-        //printk(KERN_ALERT"###########pkt_qq_chain_len_add15(%u)",pkt_qq_chain_len);
+        printk(KERN_ALERT"###########pkt_qq_chain_len_add15(%u)",pkt_qq_chain_len);
     }
-    //printk(KERN_ALERT"###########pkt_qq_chain_len_add2(%u)",pkt_qq_chain_len);
+    printk(KERN_ALERT"###########pkt_qq_chain_len_add2(%u)",pkt_qq_chain_len);
 
     write_lock(&pkt_qq_mutex_len); // 加锁
     pkt_qq_chain_len++;
