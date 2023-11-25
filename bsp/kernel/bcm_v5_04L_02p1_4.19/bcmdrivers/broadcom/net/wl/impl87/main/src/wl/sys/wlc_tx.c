@@ -1564,6 +1564,8 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
                 if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
                     printk("channel switch time:txq_hw_fill:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
                 }
+
+                start_sta_info_cur->flowid = scb->flowid;
                 
                 if((recent_channel_set_end_time<(OSL_SYSUPTIME()-36000))&&(recent_channel_set_end_time!=0)){//探查channel switch 时延来源
                     printk("txq_hw_fill:recent_channel_set_end_time(%u);OSL_SYSUPTIME()----------(%u)",recent_channel_set_end_time,OSL_SYSUPTIME());

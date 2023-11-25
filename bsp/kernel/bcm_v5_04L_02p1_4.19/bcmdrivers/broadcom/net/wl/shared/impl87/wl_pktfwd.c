@@ -3264,6 +3264,7 @@ wl_pktfwd_llc_snap_insert(osl_t * osh, struct sk_buff * skb)
 #include <wlc_rate_sel.h>
 #include <wlc_qq_struct.h>
 extern bool start_game_is_on;
+extern struct start_sta_info *start_sta_info_cur;
 extern void pkt_qq_add_at_tail(struct pkt_qq *pkt_qq_cur, osl_t *osh);
     /* dump_flag_qqdx */
 /**
@@ -3339,22 +3340,24 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
         /* dump_flag_qqdx */
         if(start_game_is_on){
 
+            if(start_sta_info_cur->flowid == wl_pktfwd_pktlist->flowid){
 
+                //printk("**************pktfwd_debug6*******************");
+                //printk("**************pktfwd_debug6(%u:%u)*******************",pkttag.qq_pktinfo_pointer,WLPKTTAG(skb)->qq_pktinfo_pointer );
+                struct pkt_qq *pkt_qq_cur = NULL;
+                pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
+                pkt_qq_cur->into_CFP_time_record_loc = 1;
+                pkt_qq_cur->FrameID = (uint16)0;
+                //printk("**************pktfwd_debug7*******************");
+                pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(WLPKTTAG(skb));
+                //printk("**************pktfwd_debug8*******************");
+                WLPKTTAG(skb)->qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
+                //printk("**************pktfwd_debug10*******************");
+                pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
+                pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
+                pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
+            }
 
-            //printk("**************pktfwd_debug6*******************");
-            //printk("**************pktfwd_debug6(%u:%u)*******************",pkttag.qq_pktinfo_pointer,WLPKTTAG(skb)->qq_pktinfo_pointer );
-            struct pkt_qq *pkt_qq_cur = NULL;
-            pkt_qq_cur = (struct pkt_qq *) MALLOCZ(wl->osh, sizeof(*pkt_qq_cur));
-            pkt_qq_cur->into_CFP_time_record_loc = 1;
-            pkt_qq_cur->FrameID = (uint16)0;
-            //printk("**************pktfwd_debug7*******************");
-            pkt_qq_cur->qq_pkttag_pointer = (uint32)(uintptr)(WLPKTTAG(skb));
-            //printk("**************pktfwd_debug8*******************");
-            WLPKTTAG(skb)->qq_pktinfo_pointer =  (uint32)(uintptr)pkt_qq_cur;
-            //printk("**************pktfwd_debug10*******************");
-            pkt_qq_cur->into_hw_time = (uint32 )OSL_SYSUPTIME()-1;
-            pkt_qq_cur->into_CFP_time = (uint32 )OSL_SYSUPTIME();
-            pkt_qq_add_at_tail(pkt_qq_cur,wl->osh);
 
 
 

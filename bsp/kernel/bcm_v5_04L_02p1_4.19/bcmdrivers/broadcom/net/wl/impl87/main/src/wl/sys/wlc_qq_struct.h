@@ -139,6 +139,7 @@ struct start_sta_info{
 	int8_t start_is_on;//判断是否游戏正在运行
 	struct ether_addr ea;
 	int8_t ac_queue_index;
+    uint16_t          flowid;     /* flowid */
 };
 /*定时器初始化相关*/
 #define TIMER_INTERVAL_S_qq (1000) // 1s

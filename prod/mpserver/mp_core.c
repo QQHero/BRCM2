@@ -345,6 +345,7 @@ struct start_sta_info{
 	int8_t start_is_on;//判断是否游戏正在运行
 	struct ether_addr ea;
 	int8_t ac_queue_index;
+    uint16_t          flowid;     /* flowid */
 };
 typedef uint32_t kernel_info_t;
 typedef struct {
