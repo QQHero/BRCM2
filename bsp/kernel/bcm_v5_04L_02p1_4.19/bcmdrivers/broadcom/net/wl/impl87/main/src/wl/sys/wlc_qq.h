@@ -1281,9 +1281,9 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
             return;
         }
         if(chanspec_origin != wlc_qq->chanspec){
-            printk("last channel set is successful:from(0x%04x)to(0x%04x)",chanspec_origin, wlc_qq->chanspec);
-            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*20));
-            return;
+            printk("last channel set is successful:from(0x%04x:%u)to(0x%04x:%u)",chanspec_origin,(chanspec_origin& WL_CHANSPEC_CHAN_MASK), wlc_qq->chanspec,(wlc_qq->chanspec& WL_CHANSPEC_CHAN_MASK));
+            //mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*20));
+            //return;
         }
         mod_timer(&timer_qq_scan_try, jiffies +1000);//防止两个timer冲突
         int best_20MHz_channel;
@@ -1401,7 +1401,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
         recent_channel_set_end_time = OSL_SYSUPTIME();//探查channel switch 时延来源
     }
         // 重新设置定时器    
-        mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*30));
+        mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*300));
     
 }
 
