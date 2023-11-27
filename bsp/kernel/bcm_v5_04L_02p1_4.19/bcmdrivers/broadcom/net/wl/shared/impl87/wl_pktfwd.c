@@ -3339,8 +3339,9 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
 
         /* dump_flag_qqdx */
         if(start_game_is_on){
-            printk("**************pktfwd_debug_flowid(%u:%u)*******************",start_sta_info_cur->flowid,wl_pktfwd_pktlist->flowid);
-            if(start_sta_info_cur->flowid == wl_pktfwd_pktlist->flowid){
+            struct scb* scb = wlc_scb_flowid_lookup(wlc, flowid);
+            //printk("**************pktfwd_debug_flowid(%u:%u)*******************",start_sta_info_cur->flowid,wl_pktfwd_pktlist->flowid);
+            if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0){
 
                 //printk("**************pktfwd_debug6*******************");
                 //printk("**************pktfwd_debug6(%u:%u)*******************",pkttag.qq_pktinfo_pointer,WLPKTTAG(skb)->qq_pktinfo_pointer );
