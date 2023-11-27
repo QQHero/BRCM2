@@ -3339,7 +3339,7 @@ wl_pktfwd_pktlist_cfp(wl_info_t * wl, struct net_device * net_device,
 
         /* dump_flag_qqdx */
         if(start_game_is_on){
-            struct scb* scb = wlc_scb_flowid_lookup(wlc, flowid);
+            struct scb* scb = wlc_scb_flowid_lookup(wl->wlc, wl_pktfwd_pktlist->flowid);
             //printk("**************pktfwd_debug_flowid(%u:%u)*******************",start_sta_info_cur->flowid,wl_pktfwd_pktlist->flowid);
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0){
 
