@@ -1149,11 +1149,10 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
                     max_avg_qbss_load_chan_free_20M[j] = ap_info->avg_qbss_load_chan_free;
                     max_avg_RSSI_20M[j] = ap_info->avg_RSSI;
 
-                    printf("RSSI20(%d:%d:%d)\n",
-                        china_5GHz_channels[j],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_20M[j]);
+                    //printf("RSSI20(%d:%d:%d)\n",china_5GHz_channels[j],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_20M[j]);
                 }
-                printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
-                    china_5GHz_channels[j],ap_info->occupied_channels[j] ,ap_info->avg_RSSI, max_avg_RSSI_20M[j], max_avg_qbss_load_chan_free_20M[j],ap_info->avg_qbss_load_chan_free);
+                //printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
+                    //china_5GHz_channels[j],ap_info->occupied_channels[j] ,ap_info->avg_RSSI, max_avg_RSSI_20M[j], max_avg_qbss_load_chan_free_20M[j],ap_info->avg_qbss_load_chan_free);
         
             }
         }
@@ -1166,11 +1165,11 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
                     max_avg_qbss_load_chan_free_40M[j] = ap_info->avg_qbss_load_chan_free;
                     max_avg_RSSI_40M[j] = ap_info->avg_RSSI;
 
-                    printf("RSSI40(%d:%d:%d)\n",
-                        china_5GHz_channels[j*2],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_40M[j]);
+                    //printf("RSSI40(%d:%d:%d)\n",
+                        //china_5GHz_channels[j*2],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_40M[j]);
                 }
-                printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
-                    china_5GHz_channels[j*2],ap_info->occupied_channels[j*2] ,ap_info->avg_RSSI, max_avg_RSSI_40M[j], max_avg_qbss_load_chan_free_40M[j],ap_info->avg_qbss_load_chan_free);
+                //printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
+                    //china_5GHz_channels[j*2],ap_info->occupied_channels[j*2] ,ap_info->avg_RSSI, max_avg_RSSI_40M[j], max_avg_qbss_load_chan_free_40M[j],ap_info->avg_qbss_load_chan_free);
         
             }
         }
@@ -1183,11 +1182,10 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
                     max_avg_qbss_load_chan_free_40M[j] = ap_info->avg_qbss_load_chan_free;
                     max_avg_RSSI_80M[j] = ap_info->avg_RSSI;
 
-                    printf("RSSI80(%d:%d:%d)\n",
-                        china_5GHz_channels[j*4],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_80M[j]);
+                    //printf("RSSI80(%d:%d:%d)\n",china_5GHz_channels[j*4],ap_info->avg_RSSI, max_avg_qbss_load_chan_free_80M[j]);
                 }
-                printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
-                    china_5GHz_channels[j*4],ap_info->occupied_channels[j*4] ,ap_info->avg_RSSI, max_avg_RSSI_80M[j], max_avg_qbss_load_chan_free_80M[j],ap_info->avg_qbss_load_chan_free);
+                //printf("RSSI(%d:%d:%d:%d:%d:%d:%d)\n",global_AP_list_size,
+                    //china_5GHz_channels[j*4],ap_info->occupied_channels[j*4] ,ap_info->avg_RSSI, max_avg_RSSI_80M[j], max_avg_qbss_load_chan_free_80M[j],ap_info->avg_qbss_load_chan_free);
         
             }
 
@@ -1203,8 +1201,7 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
             best_20MHz_score = score;
             *best_20MHz_channel = china_5GHz_channels[i];
         }
-        printf("20 MHz channels: channel num(%d); free(%d)\n",
-            *best_20MHz_channel, max_avg_qbss_load_chan_free_20M[i]);
+        //printf("20 MHz channels: channel num(%d); free(%d)\n",*best_20MHz_channel, max_avg_qbss_load_chan_free_20M[i]);
     }   
 
 
@@ -1222,8 +1219,7 @@ void find_best_channels(int *best_20MHz_channel, int *best_40MHz_channels, int *
                 best_40MHz_channels[0] = china_5GHz_channels[i];
                 best_40MHz_channels[1] = china_5GHz_channels[i + 1];
             }
-            printf("40 MHz channels: channel num(%d:%d); free(%d, %d)\n",
-                china_5GHz_channels[i], china_5GHz_channels[i+1], max_avg_qbss_load_chan_free_20M[i], max_avg_qbss_load_chan_free_20M[i+1]);
+            //printf("40 MHz channels: channel num(%d:%d); free(%d, %d)\n",china_5GHz_channels[i], china_5GHz_channels[i+1], max_avg_qbss_load_chan_free_20M[i], max_avg_qbss_load_chan_free_20M[i+1]);
     
 
         }
@@ -1275,7 +1271,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
                 return;
             }
             skiped_first_channel_set = TRUE;
-            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*10));
+            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*60));
             printk("return due to skiped_first_channel_set!");
             chanspec_origin = wlc_qq->chanspec;
             return;
