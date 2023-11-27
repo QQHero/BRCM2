@@ -1399,9 +1399,15 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
 
 
         recent_channel_set_end_time = OSL_SYSUPTIME();//探查channel switch 时延来源
-    }
-        // 重新设置定时器    
+        
+        // 重新设置定时器  
         mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*300));
+
+    }else{
+        // 重新设置定时器  
+        mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*10));
+
+    }  
     
 }
 
@@ -1669,7 +1675,7 @@ void scan_channel(wlc_info_t *wlc, chanspec_t chanspec) {
 //周期scan
 uint8 scan_channel_index = 0;
 uint8 scan_bw_index = 0;
-#define TIMER_INTERVAL_SCAN_qq (1000) // 1s
+#define TIMER_INTERVAL_SCAN_qq (3000) // 1s
 void timer_callback_scan_try_qq(struct timer_list *t) {
         //printk("scan test1(%u)----------[fyl] OSL_SYSUPTIME()----------(%u)",scan_channel_index,OSL_SYSUPTIME());
     if(start_game_is_on){
