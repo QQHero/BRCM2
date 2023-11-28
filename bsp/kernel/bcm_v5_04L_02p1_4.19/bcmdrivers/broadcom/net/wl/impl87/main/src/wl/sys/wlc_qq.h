@@ -1271,7 +1271,7 @@ void timer_callback_scan_set_qq(struct timer_list *t) {
                 return;
             }
             skiped_first_channel_set = TRUE;
-            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*60));
+            mod_timer(&timer_qq_scan_set, jiffies + msecs_to_jiffies(TIMER_INTERVAL_S_qq*30));
             printk("return due to skiped_first_channel_set!");
             chanspec_origin = wlc_qq->chanspec;
             return;
