@@ -4041,6 +4041,17 @@ wlc_send_q(wlc_info_t *wlc, wlc_txq_info_t *qi)
         printk(KERN_ALERT"----------[fyl] wlc_send_q dump_stack stop----------");
     }
 #endif /*dump_stack_qqdx_print*/
+
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+            printk("**************wlc_send_q(wlc_info_t *wlc, wlc_txq_info_t *qi);*******************");
+            dump_stack();
+        }
+        /* dump_flag_qqdx */
+
+
+
+
     /* Don't send the packets while flushing DMA and low tx queues */
     if (!wlc->pub->up || wlc->hw->reinit) {
         return;
@@ -8625,6 +8636,11 @@ wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)
         BCM_REFERENCE(frameid_le);
 
         fifo = WLC_HW_MAP_TXFIFO(wlc, fifo);    /* Map to HW FIFO */
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+            printk("**************wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)(%u)*******************",fifo);
+        }
+        /* dump_flag_qqdx */
 
         return (((seq << D11_REV128_TXFID_SEQ_SHIFT) & D11_REV128_TXFID_SEQ_MASK) |
                (fifo & D11_REV128_TXFID_FIFO_MASK));
@@ -8636,6 +8652,7 @@ wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)
                ((seq << TXFID_SEQ_SHIFT) & TXFID_SEQ_MASK) |
                (fifo & TXFID_FIFO_MASK));
     }
+
 }
 
 /*
@@ -11235,6 +11252,11 @@ wlc_d11hdrs_rev128(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flag
 
     /* Compute frameid, also possibly change seq */
     frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+            printk("**************frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u)*******************",frameid);
+        }
+        /* dump_flag_qqdx */
 
     /* Rev 128 has no TxStatus field, so skip txh->TxStatus = 0; */
 
