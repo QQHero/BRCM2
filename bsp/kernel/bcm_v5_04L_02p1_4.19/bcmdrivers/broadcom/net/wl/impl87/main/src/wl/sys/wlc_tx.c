@@ -5496,6 +5496,14 @@ wlc_prep_sdu(wlc_info_t *wlc, scb_t *scb, void *pkts[DOT11_MAXNUMFRAGS], uint *n
 
                     WLCNTINCR(wlc->pub->_cnt->txchit);
                     err = wlc_txfast(wlc, scb, sdu, pkt_length, key);
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+
+            printk("wlc_prep_sdu***err = wlc_txfast(wlc, scb, sdu, pkt_length, key);*******************");
+            
+            dump_stack();
+        }
+        /* dump_flag_qqdx */
                     if (err != BCME_OK)
                         return err;
 
@@ -6084,6 +6092,14 @@ wlc_prep_sdu_fast(wlc_info_t *wlc, wlc_bsscfg_t *bsscfg, struct scb *scb,
 
             WLCNTINCR(wlc->pub->_cnt->txchit);
             err = wlc_txfast(wlc, scb, sdu, pktlen, *key);
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+
+            printk("wlc_prep_sdu_fast***err = wlc_txfast(wlc, scb, sdu, pktlen, *key);*******************");
+            
+            dump_stack();
+        }
+        /* dump_flag_qqdx */
             if (err != BCME_OK)
                 return err;
             goto done;
@@ -11269,6 +11285,7 @@ wlc_d11hdrs_rev128(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flag
         /* dump_flag_qqdx */
         if(start_game_is_on){
             printk("wlc_d11hdrs_rev128***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
+            dump_stack();
         }
         /* dump_flag_qqdx */
 
