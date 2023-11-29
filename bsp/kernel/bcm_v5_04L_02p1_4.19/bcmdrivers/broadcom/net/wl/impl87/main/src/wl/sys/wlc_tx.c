@@ -5888,6 +5888,7 @@ wlc_txfast(wlc_info_t *wlc, struct scb *scb, void *sdu, uint pktlen, wlc_key_t *
     frameid = wlc_compute_frameid(wlc, frameid, fifo);
         /* dump_flag_qqdx */
         if(start_game_is_on){
+
             printk("wlc_txfast***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
         }
         /* dump_flag_qqdx */
@@ -8644,6 +8645,7 @@ wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)
         if(start_game_is_on){
             printk("**************wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)(%u:%u)*******************",fifo,((seq << D11_REV128_TXFID_SEQ_SHIFT) & D11_REV128_TXFID_SEQ_MASK) |
                (fifo & D11_REV128_TXFID_FIFO_MASK));
+            dump_stack();
         }
         /* dump_flag_qqdx */
 
