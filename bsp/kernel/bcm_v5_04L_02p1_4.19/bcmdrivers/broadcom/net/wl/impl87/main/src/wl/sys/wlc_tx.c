@@ -4042,13 +4042,6 @@ wlc_send_q(wlc_info_t *wlc, wlc_txq_info_t *qi)
     }
 #endif /*dump_stack_qqdx_print*/
 
-        /* dump_flag_qqdx */
-        if(start_game_is_on){
-            printk("**************wlc_send_q(wlc_info_t *wlc, wlc_txq_info_t *qi);*******************");
-            dump_stack();
-        }
-        /* dump_flag_qqdx */
-
 
 
 
@@ -5893,6 +5886,11 @@ wlc_txfast(wlc_info_t *wlc, struct scb *scb, void *sdu, uint pktlen, wlc_key_t *
     frameid = *(uint16 *)((uint8 *)txh + TxFrameID_off);
     fifo = D11_TXFID_GET_FIFO(wlc, ltoh16(frameid));
     frameid = wlc_compute_frameid(wlc, frameid, fifo);
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+            printk("wlc_txfast***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
+        }
+        /* dump_flag_qqdx */
     *(uint16 *)((uint8 *)txh + TxFrameID_off) = htol16(frameid);
 
     /* fix up the seqnum in the hdr */
@@ -7412,6 +7410,12 @@ wlc_d11hdrs_pre40(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flags
         fifo == TX_BCMC_FIFO ? txh->TxFrameID : 0,
         fifo);
 
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+            printk("wlc_d11hdrs_pre40***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
+        }
+        /* dump_flag_qqdx */
+
     /* set the ignpmq bit for all pkts tx'd in PS mode and for beacons and for anything
      * going out from a STA interface.
      */
@@ -8638,7 +8642,8 @@ wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)
         fifo = WLC_HW_MAP_TXFIFO(wlc, fifo);    /* Map to HW FIFO */
         /* dump_flag_qqdx */
         if(start_game_is_on){
-            printk("**************wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)(%u)*******************",fifo);
+            printk("**************wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)(%u:%u)*******************",fifo,((seq << D11_REV128_TXFID_SEQ_SHIFT) & D11_REV128_TXFID_SEQ_MASK) |
+               (fifo & D11_REV128_TXFID_FIFO_MASK));
         }
         /* dump_flag_qqdx */
 
@@ -9020,6 +9025,11 @@ wlc_d11hdrs_rev40(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flags
 
     /* Compute frameid, also possibly change seq */
     frameid = wlc_compute_frameid(wlc, txh->PktInfo.TxFrameID, fifo);
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+            printk("wlc_d11hdrs_rev40***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
+        }
+        /* dump_flag_qqdx */
 
     /* TxStatus, Note the case of recreating the first frag of a suppressed frame
      * then we may need to reset the retry cnt's via the status reg
@@ -11254,7 +11264,7 @@ wlc_d11hdrs_rev128(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flag
     frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);
         /* dump_flag_qqdx */
         if(start_game_is_on){
-            printk("**************frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u)*******************",frameid);
+            printk("wlc_d11hdrs_rev128***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
         }
         /* dump_flag_qqdx */
 
