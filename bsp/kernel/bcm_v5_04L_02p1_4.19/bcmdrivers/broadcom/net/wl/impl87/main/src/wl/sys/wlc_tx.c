@@ -5499,9 +5499,9 @@ wlc_prep_sdu(wlc_info_t *wlc, scb_t *scb, void *pkts[DOT11_MAXNUMFRAGS], uint *n
         /* dump_flag_qqdx */
         if(start_game_is_on){
 
-            printk("wlc_prep_sdu***err = wlc_txfast(wlc, scb, sdu, pkt_length, key);*******************");
+            //printk("wlc_prep_sdu***err = wlc_txfast(wlc, scb, sdu, pkt_length, key);*******************");
             
-            dump_stack();
+            //dump_stack();
         }
         /* dump_flag_qqdx */
                     if (err != BCME_OK)
@@ -5897,9 +5897,9 @@ wlc_txfast(wlc_info_t *wlc, struct scb *scb, void *sdu, uint pktlen, wlc_key_t *
         /* dump_flag_qqdx */
         if(start_game_is_on){
 
-            printk("wlc_txfast***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
+            //printk("wlc_txfast***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
             
-            dump_stack();
+            //dump_stack();
         }
         /* dump_flag_qqdx */
     *(uint16 *)((uint8 *)txh + TxFrameID_off) = htol16(frameid);
@@ -6095,9 +6095,9 @@ wlc_prep_sdu_fast(wlc_info_t *wlc, wlc_bsscfg_t *bsscfg, struct scb *scb,
         /* dump_flag_qqdx */
         if(start_game_is_on){
 
-            printk("wlc_prep_sdu_fast***err = wlc_txfast(wlc, scb, sdu, pktlen, *key);*******************");
+            //printk("wlc_prep_sdu_fast***err = wlc_txfast(wlc, scb, sdu, pktlen, *key);*******************");
             
-            dump_stack();
+            //dump_stack();
         }
         /* dump_flag_qqdx */
             if (err != BCME_OK)
@@ -7431,7 +7431,7 @@ wlc_d11hdrs_pre40(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flags
 
         /* dump_flag_qqdx */
         if(start_game_is_on){
-            printk("wlc_d11hdrs_pre40***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
+            //printk("wlc_d11hdrs_pre40***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
         }
         /* dump_flag_qqdx */
 
@@ -8661,8 +8661,8 @@ wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)
         fifo = WLC_HW_MAP_TXFIFO(wlc, fifo);    /* Map to HW FIFO */
         /* dump_flag_qqdx */
         if(start_game_is_on){
-            printk("**************wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)(%u:%u)*******************",fifo,((seq << D11_REV128_TXFID_SEQ_SHIFT) & D11_REV128_TXFID_SEQ_MASK) |
-               (fifo & D11_REV128_TXFID_FIFO_MASK));
+            //printk("**************wlc_compute_frameid(wlc_info_t *wlc, uint16 frameid_le, uint fifo)(%u:%u)*******************",fifo,((seq << D11_REV128_TXFID_SEQ_SHIFT) & D11_REV128_TXFID_SEQ_MASK) |
+               //(fifo & D11_REV128_TXFID_FIFO_MASK));
             //dump_stack();
         }
         /* dump_flag_qqdx */
@@ -9045,11 +9045,6 @@ wlc_d11hdrs_rev40(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flags
 
     /* Compute frameid, also possibly change seq */
     frameid = wlc_compute_frameid(wlc, txh->PktInfo.TxFrameID, fifo);
-        /* dump_flag_qqdx */
-        if(start_game_is_on){
-            printk("wlc_d11hdrs_rev40***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
-        }
-        /* dump_flag_qqdx */
 
     /* TxStatus, Note the case of recreating the first frag of a suppressed frame
      * then we may need to reset the retry cnt's via the status reg
@@ -11282,12 +11277,6 @@ wlc_d11hdrs_rev128(wlc_info_t *wlc, void *p, struct scb *scb, uint txparams_flag
 
     /* Compute frameid, also possibly change seq */
     frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);
-        /* dump_flag_qqdx */
-        if(start_game_is_on){
-            printk("wlc_d11hdrs_rev128***frameid = wlc_compute_frameid(wlc, txh->FrameID, fifo);(%u:%u)*******************",fifo,frameid);
-            dump_stack();
-        }
-        /* dump_flag_qqdx */
 
     /* Rev 128 has no TxStatus field, so skip txh->TxStatus = 0; */
 
