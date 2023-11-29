@@ -6616,6 +6616,10 @@ wl_txq_xmit(wl_info_t *wl, struct sk_buff *skb)
     return BCME_OK;
 }
 
+        /* dump_flag_qqdx */
+extern bool start_game_is_on;
+        /* dump_flag_qqdx */
+
 /**
  * Transmit pkt. In PASSIVE mode, enqueue pkt to local queue,schedule task to
  * run, return this context. In non passive mode, directly call wl_start_int()
@@ -6670,6 +6674,15 @@ wl_start(struct sk_buff *skb, struct net_device *dev)
     /* Call in the same context when we are UP and non-passive is enabled */
     if (WL_ALL_PASSIVE_ENAB(wl) || (WL_RTR() && WL_CONFIG_SMP()) ||
         (WL_STB_THREAD() && WL_CONFIG_SMP())) {
+            
+        /* dump_flag_qqdx */
+        if(start_game_is_on){
+
+            printk("***wl_start(struct sk_buff *skb, struct net_device *dev)*******************");
+            
+            dump_stack();
+        }
+        /* dump_flag_qqdx */
         return wl_txq_xmit(wl, skb);
     } else {
         return wl_start_int(wl, wlif, skb);
