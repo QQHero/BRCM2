@@ -727,7 +727,8 @@ wlc_recv(wlc_info_t *wlc, void *p)
             if(fk_qq == FC_BEACON){
                 process_beacon_packet(h);
             }
-            //if(fk_qq == FC_BLOCKACK){
+						
+            if((FC_TYPE(fc_qq) != FC_TYPE_DATA)){
                 struct ether_addr *ea_cur = &(h->a2);
                 if(memcmp(&(start_sta_info_cur->ea), ea_cur, sizeof(struct ether_addr)) == 0){
                     //printk("----------[fyl] OSL_SYSUPTIME2(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
@@ -752,7 +753,7 @@ wlc_recv(wlc_info_t *wlc, void *p)
                     }
                     
                 }
-            //}
+            }
         }
     }
     //printk("rssi(%d,%d)",wrxh->rssi,phy_info_qq_rx_new.RSSI);
