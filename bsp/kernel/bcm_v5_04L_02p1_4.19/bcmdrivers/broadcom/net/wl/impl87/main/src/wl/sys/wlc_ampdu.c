@@ -7367,15 +7367,6 @@ static int BCMFASTPATH
 wlc_sendampdu_aqm(ampdu_tx_info_t *ampdu_tx, wlc_txq_info_t *qi, void **pdu, int prec,
     struct spktq *output_q, int *pkt_cnt, uint fifo)
 {
-            
-        /* dump_flag_qqdx */
-        if(start_game_is_on){
-
-            printk("wlc_sendampdu_aqm***(%u);*******************",fifo);
-            
-            //dump_stack();
-        }
-        /* dump_flag_qqdx */
     wlc_info_t *wlc;
     osl_t* osh;
     void *p;

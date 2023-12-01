@@ -114,6 +114,7 @@ struct phy_info_qq {
     uint32 ISSGI[RATESEL_MFBR_NUM];
     int8 SNR;
     int8 RSSI;
+    int8 RSSI_loc;//0:wlc_cfp.c;1:wlc_qq.c;2:wlc_rx;3.wlc_lq_rssi_get
     int8 noiselevel;
     uint8 rssi_ring_buffer_index;
     DataPoint_qq rssi_ring_buffer[RSSI_RING_SIZE];

@@ -2322,6 +2322,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                 phy_info_qq_cur->SNR = pkttag->pktinfo.misc.snr;
                 phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
                 phy_info_qq_cur->rssi_ring_buffer_index = rssi_ring_buffer_index;
+                phy_info_qq_cur->RSSI_loc = 1;
                 kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
                 memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
                 debugfs_set_info_qq(2, info_qq, 1);
