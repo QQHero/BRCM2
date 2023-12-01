@@ -2624,6 +2624,19 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 							debugfs_set_info_qq(2, info_qq, 1);
 							MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
 						}
+						if((FC_TYPE(fc_qq) != FC_TYPE_DATA)){
+
+							kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+							struct phy_info_qq *phy_info_qq_cur = NULL;
+							phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+							phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+							phy_info_qq_cur->RSSI = wrxh->rssi;
+							phy_info_qq_cur->RSSI_loc = 4;
+							memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+							debugfs_set_info_qq(2, info_qq, 1);
+							MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+						}
+
 					}
 				//}
             }
