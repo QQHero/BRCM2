@@ -2235,6 +2235,12 @@ wlc_sts_xfer_txs_error_dump(wlc_info_t *wlc, void *status, bool reg_dump)
 
 } /* wlc_sts_xfer_txs_error_dump() */
 
+    /* dump_flag_qqdx */
+#include <wlc_rate_sel.h>
+#include <wlc_qq_struct.h>
+extern bool start_game_is_on;
+extern struct start_sta_info *start_sta_info_cur;
+    /* dump_flag_qqdx */
 #if defined(STS_XFER_TXS_PP)
 /*
  * ------------------------------------------------------------------------------------------------
@@ -2251,6 +2257,9 @@ wlc_sts_xfer_txs_error_dump(wlc_info_t *wlc, void *status, bool reg_dump)
 bool BCMFASTPATH
 wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)
 {
+            if(start_game_is_on){
+				printk("**************wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)1*******************");
+			}
 	wlc_sts_xfer_t	*sts_xfer;
 	sts_xfer_txs_t	*txs;
 	sts_xfer_ring_t	*txs_ring;
@@ -2465,6 +2474,9 @@ wlc_sts_xfer_txs_pagein_process(wlc_info_t *wlc)
 bool BCMFASTPATH
 wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)
 {
+            if(start_game_is_on){
+				printk("**************wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)2*******************");
+			}
 	wlc_sts_xfer_t	*sts_xfer;
 	sts_xfer_txs_t	*txs;
 	sts_xfer_ring_t	*txs_ring;
