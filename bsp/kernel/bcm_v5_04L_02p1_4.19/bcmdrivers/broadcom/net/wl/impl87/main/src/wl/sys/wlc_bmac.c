@@ -13529,7 +13529,59 @@ wlc_bmac_txstatus(wlc_hw_info_t *wlc_hw, bool bound, bool *fatal)
 #endif /* TX_STATUS_MACTXS_64BYTES */
 
             }
+                    /* dump_flag_qqdx */
+                    int16 rssi1 = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(txs));
+                    int16 rssi2 = ((rssi1) & PHYRSSI_SIGN_MASK) ? (rssi1 - PHYRSSI_2SCOMPLEMENT) : rssi1;
+                    int16 rssi3 = rssi2;
+                    if (rssi2 < 0) {
+                        rssi3 = -rssi2;
+                    }
+                    int16 rssi4 = rssi3 >> 2;
+                    int16 rssi5 = (rssi3 & 0x3) * 25;
+	                int32 phyrssi = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(txs));
+	                phyrssi = (phyrssi - ((phyrssi >= PHYRSSI_SIGN_MASK) << PHYRSSI_2SCOMPLEMENT_SHIFT)) << OPERAND_SHIFT;
+                
 
+                    kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                    struct phy_info_qq *phy_info_qq_cur = NULL;
+                    phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+                    phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                    if(OLS_RAND()%10==1){
+                        phy_info_qq_cur->RSSI = rssi1;
+                        phy_info_qq_cur->RSSI_loc = 10 + 1;
+
+                    }else if(OLS_RAND()%10==2){
+                        phy_info_qq_cur->RSSI = rssi2;
+                        phy_info_qq_cur->RSSI_loc = 10 + 2;
+
+                    }else if(OLS_RAND()%10==3){
+                        phy_info_qq_cur->RSSI = rssi3;
+                        phy_info_qq_cur->RSSI_loc = 10 + 3;
+
+                    }else if(OLS_RAND()%10==4){
+                        phy_info_qq_cur->RSSI = rssi4;
+                        phy_info_qq_cur->RSSI_loc = 10 + 4;
+
+                    }else if(OLS_RAND()%10==5){
+                        phy_info_qq_cur->RSSI = rssi5;
+                        phy_info_qq_cur->RSSI_loc = 10 + 5;
+
+                    }else{
+                        phy_info_qq_cur->RSSI = phyrssi;
+                        phy_info_qq_cur->RSSI_loc = 10 + 6;
+
+                    }
+
+
+
+
+
+
+
+                    memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                    debugfs_set_info_qq(2, info_qq, 1);
+                    MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                    /* dump_flag_qqdx */
             txs.frameid = (TX_STATUS_MACTXS_S1(&txs) & TX_STATUS_FID_MASK) >>
                         TX_STATUS_FID_SHIFT;
             txs.sequence = TX_STATUS_MACTXS_S2(&txs) & TX_STATUS_SEQ_MASK;
