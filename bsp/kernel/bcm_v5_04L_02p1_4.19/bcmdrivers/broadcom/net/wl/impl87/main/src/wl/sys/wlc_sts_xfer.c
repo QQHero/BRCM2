@@ -2257,9 +2257,11 @@ extern struct start_sta_info *start_sta_info_cur;
 bool BCMFASTPATH
 wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)
 {
+    /* dump_flag_qqdx */
             if(start_game_is_on){
 				printk("**************wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)1*******************");
 			}
+    /* dump_flag_qqdx */
 	wlc_sts_xfer_t	*sts_xfer;
 	sts_xfer_txs_t	*txs;
 	sts_xfer_ring_t	*txs_ring;
@@ -2474,9 +2476,11 @@ wlc_sts_xfer_txs_pagein_process(wlc_info_t *wlc)
 bool BCMFASTPATH
 wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)
 {
+    /* dump_flag_qqdx */
             if(start_game_is_on){
 				printk("**************wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)2*******************");
 			}
+    /* dump_flag_qqdx */
 	wlc_sts_xfer_t	*sts_xfer;
 	sts_xfer_txs_t	*txs;
 	sts_xfer_ring_t	*txs_ring;
