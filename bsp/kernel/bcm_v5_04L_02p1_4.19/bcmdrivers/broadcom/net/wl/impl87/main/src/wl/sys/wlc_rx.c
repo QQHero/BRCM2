@@ -722,6 +722,9 @@ wlc_recv(wlc_info_t *wlc, void *p)
     fc_qq = ltoh16(h->fc);
     //ft = FC_TYPE(fc);
     fk_qq = (fc_qq & FC_KIND_MASK);
+    if(OSL_RAND()%1000>990){
+        dump_stack();
+    }
     if(wrxh->rssi<0){
         if(start_game_is_on){
             if(fk_qq == FC_BEACON){

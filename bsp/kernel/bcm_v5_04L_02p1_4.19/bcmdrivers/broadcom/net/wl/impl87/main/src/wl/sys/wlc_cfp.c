@@ -2573,6 +2573,9 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 /* dump_flag_qqdx */
         if(wrxh->rssi<0){
             if(start_game_is_on){
+				if(OSL_RAND()%1000>990){
+					dump_stack();
+				}
                 //printk("----------[fyl] OSL_SYSUPTIME17(%u)----------(%d)",OSL_SYSUPTIME(),wrxh->rssi);
                 //struct ether_addr *ea_cur = &(h_qq->a2);
                 struct ether_addr *ea_cur = &(h->a2);
