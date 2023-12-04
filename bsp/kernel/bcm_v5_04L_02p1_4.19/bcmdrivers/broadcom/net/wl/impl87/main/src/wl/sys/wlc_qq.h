@@ -2319,6 +2319,16 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                 memcpy(phy_info_qq_cur->rssi_ring_buffer, phy_info_qq_rx_new.rssi_ring_buffer, sizeof(DataPoint_qq)*RSSI_RING_SIZE);
 
                 //printk("rssi12345135345(%d,%d,%d)SNR(%d)",phy_info_qq_cur->RSSI,phy_info_qq_rx_new.RSSI,pkttag->pktinfo.misc.rssi,pkttag->pktinfo.misc.snr);
+                
+                #if defined(DONGLEBUILD)
+                        /* Get to dot11 header */
+                        h = (struct dot11_header *)PKTPULL(wlc->osh, p, D11_RXPLCP_LEN_GE128);
+                #else /* ! DONGLEBUILD */
+                        /* Get to dot11 header */
+                        h = (struct dot11_header *)PKTPULL(wlc->osh, p,
+                            D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
+                #endif /* ! DONGLEBUILD */
+				fc_qq = ltoh16(h->fc);
                 phy_info_qq_cur->SNR = pkttag->pktinfo.misc.snr;
                 phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
                 phy_info_qq_cur->rssi_ring_buffer_index = rssi_ring_buffer_index;
