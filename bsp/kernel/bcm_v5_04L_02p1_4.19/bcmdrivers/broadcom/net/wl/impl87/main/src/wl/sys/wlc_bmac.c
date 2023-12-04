@@ -13545,6 +13545,7 @@ wlc_bmac_txstatus(wlc_hw_info_t *wlc_hw, bool bound, bool *fatal)
                         }
                         int16 rssi4 = rssi3 >> 2;
                         int16 rssi5 = (rssi3 & 0x3) * 25;
+                        int16 rssi6 = TX_STATUS_PTX(TX_STATUS_MACTXS_S2(&txs), wlc->pub->corerev);
                         int32 phyrssi = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(&txs));
                         #define OPERAND_SHIFT			4
                         phyrssi = (phyrssi - ((phyrssi >= PHYRSSI_SIGN_MASK) << PHYRSSI_2SCOMPLEMENT_SHIFT)) << OPERAND_SHIFT;
@@ -13574,9 +13575,13 @@ wlc_bmac_txstatus(wlc_hw_info_t *wlc_hw, bool bound, bool *fatal)
                             phy_info_qq_cur->RSSI = rssi5;
                             phy_info_qq_cur->RSSI_loc = 10 + 5;
 
+                        }else if(OSL_RAND()%10==6){
+                            phy_info_qq_cur->RSSI = rssi6;
+                            phy_info_qq_cur->RSSI_loc = 10 + 6;
+
                         }else{
                             phy_info_qq_cur->RSSI = phyrssi;
-                            phy_info_qq_cur->RSSI_loc = 10 + 6;
+                            phy_info_qq_cur->RSSI_loc = 10 + 7;
 
                         }
 
