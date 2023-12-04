@@ -980,6 +980,15 @@ wlc_diag_recv(wlc_info_t *wlc, void *p)
 	}
 }
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+#include <wlc_qq_struct.h>
+#include <wl_linux.h>
+//extern struct phy_info_qq phy_info_qq
+extern struct phy_info_qq phy_info_qq_rx_new;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
+/* dump_flag_qqdx */
 /**
  * Ucode in loopback mode does not generate txstatus, thus no MI_TFS irq. Firmware however requires
  * a txstatus for correct transmit operation. Workaround is to 'fake' a txstatus on a d11 receive
@@ -1000,6 +1009,58 @@ wlc_diag_lb_ucode_fake_txstatus(wlc_info_t *wlc)
 		txs.frameid = txh_info.TxFrameID;
 		txs.sequence = txh_info.seq;
 		txs.status.was_acked = TRUE;
+		
+                    /* dump_flag_qqdx */
+                    if(start_game_is_on){
+                        int16 rssi1 = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(&txs));
+                        int16 rssi2 = ((rssi1) & PHYRSSI_SIGN_MASK) ? (rssi1 - PHYRSSI_2SCOMPLEMENT) : rssi1;
+                        int16 rssi3 = rssi2;
+                        if (rssi2 < 0) {
+                            rssi3 = -rssi2;
+                        }
+                        int16 rssi4 = rssi3 >> 2;
+                        int16 rssi5 = (rssi3 & 0x3) * 25;
+                        int32 phyrssi = TGTXS_PHYRSSI(TX_STATUS_MACTXS_S8(&txs));
+                        #define OPERAND_SHIFT			4
+                        phyrssi = (phyrssi - ((phyrssi >= PHYRSSI_SIGN_MASK) << PHYRSSI_2SCOMPLEMENT_SHIFT)) << OPERAND_SHIFT;
+                    
+
+                        kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+                        struct phy_info_qq *phy_info_qq_cur = NULL;
+                        phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+                        //phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
+                        if(OSL_RAND()%10==1){
+                            phy_info_qq_cur->RSSI = rssi1;
+                            phy_info_qq_cur->RSSI_loc = 30 + 1;
+
+                        }else if(OSL_RAND()%10==2){
+                            phy_info_qq_cur->RSSI = rssi2;
+                            phy_info_qq_cur->RSSI_loc = 30 + 2;
+
+                        }else if(OSL_RAND()%10==3){
+                            phy_info_qq_cur->RSSI = rssi3;
+                            phy_info_qq_cur->RSSI_loc = 30 + 3;
+
+                        }else if(OSL_RAND()%10==4){
+                            phy_info_qq_cur->RSSI = rssi4;
+                            phy_info_qq_cur->RSSI_loc = 30 + 4;
+
+                        }else if(OSL_RAND()%10==5){
+                            phy_info_qq_cur->RSSI = rssi5;
+                            phy_info_qq_cur->RSSI_loc = 30 + 5;
+
+                        }else{
+                            phy_info_qq_cur->RSSI = phyrssi;
+                            phy_info_qq_cur->RSSI_loc = 30 + 6;
+
+                        }
+
+                        memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+                        debugfs_set_info_qq(2, info_qq, 1);
+                        MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+
+                    }
+                    /* dump_flag_qqdx */
 		wlc_bmac_dotxstatus(wlc->hw, &txs, s2); // consumes head packet of tx DMA queue
 	}
 }
