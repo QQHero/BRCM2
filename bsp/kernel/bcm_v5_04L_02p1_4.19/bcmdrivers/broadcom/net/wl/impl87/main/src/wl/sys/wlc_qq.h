@@ -2240,6 +2240,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
     uint32 cur_time = receive_time;
     uint32 pkt_qq_cur_PHYdelay = cur_time - pkt_qq_cur->into_hw_time;
     uint16 cur_pktSEQ = pkttag->seq;
+	struct dot11_header *h;
 	h = NULL;
     //printk(KERN_ALERT"###########pkt_qq_chain_len debug24(%u)",pkt_qq_chain_len);
     //if(pkt_qq_cur->pktSEQ == cur_pktSEQ ){//如果找到了这个数据包
@@ -2329,7 +2330,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
                         h = (struct dot11_header *)PKTPULL(wlc->osh, p,
                             D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
                 #endif /* ! DONGLEBUILD */
-				fc_qq = ltoh16(h->fc);
+				uint16 fc_qq = ltoh16(h->fc);
                 phy_info_qq_cur->SNR = pkttag->pktinfo.misc.snr;
                 phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
                 phy_info_qq_cur->rssi_ring_buffer_index = rssi_ring_buffer_index;
