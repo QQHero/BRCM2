@@ -2240,6 +2240,7 @@ void ack_update_qq(wlc_info_t *wlc, scb_ampdu_tid_ini_t* ini,ampdu_tx_info_t *am
     uint32 cur_time = receive_time;
     uint32 pkt_qq_cur_PHYdelay = cur_time - pkt_qq_cur->into_hw_time;
     uint16 cur_pktSEQ = pkttag->seq;
+	h = NULL;
     //printk(KERN_ALERT"###########pkt_qq_chain_len debug24(%u)",pkt_qq_chain_len);
     //if(pkt_qq_cur->pktSEQ == cur_pktSEQ ){//如果找到了这个数据包
     //if(pkt_qq_cur->FrameID == htol16(curTxFrameID) ){//如果找到了这个数据包
