@@ -2610,6 +2610,7 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 							phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
 							phy_info_qq_cur->RSSI_loc = 0;
 							phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
+                        	phy_info_qq_cur->RSSI_subtype = FC_SUBTYPE(fc_qq);
 							memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
 							debugfs_set_info_qq(2, info_qq, 1);
 							MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2622,6 +2623,7 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 							phy_info_qq_cur->RSSI = wlc_lq_rssi_get(wlc, SCB_BSSCFG(scb), scb);
 							phy_info_qq_cur->RSSI_loc = 3;
 							phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
+                        	phy_info_qq_cur->RSSI_subtype = FC_SUBTYPE(fc_qq);
 							memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
 							debugfs_set_info_qq(2, info_qq, 1);
 							MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2635,6 +2637,7 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 							phy_info_qq_cur->RSSI = wrxh->rssi;
 							phy_info_qq_cur->RSSI_loc = 4;
 							phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
+                        	phy_info_qq_cur->RSSI_subtype = FC_SUBTYPE(fc_qq);
 							memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
 							debugfs_set_info_qq(2, info_qq, 1);
 							MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
