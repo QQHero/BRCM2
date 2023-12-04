@@ -179,6 +179,12 @@ static uint8 wlc_process_per_fifo_intr(wlc_info_t *wlc, bool bounded, wlc_workle
 static uint32 wlc_get_fifo_interrupt(wlc_info_t *wlc, uint8 FIFO);
 #endif
 
+    /* dump_flag_qqdx */
+#include <wlc_rate_sel.h>
+#include <wlc_qq_struct.h>
+extern bool start_game_is_on;
+extern struct start_sta_info *start_sta_info_cur;
+    /* dump_flag_qqdx */
 /**
  * second-level interrupt processing
  *   Return TRUE if another worklet needs to be re-scheduled. FALSE otherwise.
@@ -371,7 +377,14 @@ wlc_worklet(wlc_info_t *wlc, bool bounded, wlc_worklet_info_t *worklet)
 		} else
 #elif defined(STS_XFER_TXS)
 		if (STS_XFER_TXS_ENAB(wlc_hw->wlc->pub)) {
+			
+            if(start_game_is_on){
+				printk("**************if (STS_XFER_TXS_ENAB(wlc_hw->wlc->pub))*******************");
+			}
 			if (wlc_sts_xfer_txs_process(wlc_hw->wlc, bounded, &fatal)) {
+				if(start_game_is_on){
+					printk("**************if (wlc_sts_xfer_txs_process(wlc_hw->wlc, bounded, &fatal)) {*******************");
+				}
 				wlc_hw->macintstatus |= MI_TFS;
 			}
 		} else
