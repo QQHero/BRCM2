@@ -2262,11 +2262,6 @@ wlc_sts_xfer_txs_error_dump(wlc_info_t *wlc, void *status, bool reg_dump)
 bool BCMFASTPATH
 wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)
 {
-    /* dump_flag_qqdx */
-            if(start_game_is_on){
-				printk("**************wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)1*******************");
-			}
-    /* dump_flag_qqdx */
 	wlc_sts_xfer_t	*sts_xfer;
 	sts_xfer_txs_t	*txs;
 	sts_xfer_ring_t	*txs_ring;
@@ -2481,11 +2476,6 @@ wlc_sts_xfer_txs_pagein_process(wlc_info_t *wlc)
 bool BCMFASTPATH
 wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)
 {
-    /* dump_flag_qqdx */
-            if(start_game_is_on){
-				printk("**************wlc_sts_xfer_txs_process(wlc_info_t *wlc, bool bound, bool *fatal)2*******************");
-			}
-    /* dump_flag_qqdx */
 	wlc_sts_xfer_t	*sts_xfer;
 	sts_xfer_txs_t	*txs;
 	sts_xfer_ring_t	*txs_ring;
@@ -3138,6 +3128,14 @@ __phyrxs_consume_d11phyrxsts(wlc_info_t *wlc, sts_xfer_phyrxs_t *phyrxs,
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 571;
+		struct dot11_header *h;
+		h = (struct dot11_header *)(PKTDATA(wlc->osh, pkt) + plcp_len);
+		uint16 fc_qq, fk_qq;
+		fc_qq = ltoh16(h->fc);
+		//ft = FC_TYPE(fc);
+		fk_qq = (fc_qq & FC_KIND_MASK);
+		phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
+		phy_info_qq_cur->RSSI_subtype = FC_SUBTYPE(fc_qq);
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
 		debugfs_set_info_qq(2, info_qq, 1);
 		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
