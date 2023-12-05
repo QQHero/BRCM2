@@ -18577,15 +18577,6 @@ dhd_monitor_enabled(dhd_pub_t *dhd, int ifidx)
     return (dhd->info->monitor_type != 0);
 }
 
-/* dump_flag_qqdx */
-extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
-#include <wlc_qq_struct.h>
-#include <wl_linux.h>
-//extern struct phy_info_qq phy_info_qq
-extern struct phy_info_qq phy_info_qq_rx_new;
-extern struct start_sta_info *start_sta_info_cur;
-extern bool start_game_is_on;
-/* dump_flag_qqdx */
 void
 dhd_rx_mon_pkt(dhd_pub_t *dhdp, host_rxbuf_cmpl_t* msg, void *pkt, int ifidx)
 {
@@ -18631,19 +18622,6 @@ dhd_rx_mon_pkt(dhd_pub_t *dhdp, host_rxbuf_cmpl_t* msg, void *pkt, int ifidx)
         skb_pull(pkt, sizeof(wl_phyextract_t));
     }
     wrxh = (wlc_d11rxhdr_t*)PKTDATA(dhdp->osh, pkt);
-
-	/* dump_flag_qqdx */
-	if(start_game_is_on){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_info_qq_cur->RSSI = wrxh_tmp->rssi;
-		phy_info_qq_cur->RSSI_loc = 580;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
     if (BCM43602_CHIP(dhd_bus_chip_id(dhdp)) || BCM4365_CHIP(dhd_bus_chip_id(dhdp))) {
         /* wlc_d11rxhdr  is different in kudu from eagle branch. d11rxhdr_t is at
          * the start of the wlc_d11rxhdr. wlc_d11rxhdr_t was added back to the packet
