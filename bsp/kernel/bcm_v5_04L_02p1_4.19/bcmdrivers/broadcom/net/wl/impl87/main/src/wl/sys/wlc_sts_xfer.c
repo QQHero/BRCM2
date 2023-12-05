@@ -254,6 +254,8 @@ extern struct phy_info_qq phy_info_qq
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
+#include <wlc_rate_sel.h>
+#include <wlc_qq_struct.h>
 /* dump_flag_qqdx */
 /**
  * ------------------------------------------------------------------------------------------------
@@ -2244,12 +2246,6 @@ wlc_sts_xfer_txs_error_dump(wlc_info_t *wlc, void *status, bool reg_dump)
 
 } /* wlc_sts_xfer_txs_error_dump() */
 
-    /* dump_flag_qqdx */
-#include <wlc_rate_sel.h>
-#include <wlc_qq_struct.h>
-extern bool start_game_is_on;
-extern struct start_sta_info *start_sta_info_cur;
-    /* dump_flag_qqdx */
 #if defined(STS_XFER_TXS_PP)
 /*
  * ------------------------------------------------------------------------------------------------
