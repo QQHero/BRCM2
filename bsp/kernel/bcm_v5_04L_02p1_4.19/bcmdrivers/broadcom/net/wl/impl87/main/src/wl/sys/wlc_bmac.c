@@ -595,8 +595,6 @@ typedef struct bmac_dmactl {
                     (D11REV_IS(rev, 131) ? D11MAC_BMC_MAXFIFOS_IS131: \
                     (D11REV_IS(rev, 130) ? D11MAC_BMC_MAXFIFOS_IS130: \
                      D11MAC_BMC_MAXFIFOS_GE128)))
-/
-
 /* dump_flag_qqdx */
 #include <wlc_qq_struct.h>
 #include <wl_linux.h>
