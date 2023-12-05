@@ -3129,7 +3129,8 @@ __phyrxs_consume_d11phyrxsts(wlc_info_t *wlc, sts_xfer_phyrxs_t *phyrxs,
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 571;
 		struct dot11_header *h;
-		h = (struct dot11_header *)(PKTDATA(wlc->osh, pkt) + plcp_len);
+		//h = (struct dot11_header *)(PKTDATA(wlc->osh, pkt) + plcp_len);
+		h = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, pkt))) + wlc->hwrxoff + RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc) + D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
 		uint16 fc_qq, fk_qq;
 		fc_qq = ltoh16(h->fc);
 		//ft = FC_TYPE(fc);

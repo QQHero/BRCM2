@@ -3096,7 +3096,7 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 540;
 		struct dot11_header *h1;
-		h1 = (struct dot11_header *)(PKTDATA(wlc_hw->osh, p) + plcp_len);
+		h1 = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, p))) + wlc->hwrxoff + RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc) + D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
 		uint16 fc_qq, fk_qq;
 		fc_qq = ltoh16(h1->fc);
 		//ft = FC_TYPE(fc);
@@ -3185,7 +3185,7 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 541;
 		struct dot11_header *h2;
-		h2 = (struct dot11_header *)(PKTDATA(wlc_hw->osh, p) + plcp_len);
+		h2 = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, p))) + wlc->hwrxoff + RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc) + D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
 		uint16 fc_qq, fk_qq;
 		fc_qq = ltoh16(h2->fc);
 		//ft = FC_TYPE(fc);
@@ -3222,6 +3222,7 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 
 #if defined(DONGLEBUILD)
 	/* Get to dot11 header */
+	printk("*****if defined(DONGLEBUILD)*******")
 	h = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, p))) +
 		wlc->hwrxoff + pad +
 		D11_RXPLCP_LEN_GE128);
@@ -3232,6 +3233,7 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 	ASSERT((ltoh16(h->fc) & FC_MOREFRAG) == 0);
 
 #else /* ! DONGLEBUILD */
+	printk("*****if not defined(DONGLEBUILD)*******")
 
 	/* Get to dot11 header */
 	h = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, p))) +
@@ -3595,11 +3597,11 @@ wlc_cfp_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, wlc_worklet_info_t *worklet)
 	if(start_game_is_on){
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc_hw->osh, sizeof(*phy_info_qq_cur));
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 542;
 		struct dot11_header *h3;
-		h3 = (struct dot11_header *)(PKTDATA(wlc_hw->osh, p) + plcp_len);
+		h3 = (struct dot11_header *)(((uint8*)(PKTDATA(wlc_hw->osh, p))) + wlc_hw->hwrxoff + RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc) + D11_PHY_RXPLCP_LEN(wlc_hw->pub->corerev));
 		uint16 fc_qq, fk_qq;
 		fc_qq = ltoh16(h3->fc);
 		//ft = FC_TYPE(fc);
