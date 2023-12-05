@@ -1685,6 +1685,15 @@ wlc_amsdu_flush(amsdu_info_t *ami)
 	}
 }
 
+
+    /* dump_flag_qqdx */
+#include <wlc_qq_struct.h>
+#include <wl_linux.h>
+//extern struct phy_info_qq phy_info_qq
+extern struct phy_info_qq phy_info_qq_rx_new;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
+    /* dump_flag_qqdx */
 /**
  * return FALSE if filter failed
  *   caller needs to toss all buffered A-MSDUs and p
@@ -1996,6 +2005,18 @@ skip_amsdu_resize:
 			uchar *plcp;
 			uint16 pad_cnt;
 			frag_wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, pp);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = frag_wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 520;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 			_rxh = &frag_wrxh->rxhdr;
 
 			/* Check for short or long format */
@@ -2025,6 +2046,18 @@ skip_amsdu_resize:
 			/* Loop through subframes to remove rxstatus */
 			while (np) {
 				frag_wrxh = (wlc_d11rxhdr_t*) PKTDATA(osh, np);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = frag_wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 521;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 				_rxh = &frag_wrxh->rxhdr;
 				pad_cnt = RXHDR_GET_PAD_LEN(_rxh, wlc);
 
@@ -2650,6 +2683,18 @@ wlc_amsdu_pktc_deagg_hw(amsdu_info_t *ami, void **pp, wlc_rfc_t *rfc, uint16 *in
 
 			/* determine whether packet has 2-byte pad */
 			wrxh = (wlc_d11rxhdr_t*) PKTDATA(osh, newpkt);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 522;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 			pad = RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc);
 
 			PKTPULL(osh, newpkt, wlc->hwrxoff + pad);
@@ -3535,6 +3580,18 @@ wlc_cfp_amsdu_deagg_hw(amsdu_info_t *ami, void *p, uint32 *index, struct scb *sc
 
 			/* determine whether packet has 2-byte pad */
 			wrxh = (wlc_d11rxhdr_t*) PKTDATA(osh, newpkt);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 523;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 			pad = RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc);
 
 			PKTPULL(osh, newpkt, wlc->hwrxoff + pad);

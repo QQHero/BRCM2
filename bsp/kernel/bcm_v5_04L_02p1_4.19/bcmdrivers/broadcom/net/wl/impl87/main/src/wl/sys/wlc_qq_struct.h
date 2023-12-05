@@ -114,7 +114,7 @@ struct phy_info_qq {
     uint32 ISSGI[RATESEL_MFBR_NUM];
     int8 SNR;
     int32 RSSI;
-    int8 RSSI_loc;//0:wlc_cfp.c;1:wlc_qq.c;2:wlc_rx;3.wlc_lq_rssi_get;4.cfp...!= FC_TYPE_DATA
+    int16 RSSI_loc;//0:wlc_cfp.c;1:wlc_qq.c;2:wlc_rx;3.wlc_lq_rssi_get;4.cfp...!= FC_TYPE_DATA
     int16 RSSI_type;//数据包类型
     int16 RSSI_subtype;//数据包类型
     int8 noiselevel;

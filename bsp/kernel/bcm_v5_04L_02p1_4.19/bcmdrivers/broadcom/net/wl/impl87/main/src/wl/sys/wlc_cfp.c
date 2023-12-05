@@ -3088,6 +3088,18 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 	h = NULL;
 	sf_chainabale = chainable = TRUE;
 	wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc->osh, p);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 540;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 	rxh = &wrxh->rxhdr;
 
 #if defined(DONGLEBUILD)
@@ -3157,6 +3169,18 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 
 	/* Only head frame in AMSDU should reach here */
 	wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc->osh, p);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 541;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 	rxh = &wrxh->rxhdr;
 	pad = RXHDR_GET_PAD_LEN(rxh, wlc);
 	min_frame_len = (uint)PKTC_MIN_FRMLEN(wlc) + pad;
@@ -3551,6 +3575,18 @@ wlc_cfp_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, wlc_worklet_info_t *worklet)
 
 		/* reserve room for SW RXHDR */
 		wrxh = (wlc_d11rxhdr_t *)PKTPUSH(wlc_hw->osh, p, WLC_RXHDR_LEN);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 542;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 		/* record the tsf_l in wlc_rxd11hdr */
 		wrxh->tsf_l = tsf_l;
 

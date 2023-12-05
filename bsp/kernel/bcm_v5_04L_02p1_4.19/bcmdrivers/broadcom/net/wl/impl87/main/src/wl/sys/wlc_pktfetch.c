@@ -433,7 +433,17 @@ wlc_pktfetch_get_scb(wlc_info_t *wlc, wlc_frminfo_t *f,
 			*scb = NULL;
 	}
 } /* wlc_pktfetch_get_scb */
+/
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+#include <wlc_qq_struct.h>
+#include <wl_linux.h>
+//extern struct phy_info_qq phy_info_qq
+extern struct phy_info_qq phy_info_qq_rx_new;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
+/* dump_flag_qqdx */
 int
 wlc_recvdata_schedule_pktfetch(wlc_info_t *wlc, struct scb *scb,
 	wlc_frminfo_t *f, bool promisc_frame, bool ordered, bool amsdu_msdus)
@@ -490,6 +500,18 @@ wlc_recvdata_schedule_pktfetch(wlc_info_t *wlc, struct scb *scb,
 	memcpy(PKTDATA(wlc->osh, f->p), (uchar *)f->wrxh, WL_RXHDR_LEN(wlc->pub->corerev));
 	WL_INFORM(("f->wrsxh switching from %p to new %p\n", f->wrxh, PKTDATA(wlc->osh, f->p)));
 	f->wrxh = (wlc_d11rxhdr_t *) PKTDATA(wlc->osh, f->p);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = f->wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 550;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 	f->rxh = &f->wrxh->rxhdr;
 	PKTPULL(wlc->osh, f->p, headroom);
 
@@ -801,6 +823,18 @@ wlc_recreate_frameinfo(wlc_info_t *wlc, void *lbuf, void *lfrag,
 	/* wrxh and rxh pointers: both have same address */
 	fnew->wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, lbuf);
 	fnew->rxh = &fnew->wrxh->rxhdr;
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = fnew->wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 551;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 
 	/* Restore data pointer of lfrag and lbuf */
 	PKTPULL(osh, lfrag, offset_from_start);
@@ -1667,6 +1701,18 @@ wlc_bme_pktfetch_recvdata(wlc_info_t *wlc, wlc_frminfo_t *f, bool amsdu_msdus)
 			/* wrxh and rxh pointers: both have same address */
 			f->wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, fetch_pkt);
 			f->rxh = &f->wrxh->rxhdr;
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = f->wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 552;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 
 			/* Restore data pointers */
 			PKTPULL(osh, pkt, wrxh_offset);

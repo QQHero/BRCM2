@@ -246,6 +246,15 @@
 #define STS_XFER_STATS
 #endif /* WLCNT */
 
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+#include <wlc_qq_struct.h>
+#include <wl_linux.h>
+//extern struct phy_info_qq phy_info_qq
+extern struct phy_info_qq phy_info_qq_rx_new;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
+/* dump_flag_qqdx */
 /**
  * ------------------------------------------------------------------------------------------------
  * Section: sts_xfer_ring_t
@@ -3126,6 +3135,18 @@ __phyrxs_consume_d11phyrxsts(wlc_info_t *wlc, sts_xfer_phyrxs_t *phyrxs,
 	/* Set PhyRx Status radio unit in SW header */
 	wrxh = CONTAINEROF(rxh, wlc_d11rxhdr_t, rxhdr);
 	wrxh->radio_unit = WLC_UNIT(wlc);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 571;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 
 	WL_INFORM(("wl%d: %s: Linking PhyRx Status buffer with seqnum[%d] to pkt[%p]\n",
 		wlc->pub->unit, __FUNCTION__, rxh_seqnum, pkt));

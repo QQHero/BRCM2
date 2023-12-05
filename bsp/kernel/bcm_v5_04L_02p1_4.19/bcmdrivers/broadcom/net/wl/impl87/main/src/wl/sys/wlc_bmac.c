@@ -595,6 +595,17 @@ typedef struct bmac_dmactl {
                     (D11REV_IS(rev, 131) ? D11MAC_BMC_MAXFIFOS_IS131: \
                     (D11REV_IS(rev, 130) ? D11MAC_BMC_MAXFIFOS_IS130: \
                      D11MAC_BMC_MAXFIFOS_GE128)))
+/
+
+/* dump_flag_qqdx */
+extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
+#include <wlc_qq_struct.h>
+#include <wl_linux.h>
+//extern struct phy_info_qq phy_info_qq
+extern struct phy_info_qq phy_info_qq_rx_new;
+extern struct start_sta_info *start_sta_info_cur;
+extern bool start_game_is_on;
+/* dump_flag_qqdx */
 
 /* Iterative fifo ID which need buffer allocated in BM. RX-FIOF2 is excluded from list since
  * classified packets(SplitRx-4 mode) recieved in RX-FIFO2 is transferred from HW to driver buffer
@@ -2299,6 +2310,18 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
         ASSERT(PKTHEADROOM(wlc_hw->osh, p) >= WLC_RXHDR_LEN);
         /* reserve room for SW RXHDR */
         wrxh = (wlc_d11rxhdr_t *)PKTPUSH(wlc_hw->osh, p, WLC_RXHDR_LEN);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 530;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 
 #if defined(STS_XFER_PHYRXS)
         if (STS_XFER_PHYRXS_ENAB(wlc->pub) &&
@@ -2479,6 +2502,18 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
         }
 
         wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc_hw->osh, p);
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 531;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 
         /* record the tsf_l in wlc_rxd11hdr */
         /* On monolithic driver, write tsf in host byte order. rx status already
@@ -2557,17 +2592,7 @@ wlc_p2p_bmac_int_proc(wlc_hw_info_t *wlc_hw)
     wlc_p2p_int_proc(wlc_hw->wlc, p2p_interrupts, tsf_l, tsf_h);
 #endif
 } /* wlc_p2p_bmac_int_proc */
-#endif /* WLP2P_UCODE */
-
-/* dump_flag_qqdx */
-extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
-#include <wlc_qq_struct.h>
-#include <wl_linux.h>
-//extern struct phy_info_qq phy_info_qq
-extern struct phy_info_qq phy_info_qq_rx_new;
-extern struct start_sta_info *start_sta_info_cur;
-extern bool start_game_is_on;
-/* dump_flag_qqdx */
+#endif /* WLP2P_UCODE *
 /**
  * Used for test functionality (packet engine / diagnostics), or for BMAC and offload firmware
  * builds.
