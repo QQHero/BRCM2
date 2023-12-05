@@ -598,7 +598,6 @@ typedef struct bmac_dmactl {
 /
 
 /* dump_flag_qqdx */
-extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
 #include <wlc_qq_struct.h>
 #include <wl_linux.h>
 //extern struct phy_info_qq phy_info_qq
