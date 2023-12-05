@@ -2592,7 +2592,6 @@ wlc_p2p_bmac_int_proc(wlc_hw_info_t *wlc_hw)
 #endif
 } /* wlc_p2p_bmac_int_proc */
 #endif /* WLP2P_UCODE *
-/**
  * Used for test functionality (packet engine / diagnostics), or for BMAC and offload firmware
  * builds.
  */
