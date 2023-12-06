@@ -1695,7 +1695,7 @@ wlc_amsdu_flush(amsdu_info_t *ami)
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
-extern phy_info_t *qq_pi;
+extern phy_info_t qq_pi;
 extern bool qq_pi_is_set;
     /* dump_flag_qqdx */
 /**
@@ -2014,7 +2014,7 @@ skip_amsdu_resize:
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(qq_pi, frag_wrxh);
+    	phy_rssi_compute_rssi(&qq_pi, frag_wrxh);
 		phy_info_qq_cur->RSSI = frag_wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 520;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2056,7 +2056,7 @@ skip_amsdu_resize:
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(qq_pi, frag_wrxh);
+    	phy_rssi_compute_rssi(&qq_pi, frag_wrxh);
 		phy_info_qq_cur->RSSI = frag_wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 521;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2694,7 +2694,7 @@ wlc_amsdu_pktc_deagg_hw(amsdu_info_t *ami, void **pp, wlc_rfc_t *rfc, uint16 *in
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(qq_pi, wrxh);
+    	phy_rssi_compute_rssi(&qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 522;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -3592,7 +3592,7 @@ wlc_cfp_amsdu_deagg_hw(amsdu_info_t *ami, void *p, uint32 *index, struct scb *sc
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(qq_pi, wrxh);
+    	phy_rssi_compute_rssi(&qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 523;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));

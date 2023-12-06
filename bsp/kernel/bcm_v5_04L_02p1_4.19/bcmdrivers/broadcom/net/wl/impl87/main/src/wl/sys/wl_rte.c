@@ -560,7 +560,7 @@ wl_dump(wl_info_t *wl, struct bcmstrbuf *b)
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
-extern phy_info_t *qq_pi;
+extern phy_info_t qq_pi;
 extern bool qq_pi_is_set;
     /* dump_flag_qqdx */
 void
@@ -585,7 +585,7 @@ wl_monitor(wl_info_t *wl, wl_rxsts_t *rxsts, void *p)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(qq_pi, wrxh);
+    	phy_rssi_compute_rssi(&qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 510;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));

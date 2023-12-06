@@ -429,7 +429,7 @@ void process_beacon_packet(struct dot11_header *h);
 void remove_expired_APinfo_qq(void);
 void update_global_AP_list(wlc_bss_info_t *bss_info);
 void find_best_channels(int *best_40MHz_channels, int *best_80MHz_channels);
-extern phy_info_t *qq_pi;
+extern phy_info_t qq_pi;
 extern bool qq_pi_is_set;
 
 /* bandwidth ASCII string */

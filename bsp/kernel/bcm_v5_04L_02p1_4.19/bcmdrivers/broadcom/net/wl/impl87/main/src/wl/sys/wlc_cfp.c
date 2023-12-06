@@ -132,7 +132,7 @@ extern bool start_game_is_on;
 extern uint rssi_ring_buffer_index;
 extern DataPoint_qq rssi_ring_buffer_cur[RSSI_RING_SIZE];
 void process_beacon_packet(struct dot11_header *h);
-extern phy_info_t *qq_pi;
+extern phy_info_t qq_pi;
 extern bool qq_pi_is_set;
 /**
  * XXX NIC Mode
@@ -2636,7 +2636,7 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 							struct phy_info_qq *phy_info_qq_cur = NULL;
 							phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
 							phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
-    						phy_rssi_compute_rssi(qq_pi, wrxh);
+    						phy_rssi_compute_rssi(&qq_pi, wrxh);
 							phy_info_qq_cur->RSSI = wrxh->rssi;
 							phy_info_qq_cur->RSSI_loc = 114;
 							phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
@@ -3096,7 +3096,7 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi(qq_pi, wrxh);
+		phy_rssi_compute_rssi(&qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 540;
 		struct dot11_header *h1;
@@ -3186,7 +3186,7 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi(qq_pi, wrxh);
+		phy_rssi_compute_rssi(&qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 541;
 		struct dot11_header *h2;
@@ -3607,7 +3607,7 @@ wlc_cfp_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, wlc_worklet_info_t *worklet)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi(qq_pi, wrxh);
+		phy_rssi_compute_rssi(&qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 542;
 		struct dot11_header *h3;

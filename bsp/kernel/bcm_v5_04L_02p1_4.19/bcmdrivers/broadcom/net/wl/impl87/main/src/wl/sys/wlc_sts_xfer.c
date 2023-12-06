@@ -257,7 +257,7 @@ extern bool start_game_is_on;
 #include <wlc_rate_sel.h>
 #include <wlc_qq_struct.h>
 #include <phy_rssi_api.h>
-extern phy_info_t *qq_pi;
+extern phy_info_t qq_pi;
 extern bool qq_pi_is_set;
 /* dump_flag_qqdx */
 /**
@@ -3129,7 +3129,7 @@ __phyrxs_consume_d11phyrxsts(wlc_info_t *wlc, sts_xfer_phyrxs_t *phyrxs,
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi(qq_pi, wrxh);
+		phy_rssi_compute_rssi(&qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 571;
 		struct dot11_header *h;
