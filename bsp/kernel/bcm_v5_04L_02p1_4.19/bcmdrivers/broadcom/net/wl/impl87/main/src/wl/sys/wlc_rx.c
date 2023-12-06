@@ -667,7 +667,7 @@ wlc_recv(wlc_info_t *wlc, void *p)
 	/* dump_flag_qqdx */
 	if(start_game_is_on){
         
-        *qq_pi = (phy_info_t *)wlc->hw->band->pi;
+        qq_pi = *((phy_info_t *)wlc->hw->band->pi);
         qq_pi_is_set = TRUE;
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
