@@ -2636,7 +2636,6 @@ wlc_cfp_scb_chain_sendup(wlc_info_t *wlc, scb_cfp_t * scb_cfp, uint8 prio)
 							struct phy_info_qq *phy_info_qq_cur = NULL;
 							phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
 							phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
-    						phy_rssi_compute_rssi(&qq_pi, wrxh);
 							phy_info_qq_cur->RSSI = wrxh->rssi;
 							phy_info_qq_cur->RSSI_loc = 114;
 							phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
