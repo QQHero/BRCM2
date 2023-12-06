@@ -325,6 +325,7 @@ typedef struct {
 #endif
 
 
+	/* dump_flag_qqdx */
 #include <wlc_qq.h>
 uint32 recent_into_CFP_time = 0;
 /*
@@ -342,6 +343,7 @@ void print_trace(void) {
     }
     free(strings);
 }*/
+	/* dump_flag_qqdx */
 
 
 
@@ -1559,7 +1561,9 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
         if(start_game_is_on){
             /* dump_flag_qqdx */
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
-                    
+                           
+                qq_scb = scb;     
+                qq_scb_is_set = TURE;
                 /* dump_flag_qqdx */
                 if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
                     printk("channel switch time:txq_hw_fill:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());

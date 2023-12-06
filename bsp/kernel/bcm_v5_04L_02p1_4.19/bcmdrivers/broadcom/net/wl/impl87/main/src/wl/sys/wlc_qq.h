@@ -1604,6 +1604,8 @@ void scan_result_callback_update_qq(void *ctx, int status, wlc_bsscfg_t *bsscfg)
 
 phy_info_t qq_pi;
 bool qq_pi_is_set = FALSE;
+bool qq_scb_is_set = FALSE;
+struct scb *qq_scb;
 
 
 /*
