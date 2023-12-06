@@ -2314,6 +2314,7 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+    	phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 530;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2506,6 +2507,7 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+    	phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 531;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -13580,31 +13582,31 @@ wlc_bmac_txstatus(wlc_hw_info_t *wlc_hw, bool bound, bool *fatal)
                         //phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
                         if(OSL_RAND()%10==1){
                             phy_info_qq_cur->RSSI = rssi1;
-                            phy_info_qq_cur->RSSI_loc = 10 + 1;
+                            phy_info_qq_cur->RSSI_loc = 100 + 1;
 
                         }else if(OSL_RAND()%10==2){
                             phy_info_qq_cur->RSSI = rssi2;
-                            phy_info_qq_cur->RSSI_loc = 10 + 2;
+                            phy_info_qq_cur->RSSI_loc = 100 + 2;
 
                         }else if(OSL_RAND()%10==3){
                             phy_info_qq_cur->RSSI = rssi3;
-                            phy_info_qq_cur->RSSI_loc = 10 + 3;
+                            phy_info_qq_cur->RSSI_loc = 100 + 3;
 
                         }else if(OSL_RAND()%10==4){
                             phy_info_qq_cur->RSSI = rssi4;
-                            phy_info_qq_cur->RSSI_loc = 10 + 4;
+                            phy_info_qq_cur->RSSI_loc = 100 + 4;
 
                         }else if(OSL_RAND()%10==5){
                             phy_info_qq_cur->RSSI = rssi5;
-                            phy_info_qq_cur->RSSI_loc = 10 + 5;
+                            phy_info_qq_cur->RSSI_loc = 100 + 5;
 
                         }else if(OSL_RAND()%10==6){
                             phy_info_qq_cur->RSSI = rssi6;
-                            phy_info_qq_cur->RSSI_loc = 10 + 6;
+                            phy_info_qq_cur->RSSI_loc = 100 + 6;
 
                         }else{
                             phy_info_qq_cur->RSSI = phyrssi;
-                            phy_info_qq_cur->RSSI_loc = 10 + 7;
+                            phy_info_qq_cur->RSSI_loc = 100 + 7;
 
                         }
 

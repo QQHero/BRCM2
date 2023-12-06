@@ -650,18 +650,6 @@ wlc_recv(wlc_info_t *wlc, void *p)
     wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, p);
     rxh = &wrxh->rxhdr; /* HW RXHDR */
     
-	/* dump_flag_qqdx */
-	if(start_game_is_on){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 600;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
 
 #if defined(STS_XFER_PHYRXS)
     /* Set current PhyRx Status buffer if PhyRx Status is valid */
@@ -674,6 +662,18 @@ wlc_recv(wlc_info_t *wlc, void *p)
     /* compute the RSSI from d11rxhdr and record it in wlc_rxd11hr */
     phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
     
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 600;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
     /* strip off HW rxhdr */
     if (PKTLEN(osh, p) < wlc->hwrxoff) {
         WLCNTINCR(pub->_cnt->rxrunt);
@@ -759,7 +759,7 @@ wlc_recv(wlc_info_t *wlc, void *p)
                         phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
                         phy_info_qq_cur->noiselevel = wlc_lq_chanim_phy_noise(wlc);
                         phy_info_qq_cur->RSSI = phy_info_qq_rx_new.RSSI;
-						phy_info_qq_cur->RSSI_loc = 2;
+						phy_info_qq_cur->RSSI_loc = 112;
                         phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
                         phy_info_qq_cur->RSSI_subtype = FC_SUBTYPE(fc_qq);
                         memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -9148,6 +9148,7 @@ wlc_rxframe_chainable(wlc_info_t *wlc, void **pp, uint16 index)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 560;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -9474,6 +9475,7 @@ wlc_sendup_chain(wlc_info_t *wlc, void *head)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 561;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -9516,6 +9518,7 @@ wlc_sendup_chain(wlc_info_t *wlc, void *head)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 562;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -9742,6 +9745,7 @@ wlc_sendup_chain(wlc_info_t *wlc, void *head)
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh_tmp);
 		phy_info_qq_cur->RSSI = wrxh_tmp->rssi;
 		phy_info_qq_cur->RSSI_loc = 563;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));

@@ -2090,6 +2090,7 @@ hwa_rxfill_bmac_recv(void *context, uintptr arg1, uintptr arg2,
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+    	phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 500;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2233,6 +2234,7 @@ hwa_rxfill_bmac_recv(void *context, uintptr arg1, uintptr arg2, uint32 core, uin
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+    	phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 501;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2360,6 +2362,7 @@ hwa_rxfill_bmac_done(void *context, uintptr arg1, uintptr arg2, uint32 core, uin
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+    	phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 502;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
