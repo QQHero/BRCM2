@@ -3227,9 +3227,6 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 
 #if defined(DONGLEBUILD)
 	/* Get to dot11 header */
-	/* dump_flag_qqdx */
-	printk("*****if defined(DONGLEBUILD)*******");
-	/* dump_flag_qqdx */
 	h = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, p))) +
 		wlc->hwrxoff + pad +
 		D11_RXPLCP_LEN_GE128);
@@ -3240,9 +3237,6 @@ wlc_cfp_rxframe(wlc_info_t *wlc, void* p)
 	ASSERT((ltoh16(h->fc) & FC_MOREFRAG) == 0);
 
 #else /* ! DONGLEBUILD */
-	/* dump_flag_qqdx */
-	printk("*****if not defined(DONGLEBUILD)*******");
-	/* dump_flag_qqdx */
 
 	/* Get to dot11 header */
 	h = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, p))) +
