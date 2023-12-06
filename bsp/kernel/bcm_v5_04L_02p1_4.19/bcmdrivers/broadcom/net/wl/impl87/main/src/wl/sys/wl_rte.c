@@ -554,6 +554,7 @@ wl_dump(wl_info_t *wl, struct bcmstrbuf *b)
 
     /* dump_flag_qqdx */
 #include <wlc_qq_struct.h>
+#include <phy_rssi_api.h>
 #include <wl_linux.h>
 //extern struct phy_info_qq phy_info_qq
 extern struct phy_info_qq phy_info_qq_rx_new;

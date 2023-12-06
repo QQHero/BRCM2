@@ -440,6 +440,7 @@ extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
 #include <wlc_qq_struct.h>
 #include <wl_linux.h>
 #include <wlc_hw_priv.h>
+#include <phy_rssi_api.h>
 //extern struct phy_info_qq phy_info_qq
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;

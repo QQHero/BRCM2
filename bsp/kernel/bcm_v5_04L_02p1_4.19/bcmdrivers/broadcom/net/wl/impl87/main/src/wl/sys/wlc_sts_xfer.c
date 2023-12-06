@@ -256,6 +256,7 @@ extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
 #include <wlc_rate_sel.h>
 #include <wlc_qq_struct.h>
+#include <phy_rssi_api.h>
 /* dump_flag_qqdx */
 /**
  * ------------------------------------------------------------------------------------------------
