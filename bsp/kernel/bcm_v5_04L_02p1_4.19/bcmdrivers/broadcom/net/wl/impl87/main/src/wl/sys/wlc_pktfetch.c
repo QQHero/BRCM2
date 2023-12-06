@@ -445,6 +445,8 @@ extern uint32 recent_channel_set_end_time;//探查channel switch 时延来源
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
+extern phy_info_t *qq_pi;
+extern bool qq_pi_is_set;
 /* dump_flag_qqdx */
 int
 wlc_recvdata_schedule_pktfetch(wlc_info_t *wlc, struct scb *scb,
@@ -503,11 +505,11 @@ wlc_recvdata_schedule_pktfetch(wlc_info_t *wlc, struct scb *scb,
 	WL_INFORM(("f->wrsxh switching from %p to new %p\n", f->wrxh, PKTDATA(wlc->osh, f->p)));
 	f->wrxh = (wlc_d11rxhdr_t *) PKTDATA(wlc->osh, f->p);
 	/* dump_flag_qqdx */
-	if(start_game_is_on){
+	if(start_game_is_on && qq_pi_is_set){
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, f->wrxh);
+		phy_rssi_compute_rssi(qq_pi, f->wrxh);
 		phy_info_qq_cur->RSSI = f->wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 550;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -827,11 +829,11 @@ wlc_recreate_frameinfo(wlc_info_t *wlc, void *lbuf, void *lfrag,
 	fnew->wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, lbuf);
 	fnew->rxh = &fnew->wrxh->rxhdr;
 	/* dump_flag_qqdx */
-	if(start_game_is_on){
+	if(start_game_is_on && qq_pi_is_set){
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, fnew->wrxh);
+		phy_rssi_compute_rssi(qq_pi, fnew->wrxh);
 		phy_info_qq_cur->RSSI = fnew->wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 551;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -1706,11 +1708,11 @@ wlc_bme_pktfetch_recvdata(wlc_info_t *wlc, wlc_frminfo_t *f, bool amsdu_msdus)
 			f->wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, fetch_pkt);
 			f->rxh = &f->wrxh->rxhdr;
 	/* dump_flag_qqdx */
-	if(start_game_is_on){
+	if(start_game_is_on && qq_pi_is_set){
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, f->wrxh);
+		phy_rssi_compute_rssi(qq_pi, f->wrxh);
 		phy_info_qq_cur->RSSI = f->wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 552;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));

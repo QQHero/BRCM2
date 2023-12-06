@@ -429,6 +429,8 @@ void process_beacon_packet(struct dot11_header *h);
 void remove_expired_APinfo_qq(void);
 void update_global_AP_list(wlc_bss_info_t *bss_info);
 void find_best_channels(int *best_40MHz_channels, int *best_80MHz_channels);
+extern phy_info_t *qq_pi;
+extern bool qq_pi_is_set;
 
 /* bandwidth ASCII string */
 const char *wf_chspec_bw_str[] =
@@ -664,6 +666,9 @@ wlc_recv(wlc_info_t *wlc, void *p)
     
 	/* dump_flag_qqdx */
 	if(start_game_is_on){
+        
+        qq_pi = (phy_info_t *)wlc->hw->band->pi;
+        qq_pi_is_set = TRUE;
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));

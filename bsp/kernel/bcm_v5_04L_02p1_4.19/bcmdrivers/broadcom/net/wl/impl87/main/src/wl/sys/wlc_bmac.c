@@ -604,6 +604,8 @@ extern bool via_txq_hw_fill;//探查channel switch 时延来源
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
+extern phy_info_t *qq_pi;
+extern bool qq_pi_is_set;
 /* dump_flag_qqdx */
 
 /* Iterative fifo ID which need buffer allocated in BM. RX-FIOF2 is excluded from list since
@@ -2310,11 +2312,11 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
         /* reserve room for SW RXHDR */
         wrxh = (wlc_d11rxhdr_t *)PKTPUSH(wlc_hw->osh, p, WLC_RXHDR_LEN);
 	/* dump_flag_qqdx */
-	if(start_game_is_on){
+	if(start_game_is_on && qq_pi_is_set){
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
+    	phy_rssi_compute_rssi(qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 530;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
@@ -2503,11 +2505,11 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
 
         wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc_hw->osh, p);
 	/* dump_flag_qqdx */
-	if(start_game_is_on){
+	if(start_game_is_on && qq_pi_is_set){
 		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
 		struct phy_info_qq *phy_info_qq_cur = NULL;
 		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
+    	phy_rssi_compute_rssi(qq_pi, wrxh);
 		phy_info_qq_cur->RSSI = wrxh->rssi;
 		phy_info_qq_cur->RSSI_loc = 531;
 		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
