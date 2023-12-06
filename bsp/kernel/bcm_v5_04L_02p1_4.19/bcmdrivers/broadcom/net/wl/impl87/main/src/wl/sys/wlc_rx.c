@@ -649,6 +649,19 @@ wlc_recv(wlc_info_t *wlc, void *p)
     /* frame starts with SW+HW rxhdr */
     wrxh = (wlc_d11rxhdr_t *)PKTDATA(osh, p);
     rxh = &wrxh->rxhdr; /* HW RXHDR */
+    
+	/* dump_flag_qqdx */
+	if(start_game_is_on){
+		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
+		struct phy_info_qq *phy_info_qq_cur = NULL;
+		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
+		phy_info_qq_cur->RSSI = wrxh->rssi;
+		phy_info_qq_cur->RSSI_loc = 600;
+		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+		debugfs_set_info_qq(2, info_qq, 1);
+		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
+	}	
+	/* dump_flag_qqdx */
 
 #if defined(STS_XFER_PHYRXS)
     /* Set current PhyRx Status buffer if PhyRx Status is valid */
