@@ -1688,6 +1688,7 @@ wlc_amsdu_flush(amsdu_info_t *ami)
 
     /* dump_flag_qqdx */
 #include <wlc_qq_struct.h>
+#include <wlc_hw_priv.h>
 #include <wl_linux.h>
 //extern struct phy_info_qq phy_info_qq
 extern struct phy_info_qq phy_info_qq_rx_new;
