@@ -2458,7 +2458,6 @@ static ssize_t debugfs_write_cb(struct file *file, const char __user *user_buffe
     return -ENOENT;
 }
 /* dump_flag_qqdx */
-extern struct phy_rssi_info;
 #include <wlc_qq_struct.h>
 #include <phy_rssi.h>
 #include <wl_linux.h>
@@ -2476,6 +2475,14 @@ extern phy_info_t qq_pi;
 extern bool qq_pi_is_set;
 extern bool qq_scb_is_set;
 extern struct scb * qq_scb;
+/* module private states */
+struct phy_rssi_info {
+	phy_info_t 		*pi;
+	phy_type_rssi_fns_t 	*fns;
+	phy_rssi_ma_t 		*ma;
+	bool 			do_ma;
+};
+typedef struct phy_rssi_info phy_rssi_info_t;
 /* dump_flag_qqdx */
 #if 0
 int debugfs_read_info_qq(uint8 class, kernel_info_t *info_input, uint8 ts) {
