@@ -2458,6 +2458,7 @@ static ssize_t debugfs_write_cb(struct file *file, const char __user *user_buffe
     return -ENOENT;
 }
 /* dump_flag_qqdx */
+extern struct phy_rssi_info;
 #include <wlc_qq_struct.h>
 #include <phy_rssi.h>
 #include <wl_linux.h>
@@ -2468,7 +2469,6 @@ static ssize_t debugfs_write_cb(struct file *file, const char __user *user_buffe
 #include <phy_ac_rssi.h>
 #define PHYHW_MEAS_RSSI_FOR_INACTIVE	(-128)
 //extern struct phy_info_qq phy_info_qq
-extern struct phy_rssi_info;
 extern struct phy_info_qq phy_info_qq_rx_new;
 extern struct start_sta_info *start_sta_info_cur;
 extern bool start_game_is_on;
