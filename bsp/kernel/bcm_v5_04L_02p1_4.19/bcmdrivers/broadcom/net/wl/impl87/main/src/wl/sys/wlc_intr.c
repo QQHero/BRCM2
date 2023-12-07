@@ -179,6 +179,9 @@ static uint8 wlc_process_per_fifo_intr(wlc_info_t *wlc, bool bounded, wlc_workle
 static uint32 wlc_get_fifo_interrupt(wlc_info_t *wlc, uint8 FIFO);
 #endif
 
+/* dump_flag_qqdx */
+#include <wlc_qq_struct.h>
+/* dump_flag_qqdx */
 
 
 /**
