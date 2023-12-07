@@ -1563,7 +1563,7 @@ txq_hw_fill(txq_info_t *txqi, txq_t *txq, uint fifo_idx)
             if(memcmp(&start_sta_info_cur->ea, &scb->ea, sizeof(struct ether_addr)) == 0 && start_sta_info_cur->ac_queue_index == PKTPRIO(p)){
                            
                 qq_scb = scb;     
-                qq_scb_is_set = TURE;
+                qq_scb_is_set = TRUE;
                 /* dump_flag_qqdx */
                 if((recent_channel_set_end_time==6666)){//探查channel switch 时延来源
                     printk("channel switch time:txq_hw_fill:OSL_SYSUPTIME()----------(%u)",OSL_SYSUPTIME());
