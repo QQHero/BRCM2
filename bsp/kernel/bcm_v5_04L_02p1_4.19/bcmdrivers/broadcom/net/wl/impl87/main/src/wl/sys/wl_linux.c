@@ -2457,52 +2457,6 @@ static ssize_t debugfs_write_cb(struct file *file, const char __user *user_buffe
     }
     return -ENOENT;
 }
-/* dump_flag_qqdx */
-#include <wlc_qq_struct.h>
-#include <phy_rssi.h>
-#include <wl_linux.h>
-#include <wlc_lq.h>
-#include <phy_rssi_api.h>
-#include <phy_type_rssi.h>
-#include <wlc_phy_hal.h>
-#include <phy_ac_rssi.h>
-#define PHYHW_MEAS_RSSI_FOR_INACTIVE	(-128)
-//extern struct phy_info_qq phy_info_qq
-extern struct phy_info_qq phy_info_qq_rx_new;
-extern struct start_sta_info *start_sta_info_cur;
-extern bool start_game_is_on;
-extern phy_info_t qq_pi;
-extern bool qq_pi_is_set;
-extern bool qq_scb_is_set;
-extern struct scb * qq_scb;
-
-//copy from phy_rssi.c
-#ifndef RSSI_MA_WIN_SZ
-#define RSSI_MA_WIN_SZ 16
-#endif
-
-/* rssi moving average window */
-typedef struct {
-	uint16  win_sz;
-	int8  *rssi0_buffer;
-	int8  *rssi1_buffer;
-	int8  rssi0_avg;
-	int8  rssi1_avg;
-	int8  rssi0_index;
-	int8  rssi1_index;
-/* leave these arrays here at the end */
-	int8 rssi0[RSSI_MA_WIN_SZ];
-	int8 rssi1[RSSI_MA_WIN_SZ];
-} phy_rssi_ma_t;
-struct phy_rssi_info {
-	phy_info_t 		*pi;
-	phy_type_rssi_fns_t 	*fns;
-	phy_rssi_ma_t 		*ma;
-	bool 			do_ma;
-};
-/* module private states */
-typedef struct phy_rssi_info phy_rssi_info_t;
-/* dump_flag_qqdx */
 #if 0
 int debugfs_read_info_qq(uint8 class, kernel_info_t *info_input, uint8 ts) {
     if (unlikely(class >= DEBUG_MAX_CLASS)) {
@@ -5474,52 +5428,7 @@ wl_isr(int irq, void *dev_id, struct pt_regs *ptregs)
                 atomic_inc(&wl->callbacks);
 #if defined(WL_USE_L34_THREAD)
                 if (!wl->rxq_dispatched) {
-                    wl->rxq_dispatched = 1;
-                    
-	/* dump_flag_qqdx */
-    
-	if(start_game_is_on && qq_pi_is_set && qq_scb_is_set){
-        phy_rssi_info_t *info = qq_pi.rssii;
-        phy_type_rssi_fns_t *fns = info->fns;
-	    int8 int8_rxpwr_core[WL_RSSI_ANT_MAX-WL_ANT_IDX_1];
-	    int16 rxpwr_core[WL_RSSI_ANT_MAX-WL_ANT_IDX_1];
-        for (int8 i = WL_ANT_IDX_1 - WL_ANT_IDX_1; i < WL_RSSI_ANT_MAX - WL_ANT_IDX_1; i++){
-
-            int8_rxpwr_core[i] = wlc_lq_ant_rssi_last_get(wlc, SCB_BSSCFG(qq_scb), qq_scb, i+WL_ANT_IDX_1);
-            if (int8_rxpwr_core[i] == PHYHW_MEAS_RSSI_FOR_INACTIVE) {
-                int8_rxpwr_core[i] = WLC_RSSI_INVALID;
-            }
-
-		    rxpwr_core[i] = (int16)int8_rxpwr_core[i];
-            if (rxpwr_core[i] > 127)
-	            rxpwr_core[i] -= 256;
-
-        }
-#if 0
-        /* If the GRANTBT is set to 1 for that particular core, set the value as invalid */
-        if ((ltoh16(PHY_RXSTATUS1(qq_pi.sh->corerev, rxh)) & RXS_GRANTBT)) {
-            /* Setting shared core RSSI as invalid if Bt is active */
-            if (BOARDFLAGS(GENERIC_PHY_INFO(&qq_pi)->boardflags) & BFL_FEM_BT) {
-                /* setting the core RSSI as invalid only in shared antenna case */
-                rxpwr_core[wlc_phy_sharedant_acphy(&qq_pi)] = WLC_RSSI_INVALID;
-            }
-        }
-#endif
-        int16 rxpwr = phy_ac_rssi_compute_compensation(fns->ctx, rxpwr_core, FALSE);
-        rxpwr = MIN(MAX(-128, rxpwr), 0);
-        
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_info_qq_cur->RSSI = rxpwr;
-		phy_info_qq_cur->RSSI_loc = 666;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-    }
-
-	/* dump_flag_qqdx */
-
+                    wl->rxq_dispatched = 1;                    
                     wl_thread_schedule_work(wl);
                 } else {
 #else
