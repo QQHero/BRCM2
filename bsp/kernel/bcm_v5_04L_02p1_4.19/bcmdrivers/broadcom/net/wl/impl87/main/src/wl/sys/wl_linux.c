@@ -2462,6 +2462,7 @@ static ssize_t debugfs_write_cb(struct file *file, const char __user *user_buffe
 #include <wl_linux.h>
 #include <wlc_lq.h>
 #include <phy_rssi_api.h>
+#include <phy_type_rssi.h>
 #define PHYHW_MEAS_RSSI_FOR_INACTIVE	(-128)
 //extern struct phy_info_qq phy_info_qq
 extern struct phy_info_qq phy_info_qq_rx_new;
