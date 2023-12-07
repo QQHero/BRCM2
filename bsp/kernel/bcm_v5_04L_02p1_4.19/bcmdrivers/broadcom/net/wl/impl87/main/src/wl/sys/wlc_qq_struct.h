@@ -104,6 +104,7 @@ typedef struct {
     int32 timestamp;
 } DataPoint_qq;
 
+#define RATESEL_MFBR_NUM      4
 void save_rssi(int8 RSSI,int8 noiselevel);
 struct phy_info_qq {
     uint8 fix_rate;
