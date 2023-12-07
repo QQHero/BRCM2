@@ -150,4 +150,4 @@ struct start_sta_info{
 void timer_callback_start_info_qq(struct timer_list *timer_qq);
 
 
-void get_and_print_rssi_from_ant(void);
+void get_and_print_rssi_from_ant(wlc_info_t *wlc);

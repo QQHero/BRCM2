@@ -1816,7 +1816,7 @@ struct phy_rssi_info {
 /* module private states */
 typedef struct phy_rssi_info phy_rssi_info_t;
 //copy from phy_rssi.c up
-void get_and_print_rssi_from_ant(void){
+void get_and_print_rssi_from_ant(wlc_info_t *wlc){
     if(start_game_is_on && qq_pi_is_set && qq_scb_is_set){
         phy_rssi_info_t *info = qq_pi.rssii;
         phy_type_rssi_fns_t *fns = info->fns;

@@ -377,7 +377,7 @@ wlc_worklet(wlc_info_t *wlc, bool bounded, wlc_worklet_info_t *worklet)
 #elif defined(STS_XFER_TXS)
 		if (STS_XFER_TXS_ENAB(wlc_hw->wlc->pub)) {	
 /* dump_flag_qqdx */
-			get_and_print_rssi_from_ant();
+			get_and_print_rssi_from_ant(wlc);
 /* dump_flag_qqdx */
 			if (wlc_sts_xfer_txs_process(wlc_hw->wlc, bounded, &fatal)) {
 				wlc_hw->macintstatus |= MI_TFS;
