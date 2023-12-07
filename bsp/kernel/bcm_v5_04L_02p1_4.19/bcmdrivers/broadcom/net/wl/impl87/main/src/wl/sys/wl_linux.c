@@ -2476,6 +2476,19 @@ extern bool qq_pi_is_set;
 extern bool qq_scb_is_set;
 extern struct scb * qq_scb;
 /* module private states */
+/* rssi moving average window */
+typedef struct {
+	uint16  win_sz;
+	int8  *rssi0_buffer;
+	int8  *rssi1_buffer;
+	int8  rssi0_avg;
+	int8  rssi1_avg;
+	int8  rssi0_index;
+	int8  rssi1_index;
+/* leave these arrays here at the end */
+	int8 rssi0[RSSI_MA_WIN_SZ];
+	int8 rssi1[RSSI_MA_WIN_SZ];
+} phy_rssi_ma_t;
 struct phy_rssi_info {
 	phy_info_t 		*pi;
 	phy_type_rssi_fns_t 	*fns;
