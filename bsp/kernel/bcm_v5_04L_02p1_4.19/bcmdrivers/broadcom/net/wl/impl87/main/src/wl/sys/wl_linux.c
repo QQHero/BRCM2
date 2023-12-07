@@ -2475,7 +2475,12 @@ extern phy_info_t qq_pi;
 extern bool qq_pi_is_set;
 extern bool qq_scb_is_set;
 extern struct scb * qq_scb;
-/* module private states */
+
+//copy from phy_rssi.c
+#ifndef RSSI_MA_WIN_SZ
+#define RSSI_MA_WIN_SZ 16
+#endif
+
 /* rssi moving average window */
 typedef struct {
 	uint16  win_sz;
@@ -2495,6 +2500,7 @@ struct phy_rssi_info {
 	phy_rssi_ma_t 		*ma;
 	bool 			do_ma;
 };
+/* module private states */
 typedef struct phy_rssi_info phy_rssi_info_t;
 /* dump_flag_qqdx */
 #if 0
