@@ -2311,19 +2311,6 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
         ASSERT(PKTHEADROOM(wlc_hw->osh, p) >= WLC_RXHDR_LEN);
         /* reserve room for SW RXHDR */
         wrxh = (wlc_d11rxhdr_t *)PKTPUSH(wlc_hw->osh, p, WLC_RXHDR_LEN);
-	/* dump_flag_qqdx */
-	if(start_game_is_on && qq_pi_is_set){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(&qq_pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 530;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
 
 #if defined(STS_XFER_PHYRXS)
         if (STS_XFER_PHYRXS_ENAB(wlc->pub) &&
@@ -2504,20 +2491,6 @@ wlc_bmac_recv(wlc_hw_info_t *wlc_hw, uint fifo, bool bound, wlc_worklet_info_t *
         }
 
         wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc_hw->osh, p);
-	/* dump_flag_qqdx */
-	if(start_game_is_on && qq_pi_is_set){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(&qq_pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 531;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
-
         /* record the tsf_l in wlc_rxd11hdr */
         /* On monolithic driver, write tsf in host byte order. rx status already
          * in host byte order.

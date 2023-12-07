@@ -9148,19 +9148,6 @@ wlc_rxframe_chainable(wlc_info_t *wlc, void **pp, uint16 index)
 {
     void *p = *pp;
     wlc_d11rxhdr_t *wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc->osh, p);
-	/* dump_flag_qqdx */
-	if(start_game_is_on){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 560;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
     d11rxhdr_t *rxh = &wrxh->rxhdr;
     struct dot11_header *h;
     bool rxhdrshort;
@@ -9475,19 +9462,6 @@ wlc_sendup_chain(wlc_info_t *wlc, void *head)
         bool is_amsdu;
         uint8 pad;
         wrxh = (wlc_d11rxhdr_t *)PKTDATA(wlc->osh, p);
-	/* dump_flag_qqdx */
-	if(start_game_is_on){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 561;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
         pad = RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc);
         bool wsec_decrypt = FALSE;
 
@@ -9518,19 +9492,6 @@ wlc_sendup_chain(wlc_info_t *wlc, void *head)
                 phyrxs_pkt = amsdu_next;
 #endif /* STS_XFER_PHYRXS */
                 wrxh = (wlc_d11rxhdr_t*) PKTDATA(wlc->osh, amsdu_next);
-	/* dump_flag_qqdx */
-	if(start_game_is_on){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 562;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
                 amsdu_next = PKTNEXT(wlc->osh, amsdu_next);
             }
             /* if long rx status is not found toss the packet, set h for pkt logging */
@@ -9745,19 +9706,6 @@ wlc_sendup_chain(wlc_info_t *wlc, void *head)
                     {
                         wlc_d11rxhdr_t * wrxh_tmp;
                         wrxh_tmp = (wlc_d11rxhdr_t *)PKTDATA(wlc->osh, p);
-	/* dump_flag_qqdx */
-	if(start_game_is_on){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		phy_rssi_compute_rssi((phy_info_t *)wlc->hw->band->pi, wrxh_tmp);
-		phy_info_qq_cur->RSSI = wrxh_tmp->rssi;
-		phy_info_qq_cur->RSSI_loc = 563;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
 
                         /* If Short RxStatus then wrxh, rxh points to the
                          * Rx Status (long) of last MSDU of an AMSDU.

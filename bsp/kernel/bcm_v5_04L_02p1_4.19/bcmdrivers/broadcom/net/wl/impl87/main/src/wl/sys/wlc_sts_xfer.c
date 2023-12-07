@@ -3124,29 +3124,6 @@ __phyrxs_consume_d11phyrxsts(wlc_info_t *wlc, sts_xfer_phyrxs_t *phyrxs,
 	/* Set PhyRx Status radio unit in SW header */
 	wrxh = CONTAINEROF(rxh, wlc_d11rxhdr_t, rxhdr);
 	wrxh->radio_unit = WLC_UNIT(wlc);
-	/* dump_flag_qqdx */
-	if(start_game_is_on && qq_pi_is_set){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-		//phy_rssi_compute_rssi(&qq_pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 571;
-		struct dot11_header *h;
-		//h = (struct dot11_header *)(PKTDATA(wlc->osh, pkt) + plcp_len);
-		h = (struct dot11_header *)(((uint8*)(PKTDATA(wlc->osh, pkt))) + wlc->hwrxoff + RXHDR_GET_PAD_LEN(&wrxh->rxhdr, wlc) + D11_PHY_RXPLCP_LEN(wlc->pub->corerev));
-		uint16 fc_qq, fk_qq;
-		fc_qq = ltoh16(h->fc);
-		//ft = FC_TYPE(fc);
-		fk_qq = (fc_qq & FC_KIND_MASK);
-		phy_info_qq_cur->RSSI_type = FC_TYPE(fc_qq);
-		phy_info_qq_cur->RSSI_subtype = FC_SUBTYPE(fc_qq);
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
-
 	WL_INFORM(("wl%d: %s: Linking PhyRx Status buffer with seqnum[%d] to pkt[%p]\n",
 		wlc->pub->unit, __FUNCTION__, rxh_seqnum, pkt));
 

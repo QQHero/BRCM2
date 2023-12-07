@@ -110,17 +110,6 @@
 #endif /* STS_XFER */
 #include <wlc_ulmu.h>
 
-
-    /* dump_flag_qqdx */
-#include <wlc_qq_struct.h>
-#include <wl_linux.h>
-//extern struct phy_info_qq phy_info_qq
-extern struct phy_info_qq phy_info_qq_rx_new;
-extern struct start_sta_info *start_sta_info_cur;
-extern bool start_game_is_on;
-extern phy_info_t qq_pi;
-extern bool qq_pi_is_set;
-    /* dump_flag_qqdx */
 #ifdef HWA_QT_TEST
 uint32 hwa_kflag = 0;
 #endif
@@ -2086,22 +2075,6 @@ hwa_rxfill_bmac_recv(void *context, uintptr arg1, uintptr arg2,
 	// The data set by HW is start from RX Status
 	// We need push WLC_RXHDR_LEN bytes to SW RXHDR
 	wrxh = (wlc_d11rxhdr_t *)PKTPUSH(dev->osh, rxlbuf, WLC_RXHDR_LEN);
-
-	/* dump_flag_qqdx */
-	if(start_game_is_on && qq_pi_is_set){
-        
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(&qq_pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 500;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
-
 	// Reset correct len, include hwrxoff
 	PKTSETLEN(dev->osh, rxlbuf, pktlen);
 
@@ -2232,19 +2205,6 @@ hwa_rxfill_bmac_recv(void *context, uintptr arg1, uintptr arg2, uint32 core, uin
 	// SW RXHDR
 	wrxh = (wlc_d11rxhdr_t *)PKTDATA(dev->osh, frag);
 	
-	/* dump_flag_qqdx */
-	if(start_game_is_on && qq_pi_is_set){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(&qq_pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 501;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
 	rxh = &wrxh->rxhdr;
 
 	// Dongle part
@@ -2360,19 +2320,6 @@ hwa_rxfill_bmac_done(void *context, uintptr arg1, uintptr arg2, uint32 core, uin
 #if defined(STS_XFER_PHYRXS)
 		{
 			wlc_d11rxhdr_t *wrxh = (wlc_d11rxhdr_t *)PKTDATA(dev->osh, p);
-	/* dump_flag_qqdx */
-	if(start_game_is_on && qq_pi_is_set){
-		kernel_info_t info_qq[DEBUG_CLASS_MAX_FIELD];
-		struct phy_info_qq *phy_info_qq_cur = NULL;
-		phy_info_qq_cur = (struct phy_info_qq *) MALLOCZ(wlc->osh, sizeof(*phy_info_qq_cur));
-    	phy_rssi_compute_rssi(&qq_pi, wrxh);
-		phy_info_qq_cur->RSSI = wrxh->rssi;
-		phy_info_qq_cur->RSSI_loc = 502;
-		memcpy(info_qq, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-		debugfs_set_info_qq(2, info_qq, 1);
-		MFREE(wlc->osh, phy_info_qq_cur, sizeof(*phy_info_qq_cur));
-	}	
-	/* dump_flag_qqdx */
 			if (STS_XFER_PHYRXS_ENAB(wlc->pub) &&
 				(!RXS_GE128_VALID_PHYRXSTS(&wrxh->rxhdr, wlc->pub->corerev))) {
 				/* PhyRx Status is not valid */
