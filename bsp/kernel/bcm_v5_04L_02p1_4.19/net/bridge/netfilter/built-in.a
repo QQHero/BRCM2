@@ -1,0 +1,20 @@
+!<thin>
+//                                              122       `
+ebtables.o/
+ebtable_broute.o/
+ebtable_filter.o/
+ebtable_nat.o/
+ebt_ip.o/
+ebt_ip6.o/
+ebt_mark_m.o/
+ebt_vlan.o/
+ebt_mark.o/
+/0              0           0     0     644     21708     `
+/12             0           0     0     644     4348      `
+/30             0           0     0     644     4060      `
+/48             0           0     0     644     4024      `
+/63             0           0     0     644     4100      `
+/73             0           0     0     644     4216      `
+/84             0           0     0     644     2820      `
+/98             0           0     0     644     3532      `
+/110            0           0     0     644     2856      `

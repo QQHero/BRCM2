@@ -1,0 +1,26 @@
+!<thin>
+//                                              236       `
+ip6_tables.o/
+ip6table_filter.o/
+ip6table_mangle.o/
+ip6table_raw.o/
+ip6table_nat.o/
+nf_nat_l3proto_ipv6.o/
+nf_nat_proto_icmpv6.o/
+nf_nat_masquerade_ipv6.o/
+nf_defrag_ipv6_hooks.o/
+nf_conntrack_reasm.o/
+nf_log_ipv6.o/
+ip6t_MASQUERADE.o/
+/0              0           0     0     644     19340     `
+/14             0           0     0     644     4656      `
+/33             0           0     0     644     4996      `
+/52             0           0     0     644     4916      `
+/68             0           0     0     644     4340      `
+/84             0           0     0     644     8592      `
+/107            0           0     0     644     2168      `
+/130            0           0     0     644     5780      `
+/156            0           0     0     644     4660      `
+/180            0           0     0     644     9300      `
+/202            0           0     0     644     9740      `
+/217            0           0     0     644     3340      `

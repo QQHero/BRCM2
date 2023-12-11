@@ -1,0 +1,365 @@
+menuconfig TENDA_PRIVATE_KM
+    depends on TENDA_PRIVATE
+    bool "Tenda Private kernel modules"
+    default y
+
+config UDP_FRAGMENT_CACHE
+    depends on TENDA_PRIVATE_KM
+    bool "Udp Fragment Cache "
+    default n
+
+config SA_FASTPATH
+    depends on NET && INET && TENDA_PRIVATE_KM
+    bool "Support Software Acceleration(SA)"
+    default y
+	
+config SA_FASTPATH_IPC_SZ
+    depends on SA_FASTPATH
+    int "define ipc size"
+    default 8192
+
+config SA_FASTPATH_BRC_SZ
+    depends on SA_FASTPATH
+    int "define brc size"
+    default 128
+
+config SA_FASTPATH_LEARN_BYPASS_PTK_NUM
+    depends on SA_FASTPATH
+    int "define learn bypass packets"
+    default 0
+    
+config SA_FASTPATH_NAT
+    depends on SA_FASTPATH
+    bool "Support NAT Software Acceleration(SA)"
+    default y
+
+config SA_FASTPATH_NAT_PPTP
+    depends on SA_FASTPATH_NAT
+    bool "Support PPTP Nat Software Acceleration(SA)"
+    default y
+
+config SA_FASTPATH_FRAGMENT
+    depends on SA_FASTPATH_NAT && UDP_FRAGMENT_CACHE
+    bool "Support UDP Fragment Cache Nat Software Acceleration(SA)"
+    default n
+    
+config SA_FASTPATH_NAT_L2TP
+    depends on SA_FASTPATH_NAT
+    bool "Support L2TP Nat Software Acceleration(SA)"
+    default y
+
+config SA_FASTPATH_BRIDGE
+    depends on SA_FASTPATH
+    bool "Support Bridge Software Acceleration(SA)"
+    default y
+    
+config SA_FASTPATH_L2
+    depends on SA_FASTPATH
+    bool "Support L2 Cache Software Acceleration(SA)"
+    default n
+	
+config SA_FASTPATH_SUPPORT_RPS_RFS
+    depends on SA_FASTPATH && RPS
+    bool "Support Rps/Rfs Software Acceleration(SA)"
+    default n
+	
+config SA_FASTPATH_IPV6
+    depends on TENDA_PRIVATE_KM
+    bool "Support Ipv6 Software Acceleration(SA)"
+    default n
+
+config ONLINE_IP_L2
+    depends on TENDA_PRIVATE_KM
+    bool "Support L2 Bridge FDB Related To Client"
+    default n
+    
+config BEHAVIOR_MANAGER
+    depends on TENDA_PRIVATE_KM
+    bool "Support Behavior Manager(BM)"
+    default y
+ 
+ config SUPER_USER
+    depends on TENDA_PRIVATE_KM
+    bool "Support Super User"
+    default n
+ 
+config PPPOE_AUTH
+    depends on TENDA_PRIVATE_KM
+    bool "Support Pppoe Auth"
+    default n
+    
+menuconfig BRIDGE_BEHAVIOR_MANAGER
+    depends on TENDA_PRIVATE_KM
+    bool "Support Bridge Behavior Manager(BRIDGE_BM)"
+    default n
+
+config BRIDGE_MAC_FILTER
+    depends on BRIDGE_BEHAVIOR_MANAGER
+    bool "Support Bridge Mac Filter(BRIDGE_BM_MAC_FILTER)"
+    default n
+
+config BRIDGE_INHIBIT
+    depends on TENDA_PRIVATE_KM
+    bool "Support Bridge Broadcast inhibit"
+    default n    
+
+config NOS_CONTROL_V2
+    depends on TENDA_PRIVATE_KM
+    bool "Support Network Quality Of Service(NOS) Version 2"
+    default n
+
+config FLOW_IDENTIFY
+    depends on TENDA_PRIVATE_KM
+    bool "Support Flow Identify"
+    default n
+    
+config LOAD_BALANCE
+    depends on TENDA_PRIVATE_KM
+    bool "Support Multiwan Load Balance"
+    default y
+
+config SECURE_MODULE
+    depends on TENDA_PRIVATE_KM
+    bool "Support Secure Mode"
+    default y
+    
+config DDOS_CONTROL
+    depends on SECURE_MODULE
+    bool "Support ddos_ip(DDOS_IP)"
+    default y
+    
+config ARP_FENCE_CONTROL
+    depends on SECURE_MODULE
+    bool "Support Arp_Fence(ARP_FENCE)"
+    default y
+config SPEED_TEST
+    depends on TENDA_PRIVATE_KM
+    bool "Support Speedtest(SPEED_TEST)"
+    default y
+    
+menuconfig PORTAL_CONTROL
+    depends on TENDA_PRIVATE_KM
+    bool "Support Portal_contral(PORTAL)"
+    default n
+    
+config PORTAL_MAC_WHITE_LIST
+    depends on PORTAL_CONTROL
+    bool "Support Mac_White_List(MAC_WHITE_LIST)"
+    default n
+    
+config PORTAL_URL_WHITE_LIST
+    depends on PORTAL_CONTROL
+    bool "Support Url_White_List(URL_WHITE_LIST)"
+    default n
+    
+config PORTAL_WEIXIN_AUTH
+    depends on PORTAL_CONTROL
+    bool "Support Wechat_Auth(WEIXIN_AUTH)"
+    default n
+    
+config DNS_REDIRECT_CONTROL
+    depends on TENDA_PRIVATE_KM
+    bool "Support Dns_Redirect(DNS_REDIRECT)"
+    default n
+    
+menuconfig ISOLATE
+    depends on TENDA_PRIVATE_KM
+    bool "Support Interface And Network(ISOLATE)"
+    default n
+
+config INTERFACE_ISOLATE
+    depends on ISOLATE
+    bool "Support Interface_Isolate(INTERFACE_ISOLATE)"
+    default n
+config NETWORK_ISOLATE
+    depends on ISOLATE
+    bool "Support Network_Isolate(NETWORK_ISOLATE)"
+    default n
+    
+config ONLINE_IP_BY_MAC
+    depends on TENDA_PRIVATE_KM
+    bool "Online Ip Base On Mac(ONLINE_IP)"
+    default n
+config MULTI_BROAD_FILTER_CONTROL
+    depends on TENDA_PRIVATE_KM
+    bool "Support Multi_Broad_Filter(MULTI_BROAD_FILTER)"
+    default n
+
+config DHCP_OPTIONS
+    depends on TENDA_PRIVATE_KM
+    bool "Support Dhcp Options(DHCP_OPTIONS)"
+    default n
+    
+config OS_IDENTIFY
+    depends on TENDA_PRIVATE_KM
+    bool "Support OS Identify(OS_IDENTIFY)"
+    default n
+	
+config OS_IDENTIFY_GET_SYS_TYPE
+    depends on OS_IDENTIFY
+    bool "Support OS Identify(OS_IDENTIFY) Get System Type"
+    default n
+
+config AUTO_DISCOVER
+    depends on TENDA_PRIVATE_KM
+    bool "Support AUTO_DISCOVER(AUTO_DISCOVER)"
+    default n
+
+config KM_DEBUG
+    depends on TENDA_PRIVATE_KM
+    bool "Km Debug Switch(KM_DEBUG)"
+    default n
+
+config TENDA_DBG_BF_RELEASE
+    depends on TENDA_PRIVATE_KM
+    bool "Debug before release(Temp DEBUG)"
+    default n
+    
+config TRACE_SKB_RUNNING_TIME
+    depends on KM_DEBUG
+    bool "Tracking the time skb runs between two points(KM_TRACE)"
+    default n
+    
+config KM_KWDOG
+    depends on TENDA_PRIVATE_KM
+    bool "Support Kwdog(KM_KWDOG)"
+    default n
+config NETFILTER_HASH_SIZE_KM
+    depends on TENDA_PRIVATE_KM
+    int "define netfilter hash size"
+    default 1
+config KM_CB_SIZE
+    depends on TENDA_PRIVATE_KM
+    int "define km_cb size"
+    default 64
+config KM_CB_STADDR_FOR_MODULES
+    depends on TENDA_PRIVATE_KM
+    int "define start address in km_cb for km_modules"
+    default 32
+menuconfig KM_NF_CONNTRACK
+    depends on TENDA_PRIVATE_KM && UDP_FRAGMENT_CACHE
+    bool "l2 nf conntrack switch"
+    default n
+config KM_NF_CONNTRACK_WIRELESS_MESH_INFO
+    depends on KM_NF_CONNTRACK
+    bool "hold wireless mesh Multifrequency Gather"
+    default n
+menuconfig KM_NF_CONNTRACK_TRAFFIC_STATISTICS
+    depends on KM_NF_CONNTRACK
+    bool "l2 and l3 ct traffic statistics"
+    default n
+config KM_NF_CONNTRACK_TRAFFIC_STATISTICS_MESH
+    depends on KM_NF_CONNTRACK_TRAFFIC_STATISTICS
+    bool "traffic statistics ct via mesh"
+    default n
+config KM_NF_CONNTRACK_TRAFFIC_STATISTICS_ALL
+    depends on KM_NF_CONNTRACK_TRAFFIC_STATISTICS
+    bool "(w)lan<-->wan or lan<-->(w)lan traffic statistics"
+    default n
+config IPV6_RA_NETLINK
+    bool "notifi cbb receive RA by netlink"
+    depends on TENDA_PRIVATE_KM
+    default y
+config TD_IPV6_V2
+    depends on TENDA_PRIVATE_KM
+    bool "Support IPV6_V2"
+    default n
+config SKIP_VENDOR_ACCEL
+    depends on TENDA_PRIVATE_KM
+    bool "support skip vendor acceleration"
+    default n
+config KM_MESH
+    depends on TENDA_PRIVATE_KM
+    bool "Support Mesh"
+    default n
+config TD_MESH_V3
+    depends on TENDA_PRIVATE_KM
+    bool "Support Mesh3.0"
+    default n    
+config MESH_MULTIFREQ_LOADBALANCE
+    depends on KM_MESH
+    select KM_NF_CONNTRACK
+    select KM_NF_CONNTRACK_WIRELESS_MESH_INFO
+    bool "Support loadbalance in multifrequency network, based on KM_NF_CONNTRACK && KM_NF_CONNTRACK_WIRELESS_MESH_INFO"
+
+config HTTP_REDIRECT
+    depends on TENDA_PRIVATE_KM
+    bool "Support Http Code Redirect"
+    default n
+menuconfig KM_SDWAN
+    depends on TENDA_PRIVATE_KM
+    bool "Support kernel sdwan"
+    default n
+config KM_SDW_FAST
+    depends on KM_SDWAN
+    bool "Support kernel sdwan speedfast"
+    default n
+
+config EVENTS_CENTER
+    depends on TENDA_PRIVATE_KM
+    bool "Support All Kinds Of Asynchronous Events"
+    default y
+config PLATFORM_NETLINK
+    depends on TENDA_PRIVATE_KM
+    bool "Support platform netlink"
+    default y
+
+config NETWORK_TOPOLOGY
+    depends on TENDA_PRIVATE_KM
+    bool "Support Network Topology"
+    default n
+
+config AP_DATA_TUNNEL
+    depends on TENDA_PRIVATE_KM
+    bool "Support AP Data Tunnel"
+    default n
+
+config TUNNEL_FORWARD
+    depends on TENDA_PRIVATE_KM
+    bool "Support Tunnel Forward(TUNNEL_FORWARD)"
+    default n
+
+config AP_CT
+    depends on TENDA_PRIVATE_KM
+    bool "Support AP Nf Conntrack"
+    default n
+
+menuconfig L2_REDIRECT_AUTH
+    depends on TENDA_PRIVATE_KM
+    bool "Support L2 Redirect Auth"
+    default n
+
+config L2_WIRELESS_REDIRECT_AUTH
+    depends on L2_REDIRECT_AUTH
+    bool "Support L2 Wireless Redirect Auth"
+    default n
+
+config L2_WIRE_REDIRECT_AUTH
+    depends on L2_REDIRECT_AUTH
+    bool "Support L2 Wire Redirect Auth"
+    default n
+
+config SKIP_FASTPATH
+    depends on TENDA_PRIVATE_KM
+    bool "Support skip fastpath"
+    default n
+
+config KM_WAN_TRAFFIC_BY_DEV_STATS
+    depends on TENDA_PRIVATE_KM
+    bool "Support wan traffic statistic by network device"
+    default n
+
+config VENDOR_HNAT_SKIP_PKTS
+    depends on TENDA_PRIVATE_KM
+    int "HNAT skip packets"
+    default 0
+
+config KM_DPI
+    depends on TENDA_PRIVATE_KM
+    bool "Support deep packet inspection"
+    default n
+
+config KM_AUDIT
+    depends on KM_DPI
+    bool "Support deep packet inspection statistics for audit"
+    default n

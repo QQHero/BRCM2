@@ -1,0 +1,142 @@
+
+/*
+ * Copyright (C) 2017 Rockchip Electronic Co.,Ltd
+ * Copyright (C) 2019 Broadcom
+ *
+ * Simple U-boot fit source file containing U-Boot, dtb and optee
+ */
+
+/dts-v1/;
+
+/ {
+	description = "Simple image with ATF and optional OP-TEE support";
+	#address-cells = <1>;
+	ident_1 = "@(#) $imageversion: 5042GW0061432 $";
+	ident_2 = "@(#) $imageversion: 5042GW0061432 $";
+	ident_3 = "@(#) $imgversion: 5.04L.02 $";
+	ident_4 = "@(#) $imgversion: 5.04L.02 $";
+
+
+	images {
+
+
+		fdt_uboot {
+			description = "dtb";
+			data = /incbin/("../../obj/uboot/dts/dt.dtb");
+			type = "flat_dt";
+			compression = "none";
+			hash-1 {
+				algo = "sha256";
+			};
+		};
+
+		kernel {
+			description = "4.19 kernel";
+			data = /incbin/("../../obj/uboot/vmlinux.bin.lzma");
+			type = "kernel";
+			os = "linux";
+			arch = "arm";
+			compression = "lzma";
+			load = <0x108000>;
+			entry = <0x108000>;
+			hash-1 {
+				algo = "sha256";
+			};
+		};
+
+		fdt_96756 {
+			description = "dtb";
+			data = /incbin/("/HomeCoverage20231207/targets/ax12_pro_nor/obj/binaries/linux/96756.dtb");
+			arch = "arm";
+			type = "flat_dt";
+			compression = "none";
+			hash-1 {
+				algo = "sha256";
+				value = [0000000000000000000000000000000000000000000000000000000000000000];
+			};
+		};
+       
+
+		fdt_96756REF1 {
+			description = "dtb";
+			data = /incbin/("/HomeCoverage20231207/targets/ax12_pro_nor/obj/binaries/linux/96756REF1.dtb");
+			arch = "arm";
+			type = "flat_dt";
+			compression = "none";
+			hash-1 {
+				algo = "sha256";
+				value = [0000000000000000000000000000000000000000000000000000000000000000];
+			};
+		};
+       
+
+		fdt_96756REF1_SG {
+			description = "dtb";
+			data = /incbin/("/HomeCoverage20231207/targets/ax12_pro_nor/obj/binaries/linux/96756REF1_SG.dtb");
+			arch = "arm";
+			type = "flat_dt";
+			compression = "none";
+			hash-1 {
+				algo = "sha256";
+				value = [0000000000000000000000000000000000000000000000000000000000000000];
+			};
+		};
+       
+
+	};
+	configurations {
+		default = "conf_uboot";
+		conf_uboot {
+			description = "BRCM 63xxx with uboot";
+			fdt = "fdt_uboot";
+			loadables = "atf","uboot";
+		};
+	
+		conf_linux {
+			description = "BRCM 63xxx linux";
+			kernel = "kernel";
+			fdt = "fdt_96756";
+		};
+
+		conf_lx_96756 {
+			description = "BRCM 63xxx linux";
+			kernel = "kernel";
+			fdt = "fdt_96756";
+		};
+	
+		conf_ub_96756 {
+			description = "96756";
+			fdt = "fdt_96756";
+			loadables = "atf","uboot";
+		};
+        
+
+		conf_lx_96756REF1 {
+			description = "BRCM 63xxx linux";
+			kernel = "kernel";
+			fdt = "fdt_96756REF1";
+		};
+	
+		conf_ub_96756REF1 {
+			description = "96756REF1";
+			fdt = "fdt_96756REF1";
+			loadables = "atf","uboot";
+		};
+        
+
+		conf_lx_96756REF1_SG {
+			description = "BRCM 63xxx linux";
+			kernel = "kernel";
+			fdt = "fdt_96756REF1_SG";
+		};
+	
+		conf_ub_96756REF1_SG {
+			description = "96756REF1_SG";
+			fdt = "fdt_96756REF1_SG";
+			loadables = "atf","uboot";
+		};
+        
+
+
+	};
+};

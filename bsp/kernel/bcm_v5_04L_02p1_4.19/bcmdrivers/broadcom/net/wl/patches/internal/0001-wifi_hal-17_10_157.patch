@@ -1,0 +1,834 @@
+diff -Naur '--exclude=.svn*' '--exclude=.git*' ./cmwifi.old/libs/wlcsm/include/wlcsm_defs.h ./cmwifi/libs/wlcsm/include/wlcsm_defs.h
+--- ./cmwifi.old/libs/wlcsm/include/wlcsm_defs.h	2020-06-30 08:01:44.266944782 +0300
++++ ./cmwifi/libs/wlcsm/include/wlcsm_defs.h	2020-06-24 23:27:34.627124175 +0300
+@@ -365,11 +365,11 @@
+ #define DIV_QUO(num, div) ((num)/div)
+ #endif
+ 
+-#ifdef BUILD_RDKWIFI
++#if !defined(BCA_CPEROUTER_RDK) && defined(BUILD_RDKWIFI)
+ #define WLAN_APPS_LOG_FILE "/data/rdklogs/logs/wifi_vendor_apps.log"
+ #else
+ #define WLAN_APPS_LOG_FILE "/rdklogs/logs/wifi_vendor_apps.log"
+-#endif /* BUILD_RDKWIFI */
++#endif /* BUILD_RDKWIFI  && BCA_CPEROUTER_RDK  */
+ #define WLAN_APPS_LOG_FILE_NVRAM "wifi_apps_log_file"
+ #ifdef CMWIFI_RDKB
+ extern void wlcsm_apps_log(char *origin, char *str);
+diff -Naur '--exclude=.svn*' '--exclude=.git*' ./main/components/apps/wldm.old/wldm_lib_wifi.c ./main/components/apps/wldm/wldm_lib_wifi.c
+--- ./main/components/apps/wldm.old/wldm_lib_wifi.c	2020-06-29 21:24:01.315620328 +0300
++++ ./main/components/apps/wldm/wldm_lib_wifi.c	2020-06-29 21:47:56.820582327 +0300
+@@ -3028,7 +3028,6 @@
+ 		char *nvifname, *nvram_value;
+ 		char nvram_name[NVRAM_NAME_SIZE];
+ 		int ret, csa_deauth_mode = 0;
+-		scb_val_t scb_val;
+ 
+ 		nvifname = wldm_get_nvifname(radioIndex);
+ 		snprintf(nvram_name, sizeof(nvram_name), "%s_csa_deauth_mode", nvifname);
+@@ -3038,8 +3037,8 @@
+ 
+ 		if (csa_deauth_mode != 0) {
+ 			/* Deauth all associated clients */
+-			if (wl_deauth(radioIndex, (struct ether_addr *)&ether_bcast) < 0) {
+-				WIFI_ERR("%s: radioIndex %d Error deauthenticating ret = %d\n", __FUNCTION__, radioIndex, ret);
++			if ((ret = wl_deauth(radioIndex, (struct ether_addr *)&ether_bcast)) < 0) {
++				WIFI_ERR("%s: radioIndex %d Error deauthenticating, ret = %d\n", __FUNCTION__, radioIndex, ret);
+ 				return -1;
+ 			}
+ 		}
+@@ -5637,7 +5636,8 @@
+ 		ret = wl_iovar_getbuf(osifname, "bss", &bssbuf, sizeof(bssbuf),
+ 				buf, sizeof(buf));
+ 		if (ret != 0) {
+-			WIFI_ERR("%s %s ret=%d\n", __FUNCTION__, osifname, ret);
++			WIFI_ERR("%s %s ret=%d bsscfg_idx=%d\n",
++				__FUNCTION__, osifname, ret, bssbuf.bsscfg_idx);
+ 			return -1;
+ 		}
+ 		*pvalue = *(boolean *)buf;
+@@ -5693,7 +5693,8 @@
+ 
+ 		ret = wl_iovar_set(osifname, "bss", &bssbuf, sizeof(bssbuf));
+ 		if (ret != 0) {
+-			WIFI_ERR("%s %s ret=%d\n", __FUNCTION__, osifname, ret);
++			WIFI_ERR("%s %s ret=%d bsscfg_idx=%d\n",
++				__FUNCTION__, osifname, ret, bssbuf.bsscfg_idx);
+ 			return -1;
+ 		}
+ 		/* TBD - works now; move elsewhere as needed when all wldm in place */
+@@ -6202,7 +6203,7 @@
+ dm_maclist(int cmd, int index, char *pvalue, int *plen, char *pvar)
+ {
+ 	struct maclist *list;
+-	int i, ret = -1, ioctl, len = WLC_IOCTL_MAXLEN;
++	int i, ret = -1, ioctl = 0, len = WLC_IOCTL_MAXLEN;
+ 	char *pdelim, *next, *nvifname, *osifname, macstr[ETHER_ADDR_STR_LEN];
+ 
+ 	list = malloc(len);
+@@ -7433,11 +7434,11 @@
+ }
+ 
+ int
+-wldm_AccessPoint(int cmd, int apIndex, void *pvalue, int *plen, char *pbuf, int *pbufsz)
++wldm_AccessPoint(int cmd, int apIndex, char *pvalue, int *plen, char *pbuf, int *pbufsz)
+ {
+ 	boolean enable = FALSE;
+ 	char *osifname;
+-	int bssidx;
++	int bssidx, len;
+ 
+ 	IGNORE_CMD_WARNING(cmd, CMD_LIST | CMD_GET | CMD_SET | CMD_GET_NVRAM | CMD_SET_NVRAM |
+ 		CMD_SET_IOCTL);
+@@ -7446,11 +7447,49 @@
+ 	bssidx = wldm_get_bssidx(apIndex);
+ 
+ 	if (cmd & CMD_ADD) {
+-		/* TBD */
++		int radioIdx = wldm_get_radioIndex(apIndex);
++		char *radio_osifname = wldm_get_osifname(radioIdx);
++		wlc_ssid_t iovSsid = { 0, {0} };
++		int ssidIndex;
++		char ssid[MAX_SSID_LEN + 1];
++
++		if (sscanf(pvalue, "Device.WiFi.SSID.%d.", &ssidIndex) == 1 &&
++			(ssidIndex >= 1 && ssidIndex <= wldm_get_max_aps())) {
++			/* SSIDReference pathname is given, get the SSID */
++			ssidIndex -= 1;
++			len = sizeof(ssid);
++			wldm_SSID_SSID(CMD_GET_NVRAM, ssidIndex, ssid, &len, NULL, NULL);
++			len = strlen(ssid);
++		} else {
++			len = strlen(pvalue);
++			if (len > sizeof(ssid) - 1) {
++				WIFI_ERR("%s: SSID is bigger than 32 bytes\n", __FUNCTION__);
++				return -1;
++			}
++			strncpy(ssid, pvalue, sizeof(ssid) - 1);
++		}
++		iovSsid.SSID_len = len;
++		strncpy(iovSsid.SSID, ssid, strlen(ssid));
++		if (wl_bssiovar_set(radio_osifname, "ssid", bssidx, &iovSsid, sizeof(iovSsid))) {
++			WIFI_ERR("%s: wl_bssiovar_set [%d] failed [%s] radio=[%s]\n",
++				__FUNCTION__, bssidx, strerror(errno), radio_osifname);
++			return -1;
++		}
++
++		enable = TRUE;
++		len = sizeof(enable);
++		if (wldm_AccessPoint_Enable(CMD_SET_NVRAM | CMD_SET_IOCTL, apIndex,
++			&enable, &len, pbuf, pbufsz) < 0) {
++			WIFI_ERR("%s:%d wldm_AccessPoint_Enable failed %s!\n",
++				__FUNCTION__, __LINE__, osifname);
++			return -1;
++		}
+ 	} else if (cmd & CMD_DEL) {
++		enable = FALSE;
++		len = sizeof(enable);
+ 		if (bssidx == 0) { /* Primary networks */
+ 			if (wldm_AccessPoint_Enable(CMD_SET_NVRAM | CMD_SET_IOCTL, apIndex,
+-				&enable, plen, pbuf, pbufsz) < 0) {
++				&enable, &len, pbuf, pbufsz) < 0) {
+ 				WIFI_ERR("%s:%d wldm_AccessPoint_Enable failed %s!\n",
+ 						__FUNCTION__, __LINE__, osifname);
+ 				return -1;
+@@ -8126,7 +8165,7 @@
+ 	}
+ 
+ 	if (cmd & CMD_SET_IOCTL) {
+-		int mfp_mode;
++		int mfp_mode = 0;
+ 		if (strncmp(pvalue, mfpModeStr[MFP_CONFIG_DISABLE],
+ 			strlen(mfpModeStr[MFP_CONFIG_DISABLE])) == 0) {
+ 			mfp_mode = MFP_CONFIG_DISABLE;
+@@ -8858,10 +8897,9 @@
+ 	char *pvalue, int *plen, char *pbuf, int *pbufsz)
+ {
+ 	char *parameter = "ConfigMethodsSupported";
+-	char buf[BUF_SIZE];;
+-	unsigned long iwpsmethods;
+ 
+-	IGNORE_CMD_WARNING(cmd, CMD_ADD | CMD_DEL );
++	IGNORE_CMD_WARNING(cmd,
++		CMD_SET | CMD_ADD | CMD_DEL | CMD_GET_NVRAM | CMD_SET_NVRAM | CMD_SET_IOCTL);
+ 
+ 	if (cmd == CMD_LIST) {
+ 		/* List the name only. */
+@@ -8869,120 +8907,23 @@
+ 		return 0;
+ 	}
+ 
+-	if (cmd & (CMD_GET | CMD_GET_NVRAM)) {
+-		char nvram_name[NVRAM_NAME_SIZE];
+-		char *nvram_value = NULL;
++	if (cmd & CMD_GET) {
++		int size = 0;
+ 
+-		snprintf(nvram_name, sizeof(nvram_name), "wps_config_method");
+-		nvram_value = wlcsm_nvram_get(nvram_name);
+-		if (nvram_value == NULL) {
+-			WIFI_DBG("%s, Null %s \n", __FUNCTION__, nvram_name);
+-			return -1;
+-		}
+-		WIFI_DBG("%s, nvram_value %s \n", __FUNCTION__, nvram_value);
+-		iwpsmethods = strtoul(nvram_value, NULL, 16);
+-		memset(buf, 0, BUF_SIZE);
+-		if((iwpsmethods & WPS_CONFIG_USBA) == WPS_CONFIG_USBA){
+-			strncat(buf, "USBFlashDrive", strlen("USBFlashDrive"));
+-		}
+-		if((iwpsmethods & WPS_CONFIG_ETHERNET) == WPS_CONFIG_ETHERNET){
+-			if(strlen(buf)){
+-				strncat(buf, ",Ethernet", strlen(",Ethernet"));
+-			} else {
+-				strncat(buf, "Ethernet", strlen("Ethernet"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_LABEL) == WPS_CONFIG_LABEL){
+-			if(strlen(buf)){
+-				strncat(buf, ",Label", strlen(",Label"));
+-			} else {
+-				strncat(buf, "Label", strlen("Label"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_EXT_NFC_TOKEN) == WPS_CONFIG_EXT_NFC_TOKEN){
+-			if(strlen(buf)){
+-				strncat(buf, ",ExternalNFCToken", strlen(",ExternalNFCToken"));
+-			} else {
+-				strncat(buf, "ExternalNFCToken", strlen("ExternalNFCToken"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_INT_NFC_TOKEN) == WPS_CONFIG_INT_NFC_TOKEN){
+-			if(strlen(buf)){
+-				strncat(buf, ",IntegratedNFCToken", strlen(",IntegratedNFCToken"));
+-			} else {
+-				strncat(buf, "IntegratedNFCToken", strlen("IntegratedNFCToken"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_NFC_INTERFACE) == WPS_CONFIG_NFC_INTERFACE ){
+-			if(strlen(buf)){
+-				strncat(buf, ",NFCInterface", strlen(",NFCInterface"));
+-			} else {
+-				strncat(buf, "NFCInterface", strlen("NFCInterface"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_PUSHBUTTON) == WPS_CONFIG_PUSHBUTTON){
+-			if(strlen(buf)){
+-				strncat(buf, ",PushButton", strlen(",PushButton"));
+-			} else {
+-				strncat(buf, "PushButton", strlen("PushButton"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_DISPLAY) == WPS_CONFIG_DISPLAY){
+-			if(strlen(buf)){
+-				strncat(buf, ",Display", strlen(",Display"));
+-			} else {
+-				strncat(buf, "Display", strlen("Display"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_VIRT_PUSHBUTTON) == WPS_CONFIG_VIRT_PUSHBUTTON){
+-			if(strlen(buf)){
+-				strncat(buf, ",VirtualPushButton", strlen(",VirtualPushButton"));
+-			} else {
+-				strncat(buf, "VirtualPushButton", strlen("VirtualPushButton"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_PHY_PUSHBUTTON) == WPS_CONFIG_PHY_PUSHBUTTON){
+-			if(strlen(buf)){
+-				strncat(buf, ",PhysicalPushButton", strlen(",PhysicalPushButton"));
+-			} else {
+-				strncat(buf, "PhysicalPushButton", strlen("PhysicalPushButton"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_P2PS) == WPS_CONFIG_P2PS){
+-			if(strlen(buf)){
+-				strncat(buf, ",PIN", strlen(",PIN"));
+-			} else {
+-				strncat(buf, "PIN", strlen("PIN"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_VIRT_DISPLAY) == WPS_CONFIG_VIRT_DISPLAY){
+-			if(strlen(buf)){
+-				strncat(buf, ",VirtualDisplay", strlen(",VirtualDisplay"));
+-			} else {
+-				strncat(buf, "VirtualDisplay", strlen("VirtualDisplay"));
+-			}
+-		}
+-		if((iwpsmethods & WPS_CONFIG_PHY_DISPLAY) == WPS_CONFIG_PHY_DISPLAY){
+-			if(strlen(buf)){
+-				strncat(buf, ",PhysicalDisplay", strlen(",PhysicalDisplay"));
+-			} else {
+-				strncat(buf, "PhysicalDisplay", strlen("PhysicalDisplay"));
+-			}
+-		}
++		size += snprintf(pvalue + size, *plen - size, "Label,Keypad,Display,PushButton");
+ 
+-		if (*plen < (strlen(buf) + 1)) {
+-			WIFI_DBG("%s, Buffer len=%d insufficient for %s\n",
+-				__FUNCTION__, *plen, buf);
+-			return -1;
+-		}
+-		*plen = strlen(buf);
+-		strncpy(pvalue, buf, strlen(buf));
++	/*
++	 * cosa only knows "Label,Display,PushButton,Keypad".
++	 */
++#ifndef CMWIFI_RDKB
++		size += snprintf(pvalue + size, *plen - size,
++				",VirtualDisplay,VirtualPushButton,PhysicalPushButton");
++#endif /* CMWIFI_RDKB */
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-
+ /********************************************************
+ *  Device.WiFi.AccessPoint.{i}.WPS.ConfigMethodsEnabled
+ ********************************************************/
+@@ -9350,7 +9291,7 @@
+ 	char *pvalue, int *plen, char *pbuf, int *pbufsz)
+ {
+ 	char *parameter = "ConfigurationState";
+-	char *nvifname, buf[BUF_SIZE];
++	char *nvifname;
+ 
+ 	IGNORE_CMD_WARNING(cmd, CMD_ADD | CMD_DEL );
+ 
+@@ -9372,8 +9313,9 @@
+ 			WIFI_DBG("%s, Null %s \n", __FUNCTION__, nvram_name);
+ 			return -1;
+ 		}
++
+ 		if (*plen < strlen("Not Configured")) {
+-			WIFI_DBG("%s, Buffer len=%d insufficient for %s\n", __FUNCTION__, *plen, buf);
++			WIFI_ERR("%s, Buffer len=%d insufficient\n", __FUNCTION__, *plen);
+ 			return -1;
+ 		}
+ 		if(strstr(nvram_value,"1")!= NULL) {
+@@ -11850,6 +11792,194 @@
+ 	return 0;
+ }
+ 
++/* For 802.11K support in wifi_hal.c */
++
++/* Dummy start values to see easily in packet */
++static unsigned char wifi_api_rm_DialogToken = 0x89;
++static unsigned char wifi_api_mm_token = 0x99;
++
++/* Used for Beacon Request, Report tokens such as wl1_wlcsm_mm_token
++ * Using (static) vars locally does not work since it is not shared across threads
++ */
++static int
++wl_get_token(char *nv_name)
++{
++	char  *valp = NULL;
++	unsigned int ival;
++
++	if ((nv_name != NULL) && (valp = wlcsm_nvram_get(nv_name)) != NULL) {
++		ival = atoi(valp);
++	}
++	else {
++		ival = 0x99; /* dummy value */
++	}
++	return(ival);
++}
++
++static int
++wl_update_token(char *ifname, char *tokenname)
++{
++	char nv_name[64];
++	unsigned char tval=0;
++	char aval[4];
++
++	snprintf(nv_name, sizeof(nv_name), "%s_%s", ifname, tokenname);
++	tval = wl_get_token(nv_name);
++	if (++tval == 0)
++		++tval;
++	memset(aval, 0, sizeof(aval));
++	snprintf(aval, sizeof(aval), "%3d", tval);
++	wlcsm_nvram_set(nv_name, aval);
++	return (tval);
++}
++
++/* Build and send Radio Measurement Request Action Frame
++ * Input: *in_request is wifi_BeaconRequest_t for BeaconRequest
++ * Output: *out_DialogToken is the measurement token
++ */
++static int
++wl_send_rrm_req_actionFrame(char *osifname, uint8 *peer, uint32 channel, int32 dwell_time,
++	uint8 rm_ieType, void *in_rrm_request, uint8 in_rrm_reqLen, unsigned char *out_DialogToken,
++	unsigned short numRep)
++{
++	dot11_rmreq_t *rm_reqp;
++	dot11_rm_ie_t *rm_iep;
++	unsigned char *rm_req_measp;
++	wl_af_params_t *afparamp;
++	wl_action_frame_t *afInfo;
++	char *iovbufp = NULL;
++	uint iovblen, namelen;
++	int afInfoLen, ret = -1;
++
++	if (!(peer) || !(in_rrm_request) || !(out_DialogToken)) {
++	    printf("%s WLCSM_GEN_ERR \n", __FUNCTION__);
++	    return -1;
++	}
++
++	/* Allocate iov buffer */
++	namelen = strlen("actframe") + 1;
++	iovblen = sizeof(wl_af_params_t) + namelen;
++	iovbufp = (char *)malloc(iovblen);
++	if (iovbufp == NULL) {
++		WIFI_DBG("%s: malloc failed!\n", __FUNCTION__);
++		return -1;
++	}
++	memset(iovbufp, 0, iovblen);
++
++	WIFI_DBG("%s iovbufp=%p iovblen=%d\n", __FUNCTION__, iovbufp, iovblen);
++
++	memcpy(iovbufp, "actframe", namelen);
++	afparamp = (wl_af_params_t *)(iovbufp + namelen);
++	afparamp->channel = channel;
++	afparamp->dwell_time = dwell_time;
++	memset((&afparamp->BSSID), 0xFF, sizeof(afparamp->BSSID));
++
++	/* Build action frame */
++
++	afInfo = &afparamp->action_frame;
++	afInfoLen = DOT11_RMREQ_LEN + DOT11_RM_IE_LEN + in_rrm_reqLen;
++	bcopy(peer, (afInfo->da.octet), 6);
++	afInfo->len = afInfoLen;
++	afInfo->packetId = (unsigned int)(afInfo);
++
++	WIFI_DBG("%s Build action frame afInfoLen=%d in_rrm_reqLen=%d\n", __FUNCTION__, afInfoLen, in_rrm_reqLen);
++
++	wifi_api_rm_DialogToken = wl_update_token(osifname, "rm_token");
++	rm_reqp = (dot11_rmreq_t *)(afInfo->data);
++	rm_reqp->category = DOT11_ACTION_CAT_RRM;
++	rm_reqp->action = DOT11_RM_ACTION_RM_REQ;
++	rm_reqp->token = wifi_api_rm_DialogToken;
++#ifdef IL_BIGENDIAN
++	rm_reqp->reps = hton16(numRep);
++#else
++	rm_reqp->reps = numRep;
++#endif
++
++	wifi_api_mm_token =  wl_update_token(osifname, "mm_token");
++	rm_iep = (dot11_rm_ie_t *)(rm_reqp->data);
++	rm_iep->id = DOT11_MNG_MEASURE_REQUEST_ID;
++	rm_iep->len = in_rrm_reqLen + 3; /* add for meas token, mode, type */
++	rm_iep->token = wifi_api_mm_token;
++	rm_iep->mode = DOT11_RMREQ_MODE_REQUEST;
++	rm_iep->type = rm_ieType;
++
++	rm_req_measp = (unsigned char *)(rm_reqp) + afInfoLen - in_rrm_reqLen;
++	memcpy((int8 *)(rm_req_measp), (int8 *)(in_rrm_request), in_rrm_reqLen);
++	*out_DialogToken = rm_iep->token;
++
++	WIFI_DBG("%s, call %s actframe reps=0x%x rrm_req type=%d len=%d token=%d\n",
++		__FUNCTION__, osifname, rm_reqp->reps, rm_iep->type, rm_iep->len, rm_iep->token);
++
++	ret = wl_ioctl(osifname, WLC_SET_VAR, iovbufp, iovblen);
++	if (ret < 0) {
++		WIFI_ERR("%s, %s fail to send actframe err=%d\n", __FUNCTION__, osifname, ret);
++	} else {
++		WIFI_DBG("%s, %s Sent actframe\n", __FUNCTION__, osifname);
++	}
++	if (iovbufp)
++		free(iovbufp);
++	return ret;
++}
++
++/* Generate Radio Measurement Request Action Frame requests
++ * - currently only used by wifi_setRMBeaconRequest from wifi_hal
++ * Input: af_reqp has parameter info from hal collected into wl_af_rrm_req_info_t
++ * Output: pbuf has out_DialogToken
++ */
++int
++wldm_11k_rrm(wldm_rm_action_t cmd, int radioIndex, wl_af_rrm_req_info_t *af_reqp, int *plen,
++	char *pbuf, int *pbufsz)
++{
++	int ret = 0;
++	char *osifname;
++	struct ether_addr ea;
++
++	if (cmd != WLDM_RM_ACTION_RM_REQ) {
++		WIFI_ERR("%s: Invalid cmd=0x%x radioIndex=%d\n", __FUNCTION__, cmd, radioIndex);
++		return 0;
++	}
++
++	if (!af_reqp || !(af_reqp->peer) || !(af_reqp->in_request)) {
++		WIFI_ERR("%s: radioIndex=%d Null input data\n", __FUNCTION__, radioIndex);
++		return -1;
++	}
++
++	WIFI_DBG("%s: cmd=0x%x radioIndex=%d af_reqp=%p *plen=%d peer=%s\n",
++		__FUNCTION__, cmd, radioIndex, af_reqp, *plen, af_reqp->peer);
++
++	osifname = wldm_get_osifname(radioIndex);
++	_wl_ether_atoe(af_reqp->peer, &ea);
++
++	switch (af_reqp->rm_ieType) {
++		case WLDM_RM_MEASURE_TYPE_BEACON:
++			/* Don't support optional elements yet */
++			if (af_reqp->in_reqLen < RM_BCN_REQ_MANDATORY_ELEM_LEN) {
++				WIFI_ERR("%s: in_reqLen %d too short\n", __FUNCTION__, af_reqp->in_reqLen);
++				return -1;
++			}
++			WIFI_DBG("%s call wl_send_rrm_req_actionFrame type=0x%x len=%d numRep=%d\n",
++				__FUNCTION__, af_reqp->rm_ieType, RM_BCN_REQ_MANDATORY_ELEM_LEN,
++				af_reqp->numRepetitions);
++
++			/* send action frame; no off channel request */
++			ret = wl_send_rrm_req_actionFrame(osifname, (unsigned char *)(&ea.octet[0]), 0, -1,
++				af_reqp->rm_ieType, af_reqp->in_request, RM_BCN_REQ_MANDATORY_ELEM_LEN,
++				(unsigned char *)pbuf, af_reqp->numRepetitions);
++			if (ret < 0) {
++				WIFI_ERR("%s: Error send rrm_req DOT11_MEASURE_TYPE_BEACON actframe err=%d\n",
++					__FUNCTION__, ret);
++				return -1;
++			}
++			WIFI_DBG("%s: Sent rrm_req DOT11_MEASURE_TYPE_BEACON actframe out_DialogToken=%d\n",
++				__FUNCTION__, (unsigned char)(*pbuf));
++			break;
++
++		default:
++			break;
++	}
++	return ret;
++}
++
+ /* For ACS support */
+ typedef struct dm_acs_info {
+         const char	*dm_name;		/* Name of the dm */
+diff -Naur '--exclude=.svn*' '--exclude=.git*' ./main/components/apps/wldm.old/wldm_lib_wifi.h ./main/components/apps/wldm/wldm_lib_wifi.h
+--- ./main/components/apps/wldm.old/wldm_lib_wifi.h	2020-06-29 21:24:01.315620328 +0300
++++ ./main/components/apps/wldm/wldm_lib_wifi.h	2020-06-24 23:27:34.771128888 +0300
+@@ -210,7 +210,7 @@
+ 
+ /* Device.WiFi.AccessPoint.{i}. */
+ extern int wldm_AccessPoint(int cmd, int apIndex,
+-	void *pvalue, int *plen, char *pbuf, int *pbufsz);
++	char *pvalue, int *plen, char *pbuf, int *pbufsz);
+ extern int wldm_AccessPoint_SSIDAdvertisementEnabled(int cmd, int apIndex,
+ 	boolean *pvalue, int *plen, char *pbuf, int *pbufsz);
+ extern int wldm_AccessPoint_IsolationEnable(int cmd, int apIndex,
+@@ -553,4 +553,30 @@
+ extern int wldm_xbrcm_11ac(int cmd, int index, void *pvalue, uint *plen, char *pvar, int *pvarsz);
+ extern int wldm_11h_dfs(int cmd, int index, void *pvalue, uint *plen, char *pvar, int *pvarsz);
+ 
++/* 11K */
++/* Length till bssid (without optional elements) in wifi_BeaconRequest_t */
++#define RM_BCN_REQ_MANDATORY_ELEM_LEN	13
++#define WLDM_RM_MEASURE_TYPE_BEACON	5	/* DOT11_MEASURE_TYPE_BEACON */
++
++/* 11k actions - follow DOT11_RM_ACTION_xxx */
++typedef enum wldm_11k_action {
++	WLDM_RM_ACTION_RM_REQ = 0,
++	WLDM_RM_ACTION_RM_REP,
++	WLDM_RM_ACTION_LM_REQ,
++	WLDM_RM_ACTION_LM_REP,
++	WLDM_RM_ACTION_NR_REQ,
++	WLDM_RM_ACTION_NR_REP
++} wldm_rm_action_t;
++
++typedef struct {
++	char *peer;			/* peerMac XX:XX:XX:XX:XX:XX */
++	unsigned char rm_ieType;
++	void *in_request;
++	int in_reqLen;
++	unsigned short numRepetitions;
++} wl_af_rrm_req_info_t;
++
++extern int wldm_11k_rrm(wldm_rm_action_t cmd, int radio_idx, wl_af_rrm_req_info_t *af_reqp, int *plen,
++	char *pbuf, int *pbufsz);
++
+ #endif /* __WLDM_LIB_WIFI_H__ */
+diff -Naur '--exclude=.svn*' '--exclude=.git*' ./main/components/rdk.old/ccsp/hal/wifi/source/wifi/wifi_api.c ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_api.c
+--- ./main/components/rdk.old/ccsp/hal/wifi/source/wifi/wifi_api.c	2020-06-29 21:24:03.559693740 +0300
++++ ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_api.c	2020-06-24 23:27:38.043235977 +0300
+@@ -434,7 +434,7 @@
+     { "wifi_setRadioDCSScanTime",	                    3, "<RadioIndex> <interval in secs> <dwell in ms>" },
+     { "wifi_setApSecuritySecondaryRadiusServer",	    4, "<AP Index> <IPAddress> <Port> <Radius SecretKey>" },
+     { "wifi_setApSecurityRadiusServer",	                4, "<AP Index> <IPAddress> <Port> <Radius SecretKey>" },
+-    { "wifi_createAp",	                                4, "<RadioIndex> <AP Index> <E-SSID> <Hide-SSID> " },
++    { "wifi_createAp",	                                4, "<AP Index> <radioIndex> <E-SSID> <Hide-SSID> " },
+     { "wifi_pushRadioChannel2",	                        4, "<RadioIndex> <Channel> <Channel-Width> <CSA Beacon Count>" },
+     { "wifi_setRadioChannelMode",	                    5, "<RadioIndex> <Channel Mode> <802.11g> <802.11n> <802.11a,c>(E.g: wifi_setRadioChannelMode 0 11A 1 1 0)" },
+     { "wifi_startNeighborScan",	                        5, "<AP Index> <Scan Mode> <Dwell Time> <Channel Number> <list of channels>" },
+diff -Naur '--exclude=.svn*' '--exclude=.git*' ./main/components/rdk.old/ccsp/hal/wifi/source/wifi/wifi_hal.c ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_hal.c
+--- ./main/components/rdk.old/ccsp/hal/wifi/source/wifi/wifi_hal.c	2020-06-29 21:24:03.562693839 +0300
++++ ./main/components/rdk/ccsp/hal/wifi/source/wifi/wifi_hal.c	2020-06-29 21:57:14.776831474 +0300
+@@ -2210,8 +2210,8 @@
+     }
+ 
+ exit:
++#endif /* End of defined(_CBR_PRODUCT_REQ_) || defined(_XF3_PRODUCT_REQ_) */
+ 
+-#endif
+     HAL_WIFI_LOG(("%s, LAN bridge thread exit. \n", __FUNCTION__));
+ 
+     WiFi_Ready_after_hal_started = TRUE;
+@@ -4567,9 +4567,19 @@
+ 		return RETURN_ERR;
+ 	}
+ 
+-	returnStatus = wldm_Radio_Enable(CMD_GET, radioIndex, output_bool, &len, NULL, NULL);
++	/* In BCA_CPEROUTER, the WiFi driver may not be fully up, like when waiting for wlcsm_mngr_wifi_hal_started,
++	 * then get from nvram for GUI. In CM WiFi, the Radio is up, so do not need this WAR.  */
++#ifdef BCA_CPEROUTER_RDK
++	if (WiFi_Ready_after_hal_started) {
++#endif
++		returnStatus = wldm_Radio_Enable(CMD_GET, radioIndex, output_bool, &len, NULL, NULL);
++#ifdef BCA_CPEROUTER_RDK
++	} else {
++		returnStatus = wldm_Radio_Enable(CMD_GET_NVRAM, radioIndex, output_bool, &len, NULL, NULL);
++	}
++#endif
+ 	if (returnStatus != STATUS_OK) {
+-		HAL_WIFI_DBG(("%s: wldm_Radio_Enable CMD_GET failed, Status = %d\n",
++		HAL_WIFI_ERR(("%s: wldm_Radio_Enable CMD_GET/CMD_GET_NVRAM failed, Status = %d\n",
+ 				__FUNCTION__, returnStatus));
+ 		return RETURN_ERR;
+ 	}
+@@ -6352,7 +6362,7 @@
+ INT wifi_getRadioPossibleChannels(INT radioIndex, CHAR *output_string)  //RDKB
+ {
+ #ifdef RDKB_WLDM
+-	int len = OUTPUT_STRING_LENGTH_64;
++	int len = OUTPUT_STRING_LENGTH_512;
+ 	int returnStatus;
+ 	int count = 0;
+ 
+@@ -8868,9 +8878,16 @@
+         HAL_WIFI_ERR(("%s, radioIndex parameter error!!!, ssidIndex = %d\n", __FUNCTION__, ssidIndex));
+         return RETURN_ERR;
+     }
++    if ((ssidIndex >= HAL_WIFI_TOTAL_NO_OF_APS) || (ssidIndex < 0)) {
++        HAL_WIFI_ERR(("%s: INCORRECT ssidIndex [%d] \n", __FUNCTION__, ssidIndex));
++        return RETURN_ERR;
++    }
+ 
++#ifdef RDKB_WLDM
++    *radioIndex = wldm_get_radioIndex(ssidIndex);
++#else
+     *radioIndex = HAL_AP_IDX_TO_HAL_RADIO(ssidIndex);
+-
++#endif
+     HAL_WIFI_DBG(("%s, ssidIndex = %d, radioIndex = %d\n", __FUNCTION__, ssidIndex, *radioIndex));
+ 
+     return RETURN_OK;
+@@ -10895,22 +10912,68 @@
+ // creates a new ap and pushes these parameters to the hardware
+ INT wifi_createAp(INT apIndex, INT radioIndex, CHAR *essid, BOOL hideSsid)
+ {
+-#ifdef RDKB_LATTICELESS
+-    HAL_WIFI_DBG(("%s, apIndex %d radioIndex %d essid %s hideSsid %d\n", __FUNCTION__, apIndex, radioIndex, essid, hideSsid));
+-    POINTER_ASSERT(essid);
+-    apIndex_Assert(apIndex);
+-    radioIndex_Assert(radioIndex);
++#ifdef RDKB_WLDM
++	INT returnStatus, len;
++	BOOL enableSsid, enable;
++	HAL_WIFI_DBG(("%s, ENTER apIndex %d radioIndex %d essid %s hideSsid %d\n",
++		__FUNCTION__, apIndex, radioIndex, essid, hideSsid));
+ 
+-    /* How to pass essid ? */
++	if ((radioIndex >= HAL_RADIO_NUM_RADIOS) || (radioIndex < 0)) {
++		HAL_WIFI_ERR(("%s, INCORRECT radioIndex [%d] \n", __FUNCTION__, radioIndex));
++		return RETURN_ERR;
++	}
++	if ((apIndex >= HAL_WIFI_TOTAL_NO_OF_APS) || (apIndex < 0)) {
++		HAL_WIFI_ERR(("%s, INCORRECT apIndex [%d] \n", __FUNCTION__, apIndex));
++		return RETURN_ERR;
++	}
+ 
+-    if (WiFiSystemAccessPointCreate(radioIndex, apIndex, essid, (UINT32)hideSsid) != STATUS_OK)
+-    {
+-            return RETURN_ERR;
+-    }
++	if (NULL == essid) {
++		HAL_WIFI_ERR(("%s : %d Error!!!\n", __FUNCTION__, __LINE__));
++		return RETURN_ERR;
++	}
++	if (HAL_AP_IDX_TO_HAL_RADIO(apIndex) != radioIndex) {
++		HAL_WIFI_DBG(("Given apIndex %d not found in the radio %d ! \n", apIndex, radioIndex));
++		return RETURN_ERR;
++	}
+ 
+-        return RETURN_OK;
++	len = strlen(essid);
++	returnStatus = wldm_AccessPoint(CMD_ADD, apIndex, essid, &len, NULL, NULL);
++	if (returnStatus != RETURN_OK) {
++		HAL_WIFI_DBG(("%s Fail, returnStatus = %d\n", __FUNCTION__, returnStatus));
++		return RETURN_ERR;
++	}
++
++	enableSsid = !hideSsid;
++	len = sizeof(enableSsid);
++	returnStatus = wldm_AccessPoint_SSIDAdvertisementEnabled(CMD_SET_NVRAM | CMD_SET_IOCTL,
++				apIndex, &enableSsid, &len, NULL, NULL);
++	if (returnStatus != RETURN_OK) {
++		HAL_WIFI_DBG(("%s Fail, returnStatus = %d\n", __FUNCTION__, returnStatus));
++		return RETURN_ERR;
++	}
++	wldm_stop_wsec_daemons(radioIndex);
++	wldm_start_wsec_daemons(radioIndex);
++	sleep(1);
++
++	enable = TRUE;
++	len = sizeof(enable);
++	if (wldm_AccessPoint_Enable(CMD_SET_NVRAM | CMD_SET_IOCTL, apIndex,
++		&enable, &len, NULL, NULL) < 0) {
++		WIFI_ERR("%s:%d wldm_AccessPoint_Enable failed %d!\n",
++			__FUNCTION__, __LINE__, apIndex);
++		return -1;
++	}
++
++	HAL_WIFI_DBG(("%s, DONE apIndex %d radioIndex %d essid %s hideSsid %d\n",
++		__FUNCTION__, apIndex, radioIndex, essid, hideSsid));
++
++#ifdef RDKB_TIMER
++	wifi_set_timer_variable();
++#endif
++	return RETURN_OK;
+ #else
+-    HAL_WIFI_DBG(("%s, apIndex %d radioIndex %d essid %s hideSsid %d\n", __FUNCTION__, apIndex, radioIndex, essid, hideSsid));
++    HAL_WIFI_DBG(("%s, apIndex %d radioIndex %d essid %s hideSsid %d\n",
++        __FUNCTION__, apIndex, radioIndex, essid, hideSsid));
+ 
+     if ((radioIndex >= HAL_RADIO_NUM_RADIOS) || (radioIndex < 0)) {
+         HAL_WIFI_ERR(("%s, INCORRECT radioIndex [%d] \n", __FUNCTION__, radioIndex));
+@@ -10949,7 +11012,7 @@
+ 
+         return RETURN_OK;
+     }
+-#endif /* End of RDKB_LATTICELESS */
++#endif /* End of RDKB_WLDM */
+ }
+ 
+ /* Deletes this AP entry on the hardware, clears all internal variables associated with this AP */
+@@ -10958,7 +11021,7 @@
+ #ifdef RDKB_WLDM
+ 	HAL_WIFI_DBG(("%s ApIndex = %d\n", __FUNCTION__, apIndex));
+ 
+-	if((apIndex >= HAL_WIFI_TOTAL_NO_OF_APS) || (apIndex < 0)) {
++	if ((apIndex >= HAL_WIFI_TOTAL_NO_OF_APS) || (apIndex < 0)) {
+ 		HAL_WIFI_ERR(("%s: INCORRECT apIndex [%d] \n", __FUNCTION__, apIndex));
+ 		return RETURN_ERR;
+ 	}
+@@ -11057,13 +11120,15 @@
+ 	int max_num_of_aps = wldm_get_max_aps();
+ 	int len;
+ 
+-	for (apIndex  = 0; apIndex < max_num_of_aps; ++apIndex) {
+-		len = sizeof(name);
+-		if (wldm_SSID_SSID(CMD_GET, apIndex, name, &len, NULL, NULL) < 0)
+-			continue;
+-		if (!strcmp(name, inputSsidString))
+-			break;
+-	}
++    if ((apIndex = wldm_get_apindex(inputSsidString)) < 0) {
++        for (apIndex  = 0; apIndex < max_num_of_aps; ++apIndex) {
++            len = sizeof(name);
++            if (wldm_SSID_SSID(CMD_GET, apIndex, name, &len, NULL, NULL) < 0)
++                continue;
++            if (!strcmp(name, inputSsidString))
++                break;
++        }
++    }
+ 
+ 	if (apIndex == max_num_of_aps) {
+ 		HAL_WIFI_ERR(("%s, name not found!!!\n", __FUNCTION__));
+@@ -13695,6 +13760,8 @@
+ INT wifi_getApEnable(INT apIndex, BOOL *output_bool)
+ {
+ #ifdef RDKB_WLDM
++	int returnStatus, len = sizeof(*output_bool);
++
+ 	if (NULL == output_bool)
+ 	{
+ 		HAL_WIFI_ERR(("%s, output_bool parameter error!!!, apIndex = %d\n",
+@@ -13706,17 +13773,15 @@
+ 		return RETURN_ERR;
+ 	}
+ 
+-	int returnStatus, len = sizeof(*output_bool);
+ 	/* In case the WiFi driver is not fully up, like when waiting for wlcsm_mngr_wifi_hal_started,
+-	 * then get from nvram
+-	 */
++	 * then get from nvram, for GUI to display the correct AP status */
+ 	if (WiFi_Ready_after_hal_started) {
+ 		returnStatus = wldm_AccessPoint_Enable(CMD_GET, apIndex, output_bool, &len, NULL, NULL);
+ 	} else {
+ 		returnStatus = wldm_AccessPoint_Enable(CMD_GET_NVRAM, apIndex, output_bool, &len, NULL, NULL);
+ 	}
+ 	if (returnStatus != 0) {
+-		HAL_WIFI_DBG(("%s: wldm_AccessPoint_Enable CMD_GET/CMD_GET_NVRAM Failed, apIndex = %d, Status=%d\n",
++		HAL_WIFI_ERR(("%s: wldm_AccessPoint_Enable CMD_GET/CMD_GET_NVRAM Failed, apIndex = %d, Status=%d\n",
+ 			__FUNCTION__, apIndex, returnStatus));
+ 		*output_bool = FALSE;
+ 		return RETURN_ERR;
+@@ -21552,19 +21617,16 @@
+ 	return RETURN_OK;
+ }
+ 
+-extern int wlcsm_mngr_wifi_setRMBeaconRequest(unsigned int radio_idx, char *peer,
+-                        void *in_request, int in_reqLen, unsigned char *out_DialogToken, unsigned short numRep);
+-
+ INT wifi_setRMBeaconRequest(UINT apIndex,
+                              CHAR *peer,
+                              wifi_BeaconRequest_t *in_request,
+                              UCHAR *out_DialogToken)
+ {
+-	int ret, k;
+ 	char logStr[128];
+ 	unsigned int radioIndex = HAL_AP_IDX_TO_HAL_RADIO(apIndex);
+-	unsigned char macAddress[6];
+-	unsigned int macInt[6];
++	int reqlen, ret;
++	wl_af_rrm_req_info_t wl_af_rrm_req;
++	wl_af_rrm_req_info_t *reqp;
+ 
+ 	HAL_WIFI_DBG(("%s apindex=%d MAC=%s\n", __FUNCTION__, apIndex, peer));
+ 	if((apIndex >= HAL_WIFI_TOTAL_NO_OF_APS) || (apIndex < 0)) {
+@@ -21575,27 +21637,27 @@
+ 		HAL_WIFI_ERR(("%s, INCORRECT radioIndex [%d] \n", __FUNCTION__, radioIndex));
+ 		return RETURN_ERR;
+ 	}
+-	if (!(peer) || !(in_request) || !(out_DialogToken) ) {
++	if (!(peer) || !(in_request) || !(out_DialogToken)) {
+ 		HAL_WIFI_ERR(("%s, Bad input Param [%d] \n", __FUNCTION__, apIndex));
+ 		return RETURN_ERR;
+ 	}
+ 
+ 	// HAL_DBG_PRINT_BUF(__FUNCTION__, (char *)(in_request), sizeof(wifi_BeaconRequest_t));
+ 	HAL_WIFI_DBG(("HAL %s apIndex=%d radioIndex=%d numRep=%d\n",
+-		 __FUNCTION__, apIndex, radioIndex, in_request->numRepetitions));
++		__FUNCTION__, apIndex, radioIndex, in_request->numRepetitions));
+ 
+-	if (sscanf(peer, "%02x:%02x:%02x:%02x:%02x:%02x", &macInt[0], &macInt[1],
+-			&macInt[2], &macInt[3], &macInt[4], &macInt[5]) != 6) {
+-		HAL_WIFI_ERR(("%s, Error: peer MAC format %s \n", __FUNCTION__, peer));
+-		return RETURN_ERR;
+-	}
+-	for (k = 0; k < 6; k++) {
+-		macAddress[k] = (unsigned char)macInt[k];
+-	}
+-	ret = wlcsm_mngr_wifi_setRMBeaconRequest(radioIndex, (CHAR *)(&(macAddress[0])), in_request, sizeof(wifi_BeaconRequest_t),
+-		out_DialogToken, in_request->numRepetitions);
++	reqp = &wl_af_rrm_req;
++	reqlen = (sizeof(wl_af_rrm_req_info_t) + MAC_STR_LEN + reqp->in_reqLen);
++	reqp->peer = peer;
++	reqp->rm_ieType = WLDM_RM_MEASURE_TYPE_BEACON;
++	reqp->in_request = in_request;
++	reqp->in_reqLen = sizeof(wifi_BeaconRequest_t);
++	reqp->numRepetitions = in_request->numRepetitions;
++	ret = wldm_11k_rrm(WLDM_RM_ACTION_RM_REQ, radioIndex, reqp, &reqlen,
++		(char *)out_DialogToken, NULL);
+ 
+-	snprintf(logStr, sizeof(logStr), "<802.11K Tx> Radio:%d Beacon Request to MAC=%s Token=0x%x \n",
++	snprintf(logStr, sizeof(logStr),
++		"<802.11K Tx> Radio:%d Beacon Request to MAC=%s Token=0x%x \n",
+ 		radioIndex, peer, *out_DialogToken);
+ 	wifi_log_rrm_event(logStr);
+ 

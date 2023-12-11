@@ -1,0 +1,54 @@
+!<thin>
+//                                              442       `
+br.o/
+br_device.o/
+br_fdb.o/
+br_forward.o/
+br_if.o/
+br_input.o/
+br_ioctl.o/
+br_stp.o/
+br_stp_bpdu.o/
+br_stp_if.o/
+br_stp_timer.o/
+br_netlink.o/
+br_netlink_tunnel.o/
+br_arp_nd_proxy.o/
+br_sysfs_if.o/
+br_sysfs_br.o/
+br_switchdev.o/
+netfilter/ebtables.o/
+netfilter/ebtable_broute.o/
+netfilter/ebtable_filter.o/
+netfilter/ebtable_nat.o/
+netfilter/ebt_ip.o/
+netfilter/ebt_ip6.o/
+netfilter/ebt_mark_m.o/
+netfilter/ebt_vlan.o/
+netfilter/ebt_mark.o/
+/0              0           0     0     644     7232      `
+/6              0           0     0     644     7932      `
+/19             0           0     0     644     19036     `
+/29             0           0     0     644     5336      `
+/43             0           0     0     644     10112     `
+/52             0           0     0     644     6196      `
+/64             0           0     0     644     6316      `
+/76             0           0     0     644     9680      `
+/86             0           0     0     644     5040      `
+/101            0           0     0     644     7072      `
+/114            0           0     0     644     4080      `
+/130            0           0     0     644     13900     `
+/144            0           0     0     644     3720      `
+/165            0           0     0     644     5984      `
+/184            0           0     0     644     11004     `
+/199            0           0     0     644     9688      `
+/214            0           0     0     644     4244      `
+/230            0           0     0     644     21708     `
+/252            0           0     0     644     4348      `
+/280            0           0     0     644     4060      `
+/308            0           0     0     644     4024      `
+/333            0           0     0     644     4100      `
+/353            0           0     0     644     4216      `
+/374            0           0     0     644     2820      `
+/398            0           0     0     644     3532      `
+/420            0           0     0     644     2856      `

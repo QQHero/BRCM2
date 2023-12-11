@@ -1,0 +1,12 @@
+prefix=/Mline/6715/UGW_main/cbb/wifi/bcm6756_11ax_nor_wifi_release
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: json-c
+Description: A JSON implementation in C
+Version: 0.13
+Requires:
+Libs.private: 
+Libs: -L${libdir} -ljson-c
+Cflags: -I${includedir}/json-c

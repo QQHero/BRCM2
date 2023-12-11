@@ -1,0 +1,40 @@
+#!/bin/sh
+
+lockfile=/var/run/id.lock
+badcount=0
+filter=$1
+
+green(){ echo -ne "\033[0;40;32m$*\033[0m"; }
+red(){ echo -ne "\033[0;40;31m$*\033[0m"; }
+white(){ echo -ne "\033[0;40;37m$*\033[0m"; }
+yellow(){ echo -ne "\033[0;40;33m$*\033[0m"; }
+
+echo
+sed 's/id=//' $lockfile|awk '{print "id="$2"&&name="$4}'|while read cmd; do
+    eval $cmd
+    # skip '/var/run/lock.'
+    name=${name:14}
+    # check db lock only
+    [ -z "$filter" ] && [ "${name:0:3}" != "db." ] && continue
+    # apply filter
+    [ ! -z "$filter" ] && echo $name|grep -vq $filter && continue
+    # semnum value ncount zcount pid
+    cmd=`ipcs -s -i $id|sed -n '/semnum/{n;p}'|awk '{print "v="$2"&&n="$3"&&z="$4"&&pid="$5}'`
+    eval $cmd
+    white "Checking Semaphore "
+    yellow $id/$name
+    white " ..."
+    if [ $((n+z)) -ne 0 ] || [ $v -eq 0 ]; then
+        red " [BAD]\n  $n"
+        white " wait to +, "
+        red $z
+        white " wait to -, last operated by "
+        pname=`awk '{print $2}' /proc/$pid/stat`
+        pname=${pname#*\(}
+        pname=${pname%\)*}
+        red $pid/$pname\\n
+    else
+        green " [OK]\n"
+    fi
+done
+echo

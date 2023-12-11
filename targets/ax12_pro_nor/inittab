@@ -1,0 +1,2 @@
+::sysinit:/etc_ro/init.d/rcS
+ttyAMA0::respawn:/sbin/sulogin

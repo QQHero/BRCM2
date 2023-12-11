@@ -1,0 +1,169 @@
+PLATFORM := arm
+ARCH := $(PLATFORM)
+
+KERNEL_PLATORM_NAME = bcm_v5_04L_02p1
+SOLUTION_NAME = bcm6756_11ax_nor
+LINUX_KERNEL_PKG = 4.19
+
+TOOLCHAIN := crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32
+CROSS_TOOLS_DIR := /projects/hnd/tools/bcm/$(TOOLCHAIN)/usr
+CROSS_TOOLS := $(TOOLCHAIN)
+CROSS_COMPILE := $(CROSS_TOOLS_DIR)/bin/arm-buildroot-linux-gnueabi-
+CONFIG_CROSS_COMPILER_PATH := ${CROSS_TOOLS_DIR}/../
+
+WIFI_RELEASE_NAME=$(SOLUTION_NAME)_wifi_release
+CONFIG_WIFI_DRIVER_VER=impl87
+
+IMAGE_ROMFS_PATH = $(TOP_PATH)/targets/$(TARGETS_FILE)/romfs
+ROMFS_PATH = $(TOP_PATH)/targets/$(TARGETS_FILE)/romfs
+TOOLS_PATH = $(TOP_PATH)/vendor/$(KERNEL_PLATORM_NAME)/tools
+ifeq ($(shell uname -m),x86_64)
+HOSTTOOLS_DIR = $(TOOLS_PATH)/hostTools_64
+else
+HOSTTOOLS_DIR = $(TOOLS_PATH)/hostTools_32
+endif
+BOOTFS_PATH = $(ROMFS_PATH)/../bootfs
+IMAGE_DIR =$(TOP_PATH)/targets/$(TARGETS_FILE)/bin
+KPATCH_DIR = $(TOP_PATH)/bsp/kernel/kpatch/$(KERNEL_PLATORM_NAME)_$(LINUX_KERNEL_PKG)
+
+WIRELESS_DRIVER_PATH = $(TOP_PATH)/prod/wifi/$(VENDOR)/driver/rtl8192cd_$(WIRELESS_DRIVER_VERSION)
+WIRELESS_VENDORAPP_PATH = $(TOP_PATH)/prod/wifi/$(VENDOR)/app
+WIRELESS_TENDAAPP_PATH = $(TOP_PATH)/prod/wifi/tendawifi
+
+PROD_PATH=$(TOP_PATH)/prod
+CGI_PATH = $(PROD_PATH)/httpd/11ac/cgi
+CONFIG_WEB_PATH = web
+WEB_PATH=$(PROD_PATH)/httpd/$(CONFIG_WEB_PATH)
+CONFIG_WEB_NOCACHE_PATH = $(CONFIG_WEB_PATH)_nocache
+WEB_NOCACHE_PATH=$(PROD_PATH)/httpd/11ac/$(CONFIG_WEB_NOCACHE_PATH)
+MACRO_CONFIG_PATH=$(WEB_PATH)/publish/js
+# SIMPLE_UPLOAD_FILE_PATH = $(WEB_PATH)/system
+CONFIG_WEB_LANG=cn
+ifeq ($(CONFIG_USE_SQUASHFS),y)
+	ROMFS_WEBROOT_PATH=$(ROMFS_PATH)/webroot_ro
+else
+	ROMFS_WEBROOT_PATH=$(ROMFS_PATH)/webroot
+endif
+
+KERNEL_DIR = $(TOP_PATH)/bsp/kernel/$(KERNEL_PLATORM_NAME)_$(LINUX_KERNEL_PKG)
+LINUX_PATH = $(KERNEL_DIR)
+
+KERNEL_MODULES_PATH = $(ROMFS_PATH)/lib/modules
+
+LIBDIR := $(CROSS_TOOLS_DIR)/lib
+USRLIBDIR := $(CROSS_TOOLS_DIR)/usr/lib
+
+LINUX_VERSION := 4_19
+KERNELRELEASE = $(shell cat $(KERNEL_DIR)/include/config/kernel.release 2> /dev/null)
+
+
+HEADER_INSTALL = cp -u -f --no-preserve=mode -r
+export HEADER_INSTALL
+export PRODUCT_NAME := 11ax_6756
+export BOOTFS_PATH
+export PROFILE_DIR   := $(TARGETS_DIR)/947622GW
+export SECURE_BOOT_ARCH := GEN3
+export ARCH_ENDIAN := little
+export BTRM_NUM_NVRAM_DATA_IN_PARTITION := 6
+export BTRM_NUM_IMAGES_IN_PARTITION := 6
+export BRCM_CHIP := 6756
+export BRCM_NUM_MAC_ADDRESSES=11
+export BRCM_BASE_MAC_ADDRESS="00:90:4C:88:88:88"
+export BRCM_BOARD_ID="96755REF1SGP200"
+export BRCM_MAIN_TP_NUM=0
+export BRCM_PSI_SIZE=24
+export BRCM_MISC1_PARTITION_SIZE=2
+export BRCM_MISC2_PARTITION_SIZE=2
+export BRCM_MISC3_PARTITION_SIZE=2
+export BRCM_MISC4_PARTITION_SIZE=4
+export BRCM_VOICE_BOARD_ID=""
+export BTRM_BOOT_ONLY=y
+export BTRM_IMAGE_SIZE_ALLOCATION=128
+export BTRM_NAND_BOOT_PARTITION_SIZE=1024
+export BRCM_AUXFS_PERCENT=
+export BRCM_GPON_SERIAL_NUMBER=
+export BRCM_GPON_PASSWORD=
+export HOST_PERLARCH=x86_64-linux-gnu-thread-multi
+export HOSTTOOLS_DIR 
+export HOSTTOOLS_PERL_LIB = $(HOSTTOOLS_DIR)/PerlLib:$(HOSTTOOLS_DIR)/local_install/Perl/:$(HOSTTOOLS_DIR)/PerlLib/$(HOST_PERLARCH)/
+PERL5LIB=$(HOSTTOOLS_PERL_LIB)
+export PERL5LIB
+export SECURE_BOOT_TK_MODE_REQ=
+export AVS_IMAGE_PATH=
+export AVS_IMAGE_MAX_SIZE=
+export TOOLCHAIN_PREFIX=arm-buildroot-linux-gnueabi
+export BRCM_BACKUP_PSI=
+
+
+#export for rtl switch drv
+export DIR_LINUX := $(KERNEL_DIR)
+export DIR_ROOT := $(KERNEL_DIR)
+export DIR_BOARD := $(KERNEL_DIR)/boards
+
+export PLATFORM LIBDIR USRLIBDIR LINUX_VERSION CROSS_COMPILE 
+export VENDOR WIRELESS_DRIVER_VERSION WIRELESS_DRIVER_PATH WIRELESS_VENDORAPP_PATH WIRELESS_TENDAAPP_PATH
+export LINUXDIR = $(KERNEL_DIR)
+export INSTALL_MOD_PATH := $(ROMFS_PATH)/lib
+export PATH := $(CROSS_TOOLS_DIR)/bin/:$(TOOLS_PATH):$(PATH)
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/projects/hnd/tools/bcm/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/lib
+
+WLCFGDIR=$(LINUX_PATH)/drivers/net/wl/config
+
+CC          := $(CROSS_COMPILE)gcc 
+AS          := $(CROSS_COMPILE)as 
+CXX         := $(CROSS_COMPILE)g++ 
+AR          := $(CROSS_COMPILE)ar
+LD          := $(CROSS_COMPILE)ld
+OBJCOPY     := $(CROSS_COMPILE)objcopy
+RANLIB      := $(CROSS_COMPILE)ranlib
+STRIPTOOL   := $(CROSS_COMPILE)strip
+OBJCOPY     := $(CROSS_COMPILE)objcopy
+OBJDUMP	    := $(CROSS_COMPILE)objdump 
+SIZE        := $(CROSS_COMPILE)size 
+NM          := $(CROSS_COMPILE)nm 
+STRIP       := $(CROSS_COMPILE)strip
+CROSS_STRIP := $(STRIP)
+MAKE        := make
+
+OBJCOPYSREC := $(CROSS_COMPILE)objcopy -O srec -R .reginfo -R .note -R .comment -R .mdebug -S
+
+EXTRA_CFLAGS += -Dlinux 
+
+MAKEARCH_KERNEL = $(MAKE) VAR_ARCH=$(PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE)
+
+CFLAGS += -fPIC
+CFLAGS += -I$(TOP_PATH)/platform/$(SOLUTION_NAME)_release/include
+CFLAGS += -I$(TOP_PATH)/prod/agent/netctrl/
+CFLAGS += -I$(TOP_PATH)/prod/agent/netctrl/api/inc
+CFLAGS += -I$(TOP_PATH)/prod/agent/multiwan
+CFLAGS += -I$(TOP_PATH)/../cbb/km/user/include
+
+LDFLAGS_UGW = -L$(ROMFS_PATH)/lib  -liofdrv -L$(ROMFS_PATH)/usr/lib -lcommon -lm -lz -lpthread 
+ifeq ($(CONFIG_WIFI), y)
+ifeq ($(Realtek), y)
+LDFLAGS_UGW += -L$(ROMFS_PATH)/lib -lapmib -lrtlWifiSrc 
+endif
+LDFLAGS_UGW += -L$(ROMFS_PATH)/lib -lwshared  -lwifibase -lem_shared
+ifeq ($(CONFIG_TENDA_EASYMESH), y)
+LDFLAGS_UGW += -lem_shared
+endif
+endif
+
+LDFLAGS_UGW += -L$(ROMFS_PATH)/lib -lmsgapi -lkm  -lcm
+LDFLAGS_SQL = -lsqlite3
+
+#----16M Flash----
+FLASH_TOTAL_SIZE=8192
+MTD_BOOT_SIZE= 256
+MTD_CFM_SIZE = 64
+MTD_NVRAM_SIZE = 64 
+#burn bin
+MTD_CFG_OFFSET = 128
+MTD_KERNELFS_OFFSET = 192
+MTD_CFM_OFFSET = 8064
+MTD_CFM_BAK_OFFSET = 8128
+
+#产品软件唯一ID号
+CONFIG_FW_ID	= "0x00031017"
+include $(TOP_PATH)/module.mk

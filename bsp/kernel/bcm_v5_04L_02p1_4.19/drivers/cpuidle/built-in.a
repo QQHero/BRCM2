@@ -1,0 +1,12 @@
+!<thin>
+//                                              62        `
+cpuidle.o/
+driver.o/
+governor.o/
+sysfs.o/
+governors/ladder.o/
+/0              0           0     0     644     12100     `
+/11             0           0     0     644     4260      `
+/21             0           0     0     644     2816      `
+/33             0           0     0     644     10036     `
+/42             0           0     0     644     3264      `

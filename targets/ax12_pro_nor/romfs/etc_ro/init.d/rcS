@@ -1,0 +1,169 @@
+#! /bin/sh
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin/
+export PATH
+
+mount -t ramfs none /var/
+mount -t tmpfs none /data/
+
+
+mkdir -p /var/etc
+mkdir -p /var/media
+mkdir -p /var/webroot
+mkdir -p /var/etc/iproute
+mkdir -p /var/run
+mkdir -p /etc/udhcpc
+mkdir -p /var/debug
+
+cp -rf /etc_ro/eth_name_conf.txt /var/
+cp -rf /etc_ro/eth_to_port_config.txt /var/
+cp -rf /etc_ro/config_encrypt_pass /var/config_encrypt_pass
+cp -rf /etc_ro/rsa_public_key.pem /var/
+cp -rf /etc_ro/signed_key /var/
+cp -rf /etc_ro/* /etc/
+cp -rf /webroot_ro/* /webroot/
+cp -rf /etc_ro/speedtest-config.php /var/
+umount -f /tmp
+mount -t tmpfs none /tmp -o size=3M
+mount -a
+
+mount -t ramfs /dev
+mkdir /dev/pts
+mount -t devpts devpts /dev/pts
+mdev -s
+mkdir /var/run
+
+#/bin/cnsl_safe &
+/sbin/udevd &
+#echo '/sbin/mdev' > /proc/sys/kernel/hotplug
+#echo 'sd[a-z][0-9] 0:0 0660 @/usr/sbin/usb_up.sh $MDEV $DEVPATH' >> /etc/mdev.conf
+#echo '-sd[a-z] 0:0 0660 $/usr/sbin/usb_down.sh $MDEV $DEVPATH'>> /etc/mdev.conf
+#echo 'sd[a-z] 0:0 0660 @/usr/sbin/usb_up.sh $MDEV $DEVPATH'>> /etc/mdev.conf
+#echo '.* 0:0 0660 */usr/sbin/IppPrint.sh $ACTION $INTERFACE'>> /etc/mdev.conf
+
+mkdir -p /var/ppp
+
+#提前加载gpio模块使识别fem时不用等待轮询相当于sleep 6-8s
+insmod /lib/modules/gpio.ko
+/etc/gpio_conf
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/bpm/bcm96756/bcm_bpm.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/license/bcm96756/bcm_license.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/bcmlibs/bcm96756/bcmlibs.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/vlan/bcm96756/bcmvlan.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/chipinfo/bcm96756/chipinfo.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/ingqos/bcm96756/bcm_ingqos.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/pktflow/bcm96756/pktflow.ko
+
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/cmdlist/bcm96756/cmdlist.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/archer/bcm96756/archer.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/opensource/net/enet/bcm96756/bcm_enet.ko
+
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/opensource/char/mcast/bcm96756/bcmmcast.ko
+
+#insmod /lib/modules/4.1.52/kernel/bcmdrivers/opensource/bus/pci/host/bcm947622/bcm_pcie_hcd.ko
+
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/pwrmngt/bcm947622/pwrmngtd.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/opensource/char/plat-bcm/bcm96756/bcm_thermal.ko
+insmod /lib/modules/4.19.183/kernel/bcmdrivers/broadcom/char/otp/bcm96756/otp.ko
+
+#加载公共模块
+insmod /lib/modules/kmlib.ko
+#加载无线模块
+insmod /lib/modules/firmware_class.ko
+insmod /lib/modules/wlshared.ko
+insmod /lib/modules/cfg80211.ko
+insmod /lib/modules/wlcsm.ko
+insmod /lib/modules/bcm_pcie_hcd.ko
+insmod /lib/modules/hnd.ko
+insmod /lib/modules/emf.ko
+insmod /lib/modules/igs.ko
+
+
+
+NMTD=`cat /proc/mtd | grep CFG | cut -b 4`
+touch /data/.kernel_nvram.setting
+#驱动需要CFG分区的无线射频参数，在驱动起来前先将射频参数从cfg分区读到文件中，前8个字节为crc码，要跳过。拷贝64K，忽略开头8byte
+dd if=/dev/mtd$NMTD of=/etc/wlan_rfdata count=8192 ibs=8 skip=1
+# CFG分区为空时，拷贝对应射频参数，避免无线接口无法启动
+blank=`grep model /etc/wlan_rfdata && echo 0 || echo 1`
+echo "****** blank is "
+echo "$blank"
+echo "**********"
+if [ $blank -eq 1 ] ; then
+	#echo "apmib is blank, copy default apmib now"
+	#dd if=/etc/wlan/.kernel_nvram.setting of=/etc/wlan_rfdata
+	gpio43_value=$(cat /sys/devices/virtual/misc/ugw_gpio/gpio_base/fem_pin_1/status)
+	gpio44_value=$(cat /sys/devices/virtual/misc/ugw_gpio/gpio_base/fem_pin_2/status)
+	if [[ "$gpio44_value" == "1" && "$gpio43_value" == "1" ]] ; then
+		echo "******FEM: 5GSKY 24GKCT******"
+		mv "etc/wlan/.kernel_nvram.setting_AX12PRO_KCT8243HE&KCT8528HE" etc/wlan/.kernel_nvram.setting
+	else
+		echo "gpio43_value="$gpio43_value
+		echo "gpio44_value="$gpio44_value
+		mv "etc/wlan/.kernel_nvram.setting_AX12PRO_KCT8243HE&KCT8528HE" etc/wlan/.kernel_nvram.setting
+	fi
+		dd if=/etc/wlan/.kernel_nvram.setting of=/etc/wlan_rfdata
+else
+	cp /etc/wlan_rfdata /etc/wlan/.kernel_nvram.setting
+fi
+nvram kernelset /etc/wlan_rfdata
+nvram kcommit
+insmod /lib/modules/wl.ko intf_name=wl%d instance_base=0
+insmod /lib/modules/wifibase.ko
+insmod /lib/modules/private_ie.ko
+#wl模块加载完成后，使用wlaffinity脚本对wl0-kthrd及wl1-kthrd内核线程优先级及archer等参数进行配置
+wlaffinity auto
+
+insmod /lib/modules/phy_check.ko
+
+# 加载KM内核模块
+#insmod /lib/modules/fastnat.ko
+insmod /lib/modules/kmbase.ko
+insmod /lib/modules/eventscenter.ko
+insmod /lib/modules/bm.ko
+insmod /lib/modules/mac_group.ko
+insmod /lib/modules/mac_filter.ko
+insmod /lib/modules/url_filter.ko
+insmod /lib/modules/dnsredirect.ko
+insmod /lib/modules/ddos_ip_fence.ko
+insmod /lib/modules/autodiscover.ko
+insmod /lib/modules/nos.ko
+insmod /lib/modules/dhcp_options.ko
+
+
+ifconfig bcmsw up
+
+# mount debugfs for kernel log upload
+mount -t debugfs none /sys/kernel/debug
+
+#wan_interface 必须与km_hook中driver传递的dev_name一致
+echo "add;Wire:eth0" > /proc/km/wan_interface
+echo "add;Wire:eth1" > /proc/km/wan_interface
+echo "add;Wire:eth2" > /proc/km/wan_interface
+echo "add;Wire:eth3" > /proc/km/wan_interface
+echo "add;Wire:eth4" > /proc/km/wan_interface
+echo "add;Wire:wl0" > /proc/km/wan_interface
+echo "add;Wire:wl1" > /proc/km/wan_interface
+
+#解决tcp跑流跑不通的问题
+echo 1 > /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal
+# 创建设备文件
+make_static_devnodes.sh
+
+#关闭Archer流量管理特性，该特性主要是为了解决当外部switch口或无线以大于1Gbps的突发速率往6755方案wan或lan打流时存在的大量丢包问题，由于开启sysport_tm会影响到Smartbit及IxChariot等性能，是用户或其他厂商较关心的性能，但突发流量大于1Gbps场景在家用领域产品基本不存在，故在此处关闭处理
+archer sysport_tm disable
+
+# set WAN FLAG 
+ethswctl -c wan -i eth0 -o enable
+
+#设置协商次数失败为2次后降低协商速率协商（由高到底协商） 测试百兆6S
+ethctl eth0 ethernet@wirespeed enable
+ethctl eth1 ethernet@wirespeed enable
+ethctl eth2 ethernet@wirespeed enable
+ethctl eth3 ethernet@wirespeed enable
+ethctl eth4 ethernet@wirespeed enable
+
+#开启喂狗程序
+wdtctl -d -t 30 start
+
+monitor &

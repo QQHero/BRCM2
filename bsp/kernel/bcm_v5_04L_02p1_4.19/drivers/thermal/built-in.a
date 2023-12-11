@@ -1,0 +1,13 @@
+!<thin>
+//                                              80        `
+thermal_core.o/
+thermal_sysfs.o/
+thermal_helpers.o/
+of-thermal.o/
+step_wise.o/
+
+/0              0           0     0     644     24224     `
+/16            /0           0     0     644     14920     `
+/33             0           0     0     644     5012      `
+/52             0           0     0     644     13456     `
+/66             0           0     0     644     2984      `

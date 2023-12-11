@@ -1,0 +1,69 @@
+!<thin>
+//                                              416       `
+sock.o/
+request_sock.o/
+skbuff.o/
+datagram.o/
+stream.o/
+scm.o/
+gen_stats.o/
+gen_estimator.o/
+net_namespace.o/
+secure_seq.o/
+flow_dissector.o/
+sysctl_net_core.o/
+dev.o/
+ethtool.o/
+dev_addr_lists.o/
+dst.o/
+netevent.o/
+neighbour.o/
+rtnetlink.o/
+utils.o/
+link_watch.o/
+filter.o/
+sock_diag.o/
+dev_ioctl.o/
+tso.o/
+sock_reuseport.o/
+fib_notifier.o/
+xdp.o/
+net-sysfs.o/
+net-procfs.o/
+fib_rules.o/
+dst_cache.o/
+gro_cells.o/
+
+/0              0           0     0     644     67596     `
+/8              0           0     0     644     2212      `
+/24             0           0     0     644     83984     `
+/34             0           0     0     644     14920     `
+/46             0           0     0     644     6652      `
+/56             0           0     0     644     6220      `
+/63             0           0     0     644     7300      `
+/76            /0           0     0     644     5284      `
+/93            /0           0     0     644     20576     `
+/110            0           0     0     644     5980      `
+/124            0           0     0     644     18556     `
+/142            0           0     0     644     12948     `
+/161            0           0     0     644     169132    `
+/168            0           0     0     644     43220     `
+/179            0           0     0     644     15300     `
+/197            0           0     0     644     10604     `
+/204            0           0     0     644     2524      `
+/216            0           0     0     644     50560     `
+/229            0           0     0     644     61692     `
+/242            0           0     0     644     8544      `
+/251            0           0     0     644     5176      `
+/265            0           0     0     644     91992     `
+/275            0           0     0     644     10860     `
+/288            0           0     0     644     8640      `
+/301            0           0     0     644     3740      `
+/308            0           0     0     644     5664      `
+/326            0           0     0     644     6488      `
+/342            0           0     0     644     10392     `
+/349            0           0     0     644     36176     `
+/362            0           0     0     644     10264     `
+/376            0           0     0     644     18668     `
+/389            0           0     0     644     5124      `
+/402            0           0     0     644     4332      `

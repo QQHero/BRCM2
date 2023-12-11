@@ -1,0 +1,2710 @@
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96756REF1.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96756REF1.dts"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 1
+/dts-v1/;
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/linux_autoconf.h" 1
+# 4 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../boot_rsvdmem.dtsi" 1
+# 46 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../boot_rsvdmem.dtsi"
+/memreserve/ 0x00000000 (0x100000 + 0x0 + 0x8000);
+# 7 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+/ {
+
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi" 1
+# 1 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/arm-gic.h" 1
+# 9 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/arm-gic.h"
+# 1 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/irq.h" 1
+# 10 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/arm-gic.h" 2
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi" 2
+# 11 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi"
+model = "Broadcom BCM96756";
+compatible = "brcm,bcm96756";
+interrupt-parent = <&gic>;
+#address-cells = <1>;
+#size-cells = <1>;
+
+
+psci {
+ compatible = "arm,psci-0.2";
+ method = "smc";
+ cpu_off = <1>;
+ cpu_on = <2>;
+};
+# 39 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi"
+cpus {
+ #address-cells = <1>;
+ #size-cells = <0>;
+
+ CA7_0: cpu@0 {
+  device_type = "cpu";
+  compatible = "arm,cortex-a7";
+  reg = <0x0>;
+  next-level-cache = <&L2_0>;
+ };
+
+ CA7_1: cpu@1 {
+  device_type = "cpu";
+  compatible = "arm,cortex-a7";
+  reg = <0x1>;
+  next-level-cache = <&L2_0>;
+  enable-method = "psci";
+ };
+ CA7_2: cpu@2 {
+  device_type = "cpu";
+  compatible = "arm,cortex-a7";
+  reg = <0x2>;
+  next-level-cache = <&L2_0>;
+  enable-method = "psci";
+ };
+ CA7_3: cpu@3 {
+  device_type = "cpu";
+  compatible = "arm,cortex-a7";
+  reg = <0x3>;
+  next-level-cache = <&L2_0>;
+  enable-method = "psci";
+ };
+ L2_0: l2-cache0 {
+  compatible = "cache";
+ };
+};
+
+
+gic: interrupt-controller@81000000 {
+ compatible = "arm,cortex-a7-gic";
+ #interrupt-cells = <3>;
+ #address-cells = <0>;
+ interrupt-controller;
+ reg = <0x81001000 0x1000>,
+       <0x81002000 0x2000>;
+};
+
+timer {
+ compatible = "arm,armv7-timer";
+ interrupts = <1 13 ((((1 << (4)) - 1) << 8) | 8)>,
+        <1 14 ((((1 << (4)) - 1) << 8) | 8)>,
+        <1 11 ((((1 << (4)) - 1) << 8) | 8)>,
+        <1 10 ((((1 << (4)) - 1) << 8) | 8)>;
+ arm,cpu-registers-not-fw-configured = <1>;
+};
+
+pmu: pmu {
+ compatible = "arm,cortex-a7-pmu";
+ interrupts = <0 7 4>,
+   <0 8 4>,
+   <0 9 4>,
+   <0 10 4>;
+ interrupt-affinity = <&CA7_0>, <&CA7_1>,
+    <&CA7_2>, <&CA7_3>;
+};
+
+brcm-legacy {
+ compatible = "brcm,brcm-legacy";
+};
+
+memory@00000000 {
+ device_type = "memory";
+ reg = <0x0 0x8000000>;
+};
+# 16 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi" 1
+# 145 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
+reserved-memory {
+ #address-cells = <1>;
+ #size-cells = <1>;
+ ranges;
+
+ dt_reserved_cma: dt_reserved_cma {
+  compatible = "shared-dma-pool";
+  reusable;
+
+  reg = <0x0 0x0>;
+ };
+};
+
+plat_rsvmem_cached_device {
+ compatible = "brcm,plat-rsvmem";
+ dma-coherent;
+ memory-region = <&dt_reserved_cma>;
+# 187 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
+};
+
+plat_rsvmem_uncached_device {
+ compatible = "brcm,plat-rsvmem";
+ memory-region = <&dt_reserved_cma>;
+# 228 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
+  dt_reserved_dhd0:dt_reserved_dhd0 {
+  rsvd-size = <0x0B00000>;
+ };
+  dt_reserved_dhd1:dt_reserved_dhd1 {
+  rsvd-size = <0>;
+ };
+  dt_reserved_dhd2:dt_reserved_dhd2 {
+  rsvd-size = <0>;
+ };
+
+
+};
+# 19 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_clocks.dtsi" 1
+clocks: clocks {
+ compatible = "simple-bus";
+ #address-cells = <1>;
+ #size-cells = <1>;
+ ranges;
+ u-boot,dm-pre-reloc;
+
+ periph_osc: periph-osc {
+  compatible = "fixed-clock";
+  #clock-cells = <0>;
+  clock-frequency = <200000000>;
+  u-boot,dm-pre-reloc;
+ };
+ refclk50mhz: refclk50mhz {
+  compatible = "fixed-clock";
+  #clock-cells = <0>;
+  clock-frequency = <50000000>;
+ };
+ hsspi_pll: hsspi-pll {
+  compatible = "fixed-clock";
+  #clock-cells = <0>;
+  clock-frequency = <200000000>;
+  u-boot,dm-pre-reloc;
+ };
+};
+# 24 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/memc.dtsi" 1
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcmbca_memc_dt_bindings.h" 1
+# 3 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/memc.dtsi" 2
+# 28 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+ aliases {
+  serial0 = &uart0;
+  serial1 = &uart1;
+  serial2 = &uart2;
+  spi1 = &hsspi;
+  spinand0 = &spinand;
+  nand0 = &nand;
+  spinor0 = &spinor;
+  hs_serial0 = &hs_uart0;
+ };
+
+ chosen {
+  stdout-path = "serial0:115200n8";
+  bootargs = "console=ttyAMA0 earlyprintk debug irqaffinity=0 pci=pcie_bus_safe isolcpus=3 rootwait";
+ };
+
+
+
+
+ nand: nand {
+
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_nand7_1.dtsi" 1
+#address-cells = <1>;
+#size-cells = <0>;
+compatible = "brcm,nand-bcm63xx", "brcm,nand-bcmbca", "brcm,brcmnand-v7.1";
+reg = <0xff801800 0x400>, <0xff802000 0x10>, <0xff801C00 0x200>;
+reg-names = "nand", "nand-int-base", "nand-cache";
+parameter-page-big-endian = <0>;
+write-protect = <0>;
+status = "disabled";
+
+nandcs@0 {
+ compatible = "brcm,nandcs";
+ reg = <0>;
+ nand-on-flash-bbt;
+};
+# 56 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+
+ sdhci: sdhci {
+# 69 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_sdhci.dtsi" 1
+u-boot,dm-pre-reloc;
+compatible = "brcm,bcm63xx-sdhci";
+reg-names = "sdhci-base", "sdhci-topcfg", "sdhci-boot", "sdhci-ahbss-ctrl";
+reg = <0xff810000 0x100>,
+      <0xff810100 0x100>,
+      <0xff810200 0x40>,
+      <0xff810300 0x100>;
+interrupts = <0 86 4>;
+bus-width = <8>;
+no-1-8-v;
+status = "disabled";
+# 70 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ hs_uart0: hs_serial0 {
+  pinctrl-0 = <&hs_uart_cts_pin_3 &hs_uart_rts_pin_4 &hs_uart_sin_pin_5 &hs_uart_sout_pin_6>;
+  pinctrl-names = "default";
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_hs_uart.dtsi" 1
+compatible = "brcm,bcm63xx-hs-uart";
+
+
+
+
+reg-names = "hs_uart_base";
+reg = <0xff810400 0x1E0>;
+
+interrupts = <0 34 4>;
+clocks = <&periph_osc>;
+u-boot,dm-pre-reloc;
+status = "disabled";
+# 79 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+
+ rng: rng {
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_rng200.dtsi" 1
+compatible = "brcm,iproc-rng200";
+reg = <0xff800b80 0x30>;
+# 86 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+
+ pmc: pmc {
+# 98 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_pmc_3_2.dtsi" 1
+compatible = "brcm,bca-pmc-3-2";
+
+reg = <0x80301018 0x5080>,
+    <0x80320000 0x240>,
+    <0x80300400 0x5d0>,
+    <0x80380000 0x1000>;
+reg-names = "pmc", "procmon", "maestro", "dtcm";
+# 99 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+# 115 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+ boot_state: boot_state {
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_boot_state_v2.dtsi" 1
+u-boot,dm-pre-reloc;
+compatible = "brcm,bcmbca-bootstate-v2";
+reg = <0xff802628 0x4>, <0xff85a03c 0x4>;
+reg-names = "reset_reason", "reset_status";
+# 121 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ sysport: systemport@0x80490000 {
+  compatible = "brcm,bcmbca-systemport-v2.0";
+  reg-names = "systemport-rbuf-base", "systemport-rdma-base",
+    "systemport-tdma-base",
+    "systemport-gib-base",
+    "systemport-umac-base",
+    "systemport-topctrl-base";
+  reg = <0x80490400 0x14>,
+    <0x80492000 0x1258>,
+    <0x80494000 0x9ac>,
+    <0x80498000 0x18>,
+    <0x00000000 0x00>,
+    <0x80490000 0x34>;
+  ethsw = <&switch0>;
+ };
+
+
+
+ usb_ctrl: usb_ctrl {
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ctrl.dtsi" 1
+compatible = "brcm,bcmbca-usb-ctrl";
+
+reg-names = "usb-ctrl";
+reg = <0x8000c200 0x100>;
+
+status = "disabled";
+# 145 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ usb0_xhci: usb0_xhci {
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_xhci.dtsi" 1
+compatible = "brcm,bcmbca-xhci";
+
+
+
+
+
+reg-names = "usb-xhci";
+reg = <0x8000d000 0x8c7>;
+
+interrupts = <0 74 4>;
+usb3-lpm-capable;
+status = "disabled";
+# 152 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ usb0_ehci: usb0_ehci {
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ehci.dtsi" 1
+compatible = "brcm,bcmbca-ehci";
+
+reg-names = "usb-ehci";
+reg = <0x8000c300 0x100>;
+usb_port-id = <0>;
+interrupts = <0 73 4>;
+status = "disabled";
+# 160 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ usb1_ehci: usb1_ehci {
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ehci.dtsi" 1
+compatible = "brcm,bcmbca-ehci";
+
+reg-names = "usb-ehci";
+reg = <0x8000c500 0x100>;
+usb_port-id = <1>;
+interrupts = <0 73 4>;
+status = "disabled";
+# 168 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ usb0_ohci: usb0_ohci {
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ohci.dtsi" 1
+compatible = "brcm,bcmbca-ohci";
+
+reg-names = "usb-ohci";
+reg = <0x8000c400 0x100>;
+interrupts = <0 72 4>;
+usb_port-id = <0>;
+status = "disabled";
+# 176 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ usb1_ohci: usb1_ohci {
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ohci.dtsi" 1
+compatible = "brcm,bcmbca-ohci";
+
+reg-names = "usb-ohci";
+reg = <0x8000c600 0x100>;
+interrupts = <0 72 4>;
+usb_port-id = <1>;
+status = "disabled";
+# 184 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+ periph {
+  compatible = "simple-bus";
+  #address-cells = <1>;
+  #size-cells = <1>;
+  ranges = <0x0 0xff800000 0x100000>;
+
+  i2c0: i2c0@0xff802100 {
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_i2c_bus.dtsi" 1
+compatible = "brcm,bcm63000-i2c";
+#address-cells = <1>;
+#size-cells = <0>;
+reg = <0x2100 0x60>;
+status = "disabled";
+# 196 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+  i2c1: i2c1@0xff85a800 {
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_i2c_bus.dtsi" 1
+compatible = "brcm,bcm63000-i2c";
+#address-cells = <1>;
+#size-cells = <0>;
+reg = <0x5a800 0x60>;
+status = "disabled";
+# 202 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+
+  uart0: serial0 {
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
+#address-cells = <1>;
+#size-cells = <1>;
+compatible = "arm,pl011", "arm,primecell";
+reg = <0x12000 0x1000>;
+interrupts = <0 32 4>;
+clocks = <&refclk50mhz>, <&refclk50mhz>;
+clock = <50000000>;
+clock-names = "uartclk", "apb_pclk";
+status = "disabled";
+# 212 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+  uart1: serial1 {
+   pinctrl-0 = <&uart1_sin_pin_18 &uart1_sout_pin_19>;
+   pinctrl-names = "default";
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
+#address-cells = <1>;
+#size-cells = <1>;
+compatible = "arm,pl011", "arm,primecell";
+reg = <0x13000 0x1000>;
+interrupts = <0 33 4>;
+clocks = <&refclk50mhz>, <&refclk50mhz>;
+clock = <50000000>;
+clock-names = "uartclk", "apb_pclk";
+status = "disabled";
+# 223 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+  uart2: serial2 {
+   pinctrl-0 = <&uart2_sin_pin_20 &uart2_sout_pin_21>;
+   pinctrl-names = "default";
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
+#address-cells = <1>;
+#size-cells = <1>;
+compatible = "arm,pl011", "arm,primecell";
+reg = <0x15000 0x1000>;
+interrupts = <0 35 4>;
+clocks = <&refclk50mhz>, <&refclk50mhz>;
+clock = <50000000>;
+clock-names = "uartclk", "apb_pclk";
+status = "disabled";
+# 234 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+
+  timers: timers {
+
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_timer.dtsi" 1
+compatible = "brcm,bcm-timers";
+reg = <0x400 0x48>;
+interrupts = <0 11 4>,
+   <0 12 4>,
+   <0 13 4>,
+   <0 14 4>;
+# 245 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+  wdt1:watchdog@480 {
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_wdt.dtsi" 1
+compatible = "brcm,bcm96xxx-wdt", "brcm,bcm6345-wdt";
+reg = <0x480 0x10>;
+timeout-sec = <80>;
+clocks = <&refclk50mhz>;
+status = "disabled";
+# 252 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+
+
+
+  };
+
+  wdt2: watchdog@ff8004c0 {
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_wdt.dtsi" 1
+compatible = "brcm,bcm96xxx-wdt", "brcm,bcm6345-wdt";
+reg = <0x4c0 0x10>;
+timeout-sec = <80>;
+clocks = <&refclk50mhz>;
+status = "disabled";
+# 263 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+
+
+
+
+  };
+
+
+  wdt-reboot {
+   compatible = "wdt-reboot";
+   wdt = <&wdt1>;
+  };
+
+
+  sotp {
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_sotp.dtsi" 1
+compatible = "brcm,sotp";
+#address-cells = <1>;
+#size-cells = <0>;
+reg = <0xc00 0x84>;
+status = "okay";
+# 280 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+
+  pincontroller: pinctrl {
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_pinctrl.dtsi" 1
+compatible = "brcm,bcmbca-pinctrl";
+reg = <0x554 0xc>;
+pinctrl-npins = < 108 >;
+pinctrl-nfuncs = < 8 >;
+gpio-mux = <4>;
+# 290 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756-pinctrl.dtsi" 1
+pincontroller-functions {
+        spim_group_pins: spim_group_pinmux {
+            pins = <72 73 74>;
+            function = <1>;
+        };
+
+        usb0_pwr_pins: usb0_pwr_pinmux {
+            pins = <79 80>;
+            function = <1>;
+        };
+
+        usb1_pwr_pins: usb1_pwr_pinmux {
+            pins = <81 82>;
+            function = <1>;
+        };
+
+        rgmii_pins: rgmii_pinmux {
+            pins = <56 57 58 59 60 61 62 63 64 65 66 67>;
+            function = <1>;
+        };
+
+        a_rgmii_mdc_pin_68: a_rgmii_mdc_pinmux {
+            pins = <68>;
+            function = <1>;
+        };
+
+        a_rgmii_mdio_pin_69: a_rgmii_mdio_pinmux {
+            pins = <69>;
+            function = <1>;
+        };
+
+        nand_data_pins: nand_data_pinmux {
+            pins = <43 44 45 46 47 48 49 50>;
+            function = <1>;
+        };
+
+        nand_ctrl_pins: nand_ctrl_pinmux {
+            pins = <40 41 42 51 52 53>;
+            function = <1>;
+        };
+
+        emmc_ctrl_pins: emmc_ctrl_pinmux {
+            pins = <54 55>;
+            function = <1>;
+        };
+
+        a_i2c1_scl_pin_8: a_i2c1_scl_pinmux {
+            pins = <8>;
+            function = <3>;
+        };
+
+        a_i2c1_sda_pin_7: a_i2c1_sda_pinmux {
+            pins = <7>;
+            function = <3>;
+        };
+
+        a_pcm_clk_pin_24: a_pcm_clk_pinmux {
+            pins = <24>;
+            function = <1>;
+        };
+
+        a_pcm_fs_pin_25: a_pcm_fs_pinmux {
+            pins = <25>;
+            function = <1>;
+        };
+
+        a_pcm_sdin_pin_22: a_pcm_sdin_pinmux {
+            pins = <22>;
+            function = <1>;
+        };
+
+        a_pcm_sdout_pin_23: a_pcm_sdout_pinmux {
+            pins = <23>;
+            function = <1>;
+        };
+
+        a_per_led_00_pin_0: a_per_led_00_pinmux {
+            pins = <0>;
+            function = <2>;
+            crossbar-output = <0>;
+        };
+
+        a_per_led_01_pin_1: a_per_led_01_pinmux {
+            pins = <1>;
+            function = <2>;
+            crossbar-output = <1>;
+        };
+
+        a_per_led_02_pin_2: a_per_led_02_pinmux {
+            pins = <2>;
+            function = <2>;
+            crossbar-output = <2>;
+        };
+
+        a_per_led_03_pin_3: a_per_led_03_pinmux {
+            pins = <3>;
+            function = <2>;
+            crossbar-output = <3>;
+        };
+
+        a_per_led_04_pin_4: a_per_led_04_pinmux {
+            pins = <4>;
+            function = <2>;
+            crossbar-output = <4>;
+        };
+
+        a_per_led_05_pin_5: a_per_led_05_pinmux {
+            pins = <5>;
+            function = <2>;
+            crossbar-output = <5>;
+        };
+
+        a_per_led_06_pin_6: a_per_led_06_pinmux {
+            pins = <6>;
+            function = <2>;
+            crossbar-output = <6>;
+        };
+
+        a_per_led_07_pin_7: a_per_led_07_pinmux {
+            pins = <7>;
+            function = <2>;
+            crossbar-output = <7>;
+        };
+
+        a_per_led_08_pin_8: a_per_led_08_pinmux {
+            pins = <8>;
+            function = <2>;
+            crossbar-output = <8>;
+        };
+
+        a_per_led_09_pin_9: a_per_led_09_pinmux {
+            pins = <9>;
+            function = <2>;
+            crossbar-output = <9>;
+        };
+
+        a_per_led_10_pin_10: a_per_led_10_pinmux {
+            pins = <10>;
+            function = <2>;
+            crossbar-output = <10>;
+        };
+
+        a_per_led_11_pin_11: a_per_led_11_pinmux {
+            pins = <11>;
+            function = <2>;
+            crossbar-output = <11>;
+        };
+
+        a_per_led_12_pin_12: a_per_led_12_pinmux {
+            pins = <12>;
+            function = <2>;
+            crossbar-output = <12>;
+        };
+
+        a_per_led_13_pin_13: a_per_led_13_pinmux {
+            pins = <13>;
+            function = <2>;
+            crossbar-output = <13>;
+        };
+
+        a_per_led_14_pin_14: a_per_led_14_pinmux {
+            pins = <14>;
+            function = <2>;
+            crossbar-output = <14>;
+        };
+
+        a_per_led_15_pin_15: a_per_led_15_pinmux {
+            pins = <15>;
+            function = <2>;
+            crossbar-output = <15>;
+        };
+
+        a_per_led_16_pin_16: a_per_led_16_pinmux {
+            pins = <16>;
+            function = <2>;
+            crossbar-output = <16>;
+        };
+
+        a_per_led_17_pin_17: a_per_led_17_pinmux {
+            pins = <17>;
+            function = <2>;
+            crossbar-output = <17>;
+        };
+
+        a_per_led_18_pin_18: a_per_led_18_pinmux {
+            pins = <18>;
+            function = <2>;
+            crossbar-output = <18>;
+        };
+
+        a_per_led_19_pin_19: a_per_led_19_pinmux {
+            pins = <19>;
+            function = <2>;
+            crossbar-output = <19>;
+        };
+
+        a_per_led_20_pin_20: a_per_led_20_pinmux {
+            pins = <20>;
+            function = <2>;
+            crossbar-output = <20>;
+        };
+
+        a_per_led_21_pin_21: a_per_led_21_pinmux {
+            pins = <21>;
+            function = <2>;
+            crossbar-output = <21>;
+        };
+
+        a_per_led_22_pin_22: a_per_led_22_pinmux {
+            pins = <22>;
+            function = <2>;
+            crossbar-output = <22>;
+        };
+
+        a_per_led_23_pin_23: a_per_led_23_pinmux {
+            pins = <23>;
+            function = <2>;
+            crossbar-output = <23>;
+        };
+
+        a_per_led_24_pin_24: a_per_led_24_pinmux {
+            pins = <24>;
+            function = <2>;
+            crossbar-output = <24>;
+        };
+
+        a_per_led_25_pin_25: a_per_led_25_pinmux {
+            pins = <25>;
+            function = <2>;
+            crossbar-output = <25>;
+        };
+
+        a_per_led_26_pin_26: a_per_led_26_pinmux {
+            pins = <26>;
+            function = <2>;
+            crossbar-output = <26>;
+        };
+
+        a_per_led_27_pin_27: a_per_led_27_pinmux {
+            pins = <27>;
+            function = <2>;
+            crossbar-output = <27>;
+        };
+
+        a_per_led_28_pin_28: a_per_led_28_pinmux {
+            pins = <28>;
+            function = <2>;
+            crossbar-output = <28>;
+        };
+
+        a_per_led_29_pin_29: a_per_led_29_pinmux {
+            pins = <29>;
+            function = <2>;
+            crossbar-output = <29>;
+        };
+
+        a_per_led_30_pin_30: a_per_led_30_pinmux {
+            pins = <30>;
+            function = <2>;
+            crossbar-output = <30>;
+        };
+
+        a_per_led_31_pin_31: a_per_led_31_pinmux {
+            pins = <31>;
+            function = <2>;
+            crossbar-output = <31>;
+        };
+
+        b_i2c1_scl_pin_21: b_i2c1_scl_pinmux {
+            pins = <21>;
+            function = <3>;
+        };
+
+        b_i2c1_sda_pin_20: b_i2c1_sda_pinmux {
+            pins = <20>;
+            function = <3>;
+        };
+
+        b_pcm_clk_pin_13: b_pcm_clk_pinmux {
+            pins = <13>;
+            function = <0>;
+        };
+
+        b_pcm_fs_pin_14: b_pcm_fs_pinmux {
+            pins = <14>;
+            function = <0>;
+        };
+
+        b_pcm_sdin_pin_11: b_pcm_sdin_pinmux {
+            pins = <11>;
+            function = <0>;
+        };
+
+        b_pcm_sdout_pin_12: b_pcm_sdout_pinmux {
+            pins = <12>;
+            function = <0>;
+        };
+
+        b_per_led_00_pin_40: b_per_led_00_pinmux {
+            pins = <40>;
+            function = <2>;
+            crossbar-output = <0>;
+        };
+
+        b_per_led_01_pin_41: b_per_led_01_pinmux {
+            pins = <41>;
+            function = <2>;
+            crossbar-output = <1>;
+        };
+
+        b_per_led_02_pin_42: b_per_led_02_pinmux {
+            pins = <42>;
+            function = <2>;
+            crossbar-output = <2>;
+        };
+
+        b_per_led_03_pin_43: b_per_led_03_pinmux {
+            pins = <43>;
+            function = <2>;
+            crossbar-output = <3>;
+        };
+
+        b_per_led_04_pin_44: b_per_led_04_pinmux {
+            pins = <44>;
+            function = <2>;
+            crossbar-output = <4>;
+        };
+
+        b_per_led_05_pin_45: b_per_led_05_pinmux {
+            pins = <45>;
+            function = <2>;
+            crossbar-output = <5>;
+        };
+
+        b_per_led_06_pin_46: b_per_led_06_pinmux {
+            pins = <46>;
+            function = <2>;
+            crossbar-output = <6>;
+        };
+
+        b_per_led_07_pin_47: b_per_led_07_pinmux {
+            pins = <47>;
+            function = <2>;
+            crossbar-output = <7>;
+        };
+
+        b_per_led_08_pin_48: b_per_led_08_pinmux {
+            pins = <48>;
+            function = <2>;
+            crossbar-output = <8>;
+        };
+
+        b_per_led_09_pin_49: b_per_led_09_pinmux {
+            pins = <49>;
+            function = <2>;
+            crossbar-output = <9>;
+        };
+
+        b_per_led_10_pin_50: b_per_led_10_pinmux {
+            pins = <50>;
+            function = <2>;
+            crossbar-output = <10>;
+        };
+
+        b_per_led_11_pin_51: b_per_led_11_pinmux {
+            pins = <51>;
+            function = <2>;
+            crossbar-output = <11>;
+        };
+
+        b_per_led_12_pin_52: b_per_led_12_pinmux {
+            pins = <52>;
+            function = <2>;
+            crossbar-output = <12>;
+        };
+
+        b_per_led_13_pin_53: b_per_led_13_pinmux {
+            pins = <53>;
+            function = <2>;
+            crossbar-output = <13>;
+        };
+
+        b_per_led_14_pin_54: b_per_led_14_pinmux {
+            pins = <54>;
+            function = <2>;
+            crossbar-output = <14>;
+        };
+
+        b_per_led_15_pin_55: b_per_led_15_pinmux {
+            pins = <55>;
+            function = <2>;
+            crossbar-output = <15>;
+        };
+
+        b_per_led_16_pin_56: b_per_led_16_pinmux {
+            pins = <56>;
+            function = <2>;
+            crossbar-output = <16>;
+        };
+
+        b_per_led_17_pin_57: b_per_led_17_pinmux {
+            pins = <57>;
+            function = <2>;
+            crossbar-output = <17>;
+        };
+
+        b_per_led_18_pin_58: b_per_led_18_pinmux {
+            pins = <58>;
+            function = <2>;
+            crossbar-output = <18>;
+        };
+
+        b_per_led_19_pin_59: b_per_led_19_pinmux {
+            pins = <59>;
+            function = <2>;
+            crossbar-output = <19>;
+        };
+
+        b_per_led_20_pin_60: b_per_led_20_pinmux {
+            pins = <60>;
+            function = <2>;
+            crossbar-output = <20>;
+        };
+
+        b_per_led_21_pin_61: b_per_led_21_pinmux {
+            pins = <61>;
+            function = <2>;
+            crossbar-output = <21>;
+        };
+
+        b_per_led_22_pin_62: b_per_led_22_pinmux {
+            pins = <62>;
+            function = <2>;
+            crossbar-output = <22>;
+        };
+
+        b_per_led_23_pin_63: b_per_led_23_pinmux {
+            pins = <63>;
+            function = <2>;
+            crossbar-output = <23>;
+        };
+
+        b_per_led_24_pin_64: b_per_led_24_pinmux {
+            pins = <64>;
+            function = <2>;
+            crossbar-output = <24>;
+        };
+
+        b_per_led_25_pin_65: b_per_led_25_pinmux {
+            pins = <65>;
+            function = <2>;
+            crossbar-output = <25>;
+        };
+
+        b_per_led_26_pin_66: b_per_led_26_pinmux {
+            pins = <66>;
+            function = <2>;
+            crossbar-output = <26>;
+        };
+
+        b_per_led_27_pin_67: b_per_led_27_pinmux {
+            pins = <67>;
+            function = <2>;
+            crossbar-output = <27>;
+        };
+
+        b_per_led_28_pin_68: b_per_led_28_pinmux {
+            pins = <68>;
+            function = <2>;
+            crossbar-output = <28>;
+        };
+
+        b_per_led_29_pin_69: b_per_led_29_pinmux {
+            pins = <69>;
+            function = <2>;
+            crossbar-output = <29>;
+        };
+
+        c_i2c1_scl_pin_55: c_i2c1_scl_pinmux {
+            pins = <55>;
+            function = <3>;
+        };
+
+        c_i2c1_sda_pin_54: c_i2c1_sda_pinmux {
+            pins = <54>;
+            function = <3>;
+        };
+
+        c_pcm_clk_pin_34: c_pcm_clk_pinmux {
+            pins = <34>;
+            function = <3>;
+        };
+
+        c_pcm_fs_pin_35: c_pcm_fs_pinmux {
+            pins = <35>;
+            function = <3>;
+        };
+
+        c_pcm_sdin_pin_32: c_pcm_sdin_pinmux {
+            pins = <32>;
+            function = <3>;
+        };
+
+        c_pcm_sdout_pin_33: c_pcm_sdout_pinmux {
+            pins = <33>;
+            function = <3>;
+        };
+
+        ddr_uart_rx_pin_26: ddr_uart_rx_pinmux {
+            pins = <26>;
+            function = <3>;
+        };
+
+        ddr_uart_tx_pin_25: ddr_uart_tx_pinmux {
+            pins = <25>;
+            function = <3>;
+        };
+
+        d_pcm_clk_pin_65: d_pcm_clk_pinmux {
+            pins = <65>;
+            function = <3>;
+        };
+
+        d_pcm_fs_pin_66: d_pcm_fs_pinmux {
+            pins = <66>;
+            function = <3>;
+        };
+
+        d_pcm_sdin_pin_63: d_pcm_sdin_pinmux {
+            pins = <63>;
+            function = <3>;
+        };
+
+        d_pcm_sdout_pin_64: d_pcm_sdout_pinmux {
+            pins = <64>;
+            function = <3>;
+        };
+
+        ext_bp_0_pin_37: ext_bp_0_pinmux {
+            pins = <37>;
+            function = <3>;
+        };
+
+        ext_bp_1_pin_29: ext_bp_1_pinmux {
+            pins = <29>;
+            function = <3>;
+        };
+
+        hs_uart_cts_pin_3: hs_uart_cts_pinmux {
+            pins = <3>;
+            function = <1>;
+        };
+
+        hs_uart_rts_pin_4: hs_uart_rts_pinmux {
+            pins = <4>;
+            function = <1>;
+        };
+
+        hs_uart_sin_pin_5: hs_uart_sin_pinmux {
+            pins = <5>;
+            function = <1>;
+        };
+
+        hs_uart_sout_pin_6: hs_uart_sout_pinmux {
+            pins = <6>;
+            function = <1>;
+        };
+
+        i2c_scl_pin_17: i2c_scl_pinmux {
+            pins = <17>;
+            function = <1>;
+        };
+
+        i2c_sda_pin_16: i2c_sda_pinmux {
+            pins = <16>;
+            function = <1>;
+        };
+
+        i2s_rx_lrck_pin_23: i2s_rx_lrck_pinmux {
+            pins = <23>;
+            function = <0>;
+        };
+
+        i2s_rx_mclk_pin_24: i2s_rx_mclk_pinmux {
+            pins = <24>;
+            function = <0>;
+        };
+
+        i2s_rx_sclk_pin_22: i2s_rx_sclk_pinmux {
+            pins = <22>;
+            function = <0>;
+        };
+
+        i2s_rx_sdata_pin_13: i2s_rx_sdata_pinmux {
+            pins = <13>;
+            function = <1>;
+        };
+
+        i2s_tx_lrck_pin_12: i2s_tx_lrck_pinmux {
+            pins = <12>;
+            function = <1>;
+        };
+
+        i2s_tx_mclk_pin_14: i2s_tx_mclk_pinmux {
+            pins = <14>;
+            function = <1>;
+        };
+
+        i2s_tx_sclk_pin_11: i2s_tx_sclk_pinmux {
+            pins = <11>;
+            function = <1>;
+        };
+
+        i2s_tx_sdata_pin_15: i2s_tx_sdata_pinmux {
+            pins = <15>;
+            function = <1>;
+        };
+
+        nand_wp_pin_29: nand_wp_pinmux {
+            pins = <29>;
+            function = <1>;
+        };
+
+        ntr_pulse_in_pin_37: ntr_pulse_in_pinmux {
+            pins = <37>;
+            function = <1>;
+        };
+
+        pcie_clkreq_b_pin_77: pcie_clkreq_b_pinmux {
+            pins = <77>;
+            function = <1>;
+        };
+
+        pcie_rst_b_pin_78: pcie_rst_b_pinmux {
+            pins = <78>;
+            function = <1>;
+        };
+
+        pll_byp_clk_00_pin_84: pll_byp_clk_00_pinmux {
+            pins = <84>;
+            function = <5>;
+        };
+
+        pll_byp_clk_01_pin_85: pll_byp_clk_01_pinmux {
+            pins = <85>;
+            function = <5>;
+        };
+
+        pll_byp_clk_02_pin_86: pll_byp_clk_02_pinmux {
+            pins = <86>;
+            function = <5>;
+        };
+
+        pll_byp_clk_03_pin_87: pll_byp_clk_03_pinmux {
+            pins = <87>;
+            function = <5>;
+        };
+
+        pll_byp_clk_04_pin_88: pll_byp_clk_04_pinmux {
+            pins = <88>;
+            function = <5>;
+        };
+
+        pll_byp_clk_05_pin_89: pll_byp_clk_05_pinmux {
+            pins = <89>;
+            function = <5>;
+        };
+
+        pll_byp_clk_06_pin_90: pll_byp_clk_06_pinmux {
+            pins = <90>;
+            function = <5>;
+        };
+
+        pll_byp_clk_07_pin_91: pll_byp_clk_07_pinmux {
+            pins = <91>;
+            function = <5>;
+        };
+
+        pll_byp_clk_08_pin_92: pll_byp_clk_08_pinmux {
+            pins = <92>;
+            function = <5>;
+        };
+
+        pll_byp_clk_09_pin_93: pll_byp_clk_09_pinmux {
+            pins = <93>;
+            function = <5>;
+        };
+
+        pll_byp_clk_10_pin_94: pll_byp_clk_10_pinmux {
+            pins = <94>;
+            function = <5>;
+        };
+
+        pll_byp_clk_11_pin_95: pll_byp_clk_11_pinmux {
+            pins = <95>;
+            function = <5>;
+        };
+
+        reset_out_b_pin_83: reset_out_b_pinmux {
+            pins = <83>;
+            function = <1>;
+        };
+
+        ser_led_clk_pin_1: ser_led_clk_pinmux {
+            pins = <1>;
+            function = <1>;
+        };
+
+        ser_led_data_pin_0: ser_led_data_pinmux {
+            pins = <0>;
+            function = <1>;
+        };
+
+        ser_led_mask_pin_2: ser_led_mask_pinmux {
+            pins = <2>;
+            function = <1>;
+        };
+
+        sgmii_fiber_detect_pin_26: sgmii_fiber_detect_pinmux {
+            pins = <26>;
+            function = <1>;
+        };
+
+        sgmii_fiber_detect_p1_pin_67: sgmii_fiber_detect_p1_pinmux {
+            pins = <67>;
+            function = <0>;
+        };
+
+        sgmii_serdes_mod_def_pin_9: sgmii_serdes_mod_def_pinmux {
+            pins = <9>;
+            function = <3>;
+        };
+
+        sgmii_serdes_mod_def_p1_pin_66: sgmii_serdes_mod_def_p1_pinmux {
+            pins = <66>;
+            function = <0>;
+        };
+
+        spim_ss0_b_pin_75: spim_ss0_b_pinmux {
+            pins = <75>;
+            function = <1>;
+        };
+
+        spim_ss1_b_pin_76: spim_ss1_b_pinmux {
+            pins = <76>;
+            function = <1>;
+        };
+
+        spim_ss2_b_pin_10: spim_ss2_b_pinmux {
+            pins = <10>;
+            function = <1>;
+        };
+
+        spim_ss3_b_pin_9: spim_ss3_b_pinmux {
+            pins = <9>;
+            function = <1>;
+        };
+
+        spim_ss4_b_pin_8: spim_ss4_b_pinmux {
+            pins = <8>;
+            function = <1>;
+        };
+
+        spim_ss5_b_pin_7: spim_ss5_b_pinmux {
+            pins = <7>;
+            function = <1>;
+        };
+
+        spis_clk_pin_18: spis_clk_pinmux {
+            pins = <18>;
+            function = <1>;
+        };
+
+        spis_miso_pin_20: spis_miso_pinmux {
+            pins = <20>;
+            function = <1>;
+        };
+
+        spis_mosi_pin_21: spis_mosi_pinmux {
+            pins = <21>;
+            function = <1>;
+        };
+
+        spis_ss_b_pin_19: spis_ss_b_pinmux {
+            pins = <19>;
+            function = <1>;
+        };
+
+        sw_spi_clk_pin_32: sw_spi_clk_pinmux {
+            pins = <32>;
+            function = <2>;
+        };
+
+        sw_spi_miso_pin_35: sw_spi_miso_pinmux {
+            pins = <35>;
+            function = <2>;
+        };
+
+        sw_spi_mosi_pin_34: sw_spi_mosi_pinmux {
+            pins = <34>;
+            function = <2>;
+        };
+
+        sw_spi_ss_pin_33: sw_spi_ss_pinmux {
+            pins = <33>;
+            function = <2>;
+        };
+
+        sys_irq_out_pin_10: sys_irq_out_pinmux {
+            pins = <10>;
+            function = <0>;
+        };
+
+        testmode_0_pin_104: testmode_0_pinmux {
+            pins = <104>;
+            function = <7>;
+        };
+
+        testmode_1_pin_105: testmode_1_pinmux {
+            pins = <105>;
+            function = <7>;
+        };
+
+        testmode_2_pin_106: testmode_2_pinmux {
+            pins = <106>;
+            function = <7>;
+        };
+
+        uart0_sdin_pin_70: uart0_sdin_pinmux {
+            pins = <70>;
+            function = <1>;
+        };
+
+        uart0_sdout_pin_71: uart0_sdout_pinmux {
+            pins = <71>;
+            function = <1>;
+        };
+
+        uart1_sin_pin_18: uart1_sin_pinmux {
+            pins = <18>;
+            function = <0>;
+        };
+
+        uart1_sout_pin_19: uart1_sout_pinmux {
+            pins = <19>;
+            function = <0>;
+        };
+
+        uart2_sin_pin_20: uart2_sin_pinmux {
+            pins = <20>;
+            function = <0>;
+        };
+
+        uart2_sout_pin_21: uart2_sout_pinmux {
+            pins = <21>;
+            function = <0>;
+        };
+
+        upi_clk_pin_3: upi_clk_pinmux {
+            pins = <3>;
+            function = <3>;
+        };
+
+        upi_ena_pin_1: upi_ena_pinmux {
+            pins = <1>;
+            function = <3>;
+        };
+
+        upi_enb_pin_2: upi_enb_pinmux {
+            pins = <2>;
+            function = <3>;
+        };
+
+        upi_out_pin_0: upi_out_pinmux {
+            pins = <0>;
+            function = <3>;
+        };
+
+        upi_sw_en_pin_4: upi_sw_en_pinmux {
+            pins = <4>;
+            function = <3>;
+        };
+
+        usbd_vbus_present_pin_37: usbd_vbus_present_pinmux {
+            pins = <37>;
+            function = <2>;
+        };
+
+        wifi0_c0_femctrl_0_pin_84: wifi0_c0_femctrl_0_pinmux {
+            pins = <84>;
+            function = <1>;
+        };
+
+        wifi0_c0_femctrl_1_pin_85: wifi0_c0_femctrl_1_pinmux {
+            pins = <85>;
+            function = <1>;
+        };
+
+        wifi0_c0_femctrl_2_pin_86: wifi0_c0_femctrl_2_pinmux {
+            pins = <86>;
+            function = <1>;
+        };
+
+        wifi0_c0_femctrl_3_pin_87: wifi0_c0_femctrl_3_pinmux {
+            pins = <87>;
+            function = <1>;
+        };
+
+        wifi0_c0_femctrl_4_pin_88: wifi0_c0_femctrl_4_pinmux {
+            pins = <88>;
+            function = <1>;
+        };
+
+        wifi0_c0_femctrl_5_pin_89: wifi0_c0_femctrl_5_pinmux {
+            pins = <89>;
+            function = <1>;
+        };
+
+        wifi0_c1_femctrl_0_pin_90: wifi0_c1_femctrl_0_pinmux {
+            pins = <90>;
+            function = <1>;
+        };
+
+        wifi0_c1_femctrl_1_pin_91: wifi0_c1_femctrl_1_pinmux {
+            pins = <91>;
+            function = <1>;
+        };
+
+        wifi0_c1_femctrl_2_pin_92: wifi0_c1_femctrl_2_pinmux {
+            pins = <92>;
+            function = <1>;
+        };
+
+        wifi0_c1_femctrl_3_pin_93: wifi0_c1_femctrl_3_pinmux {
+            pins = <93>;
+            function = <1>;
+        };
+
+        wifi0_c1_femctrl_4_pin_94: wifi0_c1_femctrl_4_pinmux {
+            pins = <94>;
+            function = <1>;
+        };
+
+        wifi0_c1_femctrl_5_pin_95: wifi0_c1_femctrl_5_pinmux {
+            pins = <95>;
+            function = <1>;
+        };
+
+        wifi0_gci_gpio_0_pin_30: wifi0_gci_gpio_0_pinmux {
+            pins = <30>;
+            function = <1>;
+        };
+
+        wifi0_gci_gpio_1_pin_31: wifi0_gci_gpio_1_pinmux {
+            pins = <31>;
+            function = <1>;
+        };
+
+        wifi0_gci_gpio_2_pin_32: wifi0_gci_gpio_2_pinmux {
+            pins = <32>;
+            function = <1>;
+        };
+
+        wifi0_gci_gpio_3_pin_33: wifi0_gci_gpio_3_pinmux {
+            pins = <33>;
+            function = <1>;
+        };
+
+        wifi0_gci_gpio_4_pin_34: wifi0_gci_gpio_4_pinmux {
+            pins = <34>;
+            function = <1>;
+        };
+
+        wifi0_gpio_0_pin_10: wifi0_gpio_0_pinmux {
+            pins = <10>;
+            function = <3>;
+        };
+
+        wifi0_gpio_1_pin_11: wifi0_gpio_1_pinmux {
+            pins = <11>;
+            function = <3>;
+        };
+
+        wifi0_gpio_10_pin_24: wifi0_gpio_10_pinmux {
+            pins = <24>;
+            function = <3>;
+        };
+
+        wifi0_gpio_11_pin_76: wifi0_gpio_11_pinmux {
+            pins = <76>;
+            function = <3>;
+        };
+
+        wifi0_gpio_12_pin_79: wifi0_gpio_12_pinmux {
+            pins = <79>;
+            function = <3>;
+        };
+
+        wifi0_gpio_13_pin_80: wifi0_gpio_13_pinmux {
+            pins = <80>;
+            function = <3>;
+        };
+
+        wifi0_gpio_14_pin_81: wifi0_gpio_14_pinmux {
+            pins = <81>;
+            function = <3>;
+        };
+
+        wifi0_gpio_15_pin_82: wifi0_gpio_15_pinmux {
+            pins = <82>;
+            function = <3>;
+        };
+
+        wifi0_gpio_2_pin_12: wifi0_gpio_2_pinmux {
+            pins = <12>;
+            function = <3>;
+        };
+
+        wifi0_gpio_3_pin_13: wifi0_gpio_3_pinmux {
+            pins = <13>;
+            function = <3>;
+        };
+
+        wifi0_gpio_4_pin_14: wifi0_gpio_4_pinmux {
+            pins = <14>;
+            function = <3>;
+        };
+
+        wifi0_gpio_5_pin_15: wifi0_gpio_5_pinmux {
+            pins = <15>;
+            function = <3>;
+        };
+
+        wifi0_gpio_6_pin_16: wifi0_gpio_6_pinmux {
+            pins = <16>;
+            function = <3>;
+        };
+
+        wifi0_gpio_7_pin_17: wifi0_gpio_7_pinmux {
+            pins = <17>;
+            function = <3>;
+        };
+
+        wifi0_gpio_8_pin_22: wifi0_gpio_8_pinmux {
+            pins = <22>;
+            function = <3>;
+        };
+
+        wifi0_gpio_9_pin_23: wifi0_gpio_9_pinmux {
+            pins = <23>;
+            function = <3>;
+        };
+
+        wifi0_scl_pin_38: wifi0_scl_pinmux {
+            pins = <38>;
+            function = <1>;
+        };
+
+        wifi0_sda_pin_39: wifi0_sda_pinmux {
+            pins = <39>;
+            function = <1>;
+        };
+
+        wifi0_seci_in_pin_36: wifi0_seci_in_pinmux {
+            pins = <36>;
+            function = <1>;
+        };
+
+        wifi0_seci_out_pin_35: wifi0_seci_out_pinmux {
+            pins = <35>;
+            function = <1>;
+        };
+
+        wifi1_c0_femctrl_0_pin_96: wifi1_c0_femctrl_0_pinmux {
+            pins = <96>;
+            function = <1>;
+        };
+
+        wifi1_c0_femctrl_1_pin_97: wifi1_c0_femctrl_1_pinmux {
+            pins = <97>;
+            function = <1>;
+        };
+
+        wifi1_c0_femctrl_2_pin_98: wifi1_c0_femctrl_2_pinmux {
+            pins = <98>;
+            function = <1>;
+        };
+
+        wifi1_c0_femctrl_3_pin_99: wifi1_c0_femctrl_3_pinmux {
+            pins = <99>;
+            function = <1>;
+        };
+
+        wifi1_c0_femctrl_4_pin_100: wifi1_c0_femctrl_4_pinmux {
+            pins = <100>;
+            function = <1>;
+        };
+
+        wifi1_c0_femctrl_5_pin_101: wifi1_c0_femctrl_5_pinmux {
+            pins = <101>;
+            function = <1>;
+        };
+
+        wifi1_c1_femctrl_0_pin_102: wifi1_c1_femctrl_0_pinmux {
+            pins = <102>;
+            function = <1>;
+        };
+
+        wifi1_c1_femctrl_1_pin_103: wifi1_c1_femctrl_1_pinmux {
+            pins = <103>;
+            function = <1>;
+        };
+
+        wifi1_c1_femctrl_2_pin_104: wifi1_c1_femctrl_2_pinmux {
+            pins = <104>;
+            function = <1>;
+        };
+
+        wifi1_c1_femctrl_3_pin_105: wifi1_c1_femctrl_3_pinmux {
+            pins = <105>;
+            function = <1>;
+        };
+
+        wifi1_c1_femctrl_4_pin_106: wifi1_c1_femctrl_4_pinmux {
+            pins = <106>;
+            function = <1>;
+        };
+
+        wifi1_c1_femctrl_5_pin_107: wifi1_c1_femctrl_5_pinmux {
+            pins = <107>;
+            function = <1>;
+        };
+
+        wifi1_gci_gpio_0_pin_30: wifi1_gci_gpio_0_pinmux {
+            pins = <30>;
+            function = <0>;
+        };
+
+        wifi1_gci_gpio_1_pin_31: wifi1_gci_gpio_1_pinmux {
+            pins = <31>;
+            function = <0>;
+        };
+
+        wifi1_gci_gpio_2_pin_32: wifi1_gci_gpio_2_pinmux {
+            pins = <32>;
+            function = <0>;
+        };
+
+        wifi1_gci_gpio_3_pin_33: wifi1_gci_gpio_3_pinmux {
+            pins = <33>;
+            function = <0>;
+        };
+
+        wifi1_gci_gpio_4_pin_34: wifi1_gci_gpio_4_pinmux {
+            pins = <34>;
+            function = <0>;
+        };
+
+        wifi1_gpio_0_pin_0: wifi1_gpio_0_pinmux {
+            pins = <0>;
+            function = <0>;
+        };
+
+        wifi1_gpio_1_pin_1: wifi1_gpio_1_pinmux {
+            pins = <1>;
+            function = <0>;
+        };
+
+        wifi1_gpio_10_pin_25: wifi1_gpio_10_pinmux {
+            pins = <25>;
+            function = <0>;
+        };
+
+        wifi1_gpio_11_pin_26: wifi1_gpio_11_pinmux {
+            pins = <26>;
+            function = <0>;
+        };
+
+        wifi1_gpio_12_pin_29: wifi1_gpio_12_pinmux {
+            pins = <29>;
+            function = <0>;
+        };
+
+        wifi1_gpio_13_pin_37: wifi1_gpio_13_pinmux {
+            pins = <37>;
+            function = <0>;
+        };
+
+        wifi1_gpio_14_pin_54: wifi1_gpio_14_pinmux {
+            pins = <54>;
+            function = <0>;
+        };
+
+        wifi1_gpio_15_pin_55: wifi1_gpio_15_pinmux {
+            pins = <55>;
+            function = <0>;
+        };
+
+        wifi1_gpio_2_pin_2: wifi1_gpio_2_pinmux {
+            pins = <2>;
+            function = <0>;
+        };
+
+        wifi1_gpio_3_pin_3: wifi1_gpio_3_pinmux {
+            pins = <3>;
+            function = <0>;
+        };
+
+        wifi1_gpio_4_pin_4: wifi1_gpio_4_pinmux {
+            pins = <4>;
+            function = <0>;
+        };
+
+        wifi1_gpio_5_pin_5: wifi1_gpio_5_pinmux {
+            pins = <5>;
+            function = <0>;
+        };
+
+        wifi1_gpio_6_pin_6: wifi1_gpio_6_pinmux {
+            pins = <6>;
+            function = <0>;
+        };
+
+        wifi1_gpio_7_pin_7: wifi1_gpio_7_pinmux {
+            pins = <7>;
+            function = <0>;
+        };
+
+        wifi1_gpio_8_pin_8: wifi1_gpio_8_pinmux {
+            pins = <8>;
+            function = <0>;
+        };
+
+        wifi1_gpio_9_pin_9: wifi1_gpio_9_pinmux {
+            pins = <9>;
+            function = <0>;
+        };
+
+        wifi1_scl_pin_27: wifi1_scl_pinmux {
+            pins = <27>;
+            function = <0>;
+        };
+
+        wifi1_sda_pin_28: wifi1_sda_pinmux {
+            pins = <28>;
+            function = <0>;
+        };
+
+        wifi1_seci_in_pin_36: wifi1_seci_in_pinmux {
+            pins = <36>;
+            function = <0>;
+        };
+
+        wifi1_seci_out_pin_35: wifi1_seci_out_pinmux {
+            pins = <35>;
+            function = <0>;
+        };
+
+};
+# 291 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+  gpioc: gpioc {
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_gpio.dtsi" 1
+# 1 "./scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h" 1
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_gpio.dtsi" 2
+
+compatible = "brcm,bca-gpio";
+gpio-controller;
+#gpio-cells = <2>;
+reg = <0x500 0x20>, <0x520 0x20>;
+reg-names = "gpio-dir", "gpio-data";
+ngpios = <108>;
+gpio-ranges = <&pincontroller 0 0 108>;
+# 300 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+
+
+  bca_extintr: bca_extintr0 {
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_extintr.dtsi" 1
+# 1 "./scripts/dtc/include-prefixes/../../../bcmdrivers/opensource/include/bcm963xx/bcm_bca_extintr_dt_bindings.h" 1
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_extintr.dtsi" 2
+
+compatible = "brcm,bca-extintr";
+reg = <0x4 0x48>;
+num_ext_intr = <8>;
+# 308 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+   external_interrupts = <120 121 122 123 124 125 126 127>;
+  };
+
+  hsspi: spi@1000 {
+   pinctrl-0 = <&spim_group_pins>;
+   pinctrl-names = "default";
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_hsspi.dtsi" 1
+#address-cells = <1>;
+#size-cells = <0>;
+compatible = "brcm,bcm6328-hsspi";
+reg = <0x1000 0x600>;
+clocks = <&hsspi_pll>, <&hsspi_pll>;
+clock-names = "hsspi", "pll";
+spi-max-frequency = <100000000>;
+num-cs = <8>;
+cs-gpios = <0>, <0>;
+
+status = "disabled";
+# 318 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+   spinand: spi-nand@0 {
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_spinand.dtsi" 1
+#address-cells = <1>;
+#size-cells = <0>;
+compatible = "spi-nand";
+reg-names = "spi-nand";
+reg = <0>;
+spi-max-frequency = <100000000>;
+u-boot,dm-pre-reloc;
+status = "disabled";
+# 321 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+   };
+
+   voice7 {
+    pinctrl-0 = <&a_pcm_sdin_pin_22 &a_pcm_sdout_pin_23 &a_pcm_clk_pin_24 &a_pcm_fs_pin_25>;
+    pinctrl-names = "default";
+    compatible = "bcm-spi-voice";
+    reg = <7>;
+    spi-index = <7>;
+    spi-max-frequency = <1024000>;
+   };
+
+   spinor: spi-nor@0 {
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_spinor.dtsi" 1
+#address-cells = <1>;
+#size-cells = <0>;
+compatible = "jedec,spi-nor";
+reg = <0>;
+spi-max-frequency = <50000000>;
+label = "spi-nor.0";
+u-boot,dm-pre-reloc;
+status = "disabled";
+# 335 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+   };
+   };
+
+  led_ctrl: led_ctrl {
+# 367 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+   status = "okay";
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi" 1
+# 1 "./scripts/dtc/include-prefixes/../../../bcmdrivers/opensource/include/bcm963xx/bcm_bca_leds_dt_bindings.h" 1
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi" 2
+# 64 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi"
+compatible = "brcm,bca-cleds-ctrl";
+reg = <0x3000 0x4>, <0x3004 0x4>,
+    <0x3008 0x4>,<0x300c 0x4>,
+    <0x3010 0x4>, <0x3014 0x4>,
+    <0x301c 0x4>, <0x3020 0x200>,
+    <0x3444 0x4>, <0x3448 0x4>,
+    <0x3460 0x20>, <0x3454 0x4>,
+    <0x3018 0x4>;
+
+reg-names = "glbl_ctrl", "hw_en",
+    "ser_shift", "hw_polarity",
+    "sw_set", "sw_polarity",
+    "ch_activate", "ch_config",
+    "sw_clear", "sw_status",
+    "out_mux","ser_polarity",
+    "par_polarity";
+
+nleds = <32>;
+# 369 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756_leds.dtsi" 1
+
+port_0-led_0-bit_0 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(0)>; led = <(0)>; bit = <(0)>; status = "disabled"; };
+port_0-led_1-bit_1 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(0)>; led = <(1)>; bit = <(1)>; status = "disabled"; };
+port_0-led_2-bit_2 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(0)>; led = <(2)>; bit = <(2)>; status = "disabled"; };
+
+aggregate_link-bit_3 { compatible = "brcm,serial-cled"; hardware_led; crossbar; bit = <(3)>; status = "disabled"; };
+aggregate_activity-bit_7 { compatible = "brcm,serial-cled"; hardware_led; crossbar; bit = <(7)>; status = "disabled"; };
+
+usb-led_0-bit_8 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(-1)>; led = <(0)>; bit = <(8)>; status = "disabled"; };
+
+
+port_1-led_0-bit_4 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(2)>; led = <(0)>; bit = <(4)>; status = "disabled"; };
+port_1-led_1-bit_5 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(2)>; led = <(1)>; bit = <(5)>; status = "disabled"; };
+port_1-led_2-bit_6 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(2)>; led = <(2)>; bit = <(6)>; status = "disabled"; };
+
+
+port_5-led_0-bit_9 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(3)>; led = <(0)>; bit = <(9)>; status = "disabled"; };
+port_5-led_1-bit_10 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(3)>; led = <(1)>; bit = <(10)>; status = "disabled"; };
+port_5-led_2-bit_11 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(3)>; led = <(2)>; bit = <(11)>; status = "disabled"; };
+
+port_5-led_3-bit_12 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(3)>; led = <(3)>; bit = <(12)>; status = "disabled"; };
+
+
+port_6-led_0-bit_13 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(4)>; led = <(0)>; bit = <(13)>; status = "disabled"; };
+port_6-led_1-bit_14 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(4)>; led = <(1)>; bit = <(14)>; status = "disabled"; };
+port_6-led_2-bit_15 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(4)>; led = <(2)>; bit = <(15)>; status = "disabled"; };
+
+port_6-led_2-bit_16 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(4)>; led = <(3)>; bit = <(16)>; status = "disabled"; };
+
+
+
+
+sw_led-bit_0 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(0)>; status = "disabled"; };
+sw_led-bit_1 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(1)>; status = "disabled"; };
+sw_led-bit_2 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(2)>; status = "disabled"; };
+sw_led-bit_3 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(3)>; status = "disabled"; };
+sw_led-bit_4 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(4)>; status = "disabled"; };
+sw_led-bit_5 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(5)>; status = "disabled"; };
+sw_led-bit_6 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(6)>; status = "disabled"; };
+sw_led-bit_7 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(7)>; status = "disabled"; };
+sw_led-bit_8 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(8)>; status = "disabled"; };
+sw_led-bit_9 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(9)>; status = "disabled"; };
+sw_led-bit_10 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(10)>; status = "disabled"; };
+sw_led-bit_11 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(11)>; status = "disabled"; };
+sw_led-bit_12 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(12)>; status = "disabled"; };
+sw_led-bit_13 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(13)>; status = "disabled"; };
+sw_led-bit_14 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(14)>; status = "disabled"; };
+sw_led-bit_15 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(15)>; status = "disabled"; };
+sw_led-bit_16 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(16)>; status = "disabled"; };
+sw_led-bit_17 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(17)>; status = "disabled"; };
+sw_led-bit_18 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(18)>; status = "disabled"; };
+sw_led-bit_19 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(19)>; status = "disabled"; };
+sw_led-bit_20 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(20)>; status = "disabled"; };
+sw_led-bit_21 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(21)>; status = "disabled"; };
+sw_led-bit_22 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(22)>; status = "disabled"; };
+sw_led-bit_23 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(23)>; status = "disabled"; };
+sw_led-bit_24 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(24)>; status = "disabled"; };
+sw_led-bit_25 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(25)>; status = "disabled"; };
+sw_led-bit_26 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(26)>; status = "disabled"; };
+sw_led-bit_27 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(27)>; status = "disabled"; };
+sw_led-bit_28 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(28)>; status = "disabled"; };
+sw_led-bit_29 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(29)>; status = "disabled"; };
+sw_led-bit_30 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(30)>; status = "disabled"; };
+sw_led-bit_31 { compatible = "brcm,serial-cled"; software_led; crossbar; bit = <(31)>; status = "disabled"; };
+
+
+
+port_0-led-0 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(0)>; led = <(0)>; bit = <(0)>; pinctrl-names = "default"; status = "disabled"; };
+port_0-led-1 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(0)>; led = <(1)>; bit = <(1)>; pinctrl-names = "default"; status = "disabled"; };
+port_0-led-2 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(0)>; led = <(2)>; bit = <(2)>; pinctrl-names = "default"; status = "disabled"; };
+
+port_1-led-0 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(1)>; led = <(0)>; bit = <(4)>; pinctrl-names = "default"; status = "disabled"; };
+port_1-led-1 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(1)>; led = <(1)>; bit = <(5)>; pinctrl-names = "default"; status = "disabled"; };
+port_1-led-2 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(1)>; led = <(2)>; bit = <(6)>; pinctrl-names = "default"; status = "disabled"; };
+
+usb-led-0 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(-1)>; led = <(0)>; bit = <(8)>; pinctrl-names = "default"; status = "disabled"; };
+
+aggregate_link { compatible = "brcm,parallel-cled"; hardware_led; crossbar; bit = <(3)>; pinctrl-names = "default"; status = "disabled"; };
+aggregate_activity { compatible = "brcm,parallel-cled"; hardware_led; crossbar; bit = <(7)>; pinctrl-names = "default"; status = "disabled"; };
+
+
+port_5-led-0 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(0)>; bit = <(9)>; pinctrl-names = "default"; status = "disabled"; };
+port_5-led-1 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(1)>; bit = <(10)>; pinctrl-names = "default"; status = "disabled"; };
+port_5-led-2 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(2)>; bit = <(11)>; pinctrl-names = "default"; status = "disabled"; };
+port_5-led-3 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(3)>; bit = <(11)>; pinctrl-names = "default"; status = "disabled"; };
+
+port_6-led-0 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(0)>; bit = <(13)>; pinctrl-names = "default"; status = "disabled"; };
+port_6-led-1 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(1)>; bit = <(14)>; pinctrl-names = "default"; status = "disabled"; };
+port_6-led-2 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(2)>; bit = <(15)>; pinctrl-names = "default"; status = "disabled"; };
+port_6-led-3 { compatible = "brcm,parallel-cled"; hardware_led; crossbar; port = <(2)>; led = <(3)>; bit = <(16)>; pinctrl-names = "default"; status = "disabled"; };
+
+
+
+
+
+sw_led_00 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(0)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_01 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(1)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_02 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(2)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_03 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(3)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_04 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(4)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_05 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(5)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_06 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(6)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_07 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(7)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_08 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(8)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_09 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(9)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_10 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(10)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_11 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(11)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_12 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(12)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_13 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(13)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_14 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(14)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_15 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(15)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_16 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(16)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_17 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(17)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_18 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(18)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_19 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(19)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_20 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(20)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_21 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(21)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_22 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(22)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_23 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(23)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_24 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(24)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_25 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(25)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_26 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(26)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_27 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(27)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_28 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(28)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_29 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(29)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_30 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(30)>; pinctrl-names = "default"; status = "disabled"; };
+sw_led_31 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(31)>; pinctrl-names = "default"; status = "disabled"; };
+# 370 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+  };
+ };
+
+ legacy_leds: legacy_leds {
+  compatible = "brcm,legacy-led";
+ };
+
+
+ ubus@ff800000 {
+  compatible = "simple-bus";
+  #address-cells = <1>;
+  #size-cells = <1>;
+  ranges = <0 0xff800000 0x7fffff>;
+
+
+  i2s: bcm63xx-i2s {
+   compatible = "brcm,bcm63xx-i2s";
+   reg = <0x2080 0x7f>;
+   interrupts = <0 78 4>;
+   clocks = <&i2stxclk>,<&i2srxclk>,<&osc>;
+   clock-names = "i2stxclk","i2srxclk","i2sosc";
+  };
+
+  pcm: bcm63xx-pcm {
+   compatible = "brcm,bcm63xx-pcm";
+   reg = <0x60C00 0x1060>;
+   interrupts = <0 116 4>,<0 117 4>;
+   clocks = <&pcmclk>, <&pcm_osc>;
+   clock-names = "pcmclk","pcmosc";
+  };
+ };
+
+ mdio_sf2: mdio_sf2 {
+  compatible = "simple-bus";
+  bus-type = "DSL_ETHSW";
+
+  #address-cells = <1>;
+  #size-cells = <0>;
+
+  phy_ge:8 {
+   compatible = "brcm,bcaphy";
+   reg = <0x8>;
+   phy-type = "EGPHY";
+  };
+  phy_rgmii:rgmii {
+   compatible = "brcm,bcaphy";
+   phy-type = "EGPHY";
+   reg = <25>;
+   status = "disabled";
+   phy-external;
+  };
+  phy_cascade0:cascade0 {
+   compatible = "brcm,bcaphy";
+   phy-type = "EXT3";
+   reg = <31>;
+   status = "disabled";
+   phy-external;
+  };
+  phy_cascade1:cascade1 {
+   compatible = "brcm,bcaphy";
+   phy-type = "EXT3";
+   reg = <30>;
+   status = "disabled";
+   phy-external;
+  };
+  phy_serdes0:serdes0 {
+   compatible = "brcm,bcaphy";
+   phy-type = "5GAE";
+   reg = <6>;
+   serdes-core = <0>;
+   serdes-lane = <0>;
+   status = "okay";
+  };
+
+  phy_serdes1:serdes1 {
+   compatible = "brcm,bcaphy";
+   phy-type = "5GAE";
+   reg = <7>;
+   serdes-core = <0>;
+   serdes-lane = <1>;
+   status = "okay";
+  };
+ };
+
+ switch0:sf2@80400000 {
+  compatible = "brcm,enet", "brcm,bcmbca-sf2";
+  label = "bcmsw";
+  sw-type = "SF2_SW";
+
+  phy_base = <0x8>;
+  phy_wkard_timeout = <25000>;
+  reg-names = "switchcore-base",
+     "switchreg-base",
+     "switchmdio-base",
+     "sphy-ctrl",
+     "phy-test-ctrl";
+
+  reg = <0x80400000 0x72724>,
+   <0x80480000 0x444>,
+   <0x804805c0 0x10>,
+   <0x80480024 0x04>,
+   <0x80480018 0x04>;
+
+  ports {
+   #address-cells = <1>;
+   #size-cells = <0>;
+
+   port0@0 {
+    phy-handle = <&phy_ge>;
+    reg = <0>;
+    mac-type = "SF2MAC";
+    phy-mode = "gmii";
+    gmii-direct;
+    status = "disabled";
+   };
+   port1@1 {
+    phy-handle = <&phy_rgmii>;
+    reg = <1>;
+    mac-type = "SF2MAC";
+    phy-mode = "rgmii";
+    status = "disabled";
+   };
+   port5@5 {
+    phy-handle = <&phy_serdes0>;
+    reg = <5>;
+    mac-type = "SF2MAC";
+    phy-mode = "serdes";
+    status = "disabled";
+   };
+   port6@6 {
+    phy-handle = <&phy_serdes1>;
+    reg = <6>;
+    mac-type = "SF2MAC";
+    phy-mode = "serdes";
+    status = "disabled";
+   };
+   port8@8 {
+    management;
+    reg = <8>;
+    mac-type = "SF2MAC";
+    phy-mode = "gmii";
+    gmii-direct;
+    status = "okay";
+   };
+  };
+ };
+
+ mdiosf2 {
+  compatible = "brcm,mdio-sf2";
+  reg = <0x804805c0 0x10>,
+        <0x80480000 0x4>;
+ };
+
+ rgmii: rgmii {
+  compatible = "brcm,rgmii7";
+  reg = <0x804800EC 0x44>,
+        <0xFF800500 0x78>;
+ };
+
+ ephyled {
+     compatible = "brcm,ephy-led";
+            led_reg_max=<0x8>;
+            reg-names = "aggregate_ctrl", "led_reg_0", "led_reg_1", "led_reg_5", "led_reg_6";
+            reg = <0x804800c4 0x4>, < 0x80480040 0x4>, < 0x8048004c 0x4>, < 0x8048007c 0x4>, < 0x80480088 0x4>;
+ };
+
+ cs4345 {
+  compatible = "crus,cs4345-dac";
+ };
+
+
+
+ pcie: pcie {
+  compatible = "brcm,bcm-pcie";
+  device_type = "cpci";
+  brcm,pllclkid = <0x0>;
+ };
+
+ pcie1: pcie@85000000 {
+  compatible = "brcm,bcm963xx-vpcie";
+  device_type = "vpci";
+  reg = <0x85000000 0x01000000>,
+     <0x86000000 0x01000000>;
+
+  brcm,coreid = <1>;
+ };
+
+ pcie0: pcie0 {
+
+
+
+
+
+
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_pcie_core.dtsi" 1
+compatible = "brcm,bcm963xx-pcie";
+device_type = "pci";
+reg = <0x80040000 0x0000A000>;
+
+#address-cells = <3>;
+#size-cells = <2>;
+ranges = <0x02000000 0 0xc0000000 0xc0000000 0 0x20000000>;
+
+
+interrupt-names = "intr";
+interrupts = <0 43 4>;
+
+#interrupt-cells = <1>;
+interrupt-map-mask = <0 0 0 0>;
+interrupt-map = <0 0 0 0 &gic 0 43 4>;
+
+brcm,coreid = <0>;
+
+status = "disabled";
+# 565 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+ };
+
+
+
+ therm0: brcm-therm {
+  compatible = "brcm,therm";
+  status = "okay";
+ };
+};
+
+
+&clocks {
+ i2s_clkmclk_syscon: i2s_clkmclk_syscon@0xFF802080 {
+  compatible = "brcm,i2s-audio-clkmclk-syscon", "syscon";
+  reg = <0xFF802080 0x80>;
+ };
+
+ osc: oscillator {
+  #clock-cells = <0>;
+  compatible = "fixed-clock";
+  clock-frequency = <200000000>;
+ };
+
+ i2stxclk: i2stxclk@0x80158000 {
+  #clock-cells = <0>;
+  compatible = "brcm,i2s-tx-clock";
+  clocks = <&osc>;
+  clk-mclk-syscon = <&i2s_clkmclk_syscon>;
+  clock-tx-output-names = "i2s_tx_clk";
+ };
+
+ i2srxclk: i2srxclk@0x80158000 {
+  #clock-cells = <0>;
+  compatible = "brcm,i2s-rx-clock";
+  clocks = <&osc>;
+  clk-mclk-syscon = <&i2s_clkmclk_syscon>;
+  clock-rx-output-names = "i2s_rx_clk";
+ };
+
+ pcm_nco_syscon: pcm_nco_syscon@0xFF860C00 {
+  compatible = "brcm,pcm-audio-clknco-syscon", "syscon";
+  reg = <0xFF860C00 0x50>;
+ };
+
+ pcm_osc: pcm_osc {
+  #clock-cells = <0>;
+  compatible = "fixed-clock";
+  clock-frequency = <200000000>;
+ };
+
+ pcm_endianness_syscon: pcm_endianness_syscon@0x83010a00 {
+  compatible = "brcm,pcm-endian-syscon", "syscon";
+  reg = <0x83010a00 0x01>;
+ };
+
+ pcmclk: pcmclk@0xFF860C00 {
+  #clock-cells = <0>;
+  compatible = "brcm,pcm-clock";
+  clocks = <&pcm_osc>;
+  clk-nco-syscon = <&pcm_nco_syscon>;
+  pcm-endian-syscon = <&pcm_endianness_syscon>;
+  clock-output-names = "pcm_clk";
+ };
+};
+
+&nand {
+ status = "okay";
+};
+
+&hsspi {
+ status = "okay";
+};
+
+&spinand {
+ status = "okay";
+};
+
+&spinor {
+ status = "okay";
+};
+
+&sdhci {
+ status = "okay";
+};
+# 662 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+&uart0 {
+ status = "okay";
+};
+
+&wdt1 {
+ status = "okay";
+};
+
+&pcie0 {
+ status = "okay";
+};
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96756REF1.dts" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_voice.dtsi" 1
+# 65 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_voice.dtsi"
+/ {
+    bcm_voice: bcm_voice {
+         sliclist = "NOSLIC";
+    };
+};
+# 3 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96756REF1.dts" 2
+
+/ {
+ memory_controller {
+  memcfg = <(11 | (4 << 8) | (1 << 5) | (0 << 18) | (1 << 30)|(1 << 12))>;
+
+
+
+
+ };
+
+ buttons {
+  compatible = "brcm,buttons";
+  ses_button {
+   ext_irq = <&bca_extintr 4 (0x1 << 1) ((0x0 << 1) | (0x1 << 2))>;
+   release {
+    ses_short_period = <0>;
+    ses_long_period = <3>;
+   };
+  };
+ };
+
+ switch_sf2_ext:0 {
+ };
+
+};
+
+&sysport {
+    ethsw_ext = <&switch_sf2_ext>;
+};
+
+&i2c0 {
+ pinctrl-names="default";
+ pinctrl-0 = <&i2c_sda_pin_16 &i2c_scl_pin_17>;
+ status = "okay";
+
+ #address-cells = <1>;
+ #size-cells = <0>;
+ codec_playback:codec_palyback@18{
+  compatible = "ti,tlv320dac3203";
+  reg = <0x18>;
+ };
+ codec_capture:codec_capture@4e{
+  compatible = "ti,tlv320adc5140";
+  reg = <0x4e>;
+ };
+};
+
+&mdio_sf2 {
+ phy_ge:8 {
+  status = "okay";
+ };
+
+ phy_m2m:m2m {
+  compatible = "brcm,bcaphy";
+  phy-type = "MAC2MAC";
+  reg = <1>;
+  status = "okay";
+  phy-extswitch;
+ };
+
+
+ sf2_gphy0:0 {
+  compatible = "brcm,bcaphy";
+  phy-type = "EGPHY";
+  reg = <0>;
+  status = "okay";
+ };
+ sf2_gphy1:1 {
+  compatible = "brcm,bcaphy";
+  phy-type = "EGPHY";
+  reg = <1>;
+  status = "okay";
+ };
+ sf2_gphy2:2 {
+  compatible = "brcm,bcaphy";
+  phy-type = "EGPHY";
+  reg = <2>;
+  status = "okay";
+ };
+ sf2_gphy3:3 {
+  compatible = "brcm,bcaphy";
+  phy-type = "EGPHY";
+  reg = <3>;
+  status = "okay";
+ };
+};
+
+
+&switch_sf2_ext {
+ unit = <1>;
+ sw-type = "SF2_SW";
+
+ compatible = "brcm,bcmbca-extsw";
+ reg-names ="parent-rgmii-ctrl",
+            "parent-gpio-pad-ctrl";
+ reg = <0x804800ec 0x44>,
+       <0xff800500 0x78>;
+ switch-reset = <&gpioc 10 1>;
+
+ ports {
+  #address-cells = <1>;
+  #size-cells = <0>;
+
+  sf2_port0@0 {
+   phy-handle = <&sf2_gphy0>;
+   reg = <0>;
+   mac-type = "SF2MAC";
+   phy-mode = "gmii";
+   gmii-direct;
+   status = "okay";
+  };
+  sf2_port1@1 {
+   phy-handle = <&sf2_gphy1>;
+   reg = <1>;
+   mac-type = "SF2MAC";
+   phy-mode = "gmii";
+   gmii-direct;
+   status = "okay";
+  };
+  sf2_port2@2 {
+   phy-handle = <&sf2_gphy2>;
+   reg = <2>;
+   mac-type = "SF2MAC";
+   phy-mode = "gmii";
+   gmii-direct;
+   status = "okay";
+  };
+  sf2_port3@3 {
+   phy-handle = <&sf2_gphy3>;
+   reg = <3>;
+   mac-type = "SF2MAC";
+   phy-mode = "gmii";
+   gmii-direct;
+   status = "okay";
+  };
+  sf2_port8@8 {
+   management;
+   reg = <8>;
+   mac-type = "SF2MAC";
+   shrink-ipg;
+   phy-mode = "gmii";
+   gmii-direct;
+   status = "okay";
+  };
+ };
+};
+
+&switch0 {
+ pinctrl-names = "default", "rgmii";
+ pinctrl-0 = <&a_rgmii_mdc_pin_68 &a_rgmii_mdio_pin_69 &rgmii_pins>;
+ pinctrl-1 = <&rgmii_pins>;
+
+ ports {
+  port0@0 {
+   phy-handle = <&phy_ge>;
+   status = "okay";
+  };
+  port1@1 {
+   phy-handle = <&phy_m2m>;
+   mii-pinctrl-state = "rgmii";
+   phy-mode = "rgmii";
+   rgmii-3p3v;
+   rx-delay;
+   tx-delay;
+   link = <&switch_sf2_ext>;
+   shrink-ipg;
+   status = "okay";
+  };
+ };
+};
+
+&usb_ctrl {
+ pinctrl-names="default";
+ pinctrl-0 = <&usb0_pwr_pins &usb1_pwr_pins>;
+ pwron-bias-pull-up;
+ status = "okay";
+ xhci-enable;
+};
+
+&usb0_xhci {
+ status = "okay";
+};
+
+&usb0_ehci {
+ status = "okay";
+};
+
+&usb1_ehci {
+ status = "okay";
+};
+
+&usb0_ohci {
+ status = "okay";
+};
+
+&usb1_ohci {
+ status = "okay";
+};
+
+&legacy_leds {
+ wl-sess-led = <&led2>;
+ wl0-led = <&led3>;
+ wl1-led = <&led4>;
+};
+&led_ctrl {
+ led0: port_0-led-0 {
+  active_high;
+  link = <(0x00000002|0x00000004)>;
+  pinctrl-0=<&a_per_led_00_pin_0>;
+  status = "okay";
+ };
+ led1: port_0-led-2 {
+  active_low;
+  activity = <((0x00000001 | 0x00000002) | 0x00000004)>;
+  pinctrl-0=<&a_per_led_03_pin_3>;
+  status = "okay";
+ };
+ led2: sw_led_01 {
+  active_low;
+  pinctrl-0=<&a_per_led_01_pin_1>;
+  status = "okay";
+ };
+ led3:led_gpio_7 {
+  compatible = "brcm,gpio-led";
+  software_led;
+  pin = <7>;
+  active_low;
+ };
+ led4:led_gpio_36 {
+  compatible = "brcm,gpio-led";
+  software_led;
+  pin = <36>;
+  active_low;
+ };
+};
+
+&bcm_voice{
+ sliclist = "NOSLIC", "SI32172_ISI_LQC", "SI32173_ISI_LQC", "SI32182_ISI_CB", "SI32192_ISI_CB", "SI32280_ISI_CB", "SI32281_ISI_CB", "SI32284_ISI_CB", "SI32267", "LE88536_ZSI", "LE9641_ZSI_BB", "LE9642_ZSI_BB", "LE9642_ZSI_IB", "LE9642_ZSI_TB", "LE9652_ZSI_IB", "LE9643_ZSI_IB", "LE9661_ZSI", "LE9661_ZSI_BB", "LE9662_ZSI", "LE9662_ZSI_BB", "LE9672_ZSI", "ZL88702_ZSI", "LE89116", "LE88506", "LE9653_IB", "LE9622_IB", "ZL88601", "ZL88601x2", "SI32176", "SI32176_LCQC", "SI32282_CB", "SI32184_CB", "SI32286_CB", "SI32260", "Si32260_LCUB", "Si32260_LCQC";
+};
+
+&hsspi {
+ voice0 {
+  pinctrl-0 = <&spim_ss1_b_pin_76>;
+  pinctrl-names = "default";
+  compatible = "bcm-spi-voice";
+  reg = <1>;
+  spi-max-frequency = <1024000>;
+  reset-gpio = <&gpioc 26 1>;
+  spi-index = <0>;
+ };
+ voice1 {
+  pinctrl-0 = <&spim_ss2_b_pin_10>;
+  pinctrl-names = "default";
+  compatible = "bcm-spi-voice";
+  reg = <2>;
+  spi-max-frequency = <1024000>;
+
+  spi-index = <1>;
+ };
+};
+
+&i2s {
+   pinctrl-0 = <&i2s_tx_sclk_pin_11 &i2s_tx_lrck_pin_12 &i2s_tx_sdata_pin_15 &i2s_tx_mclk_pin_14 &i2s_rx_sclk_pin_22 &i2s_rx_lrck_pin_23 &i2s_rx_sdata_pin_13 &i2s_rx_mclk_pin_24>;
+   pinctrl-names = "default";
+   status = "okay";
+};

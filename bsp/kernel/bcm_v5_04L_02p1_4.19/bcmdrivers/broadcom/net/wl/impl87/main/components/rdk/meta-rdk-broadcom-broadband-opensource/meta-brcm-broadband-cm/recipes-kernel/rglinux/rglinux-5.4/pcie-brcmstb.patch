@@ -1,0 +1,27 @@
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index b727cb966..34610d4af 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -60,6 +60,8 @@
+ #define PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK	0x80
+ #define PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK	0x400
+ 
++#define PCIE_MISC_MISC_CTRL_PCIE_IN_CPL_RO_MASK		0x20
++
+ #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
+ #define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
+ #define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
+@@ -1146,6 +1148,13 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 		PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK);
+ 	writel(tmp, base + PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1);
+ 
++	/* Turn on relaxed read ordering to avoid deadlock where reads were
++	 * blocked by writes
++	 */
++	tmp = readl(base + PCIE_MISC_MISC_CTRL);
++	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_PCIE_IN_CPL_RO_MASK);
++	writel(tmp, base + PCIE_MISC_MISC_CTRL);
++
+ 	return 0;
+ }
+ 

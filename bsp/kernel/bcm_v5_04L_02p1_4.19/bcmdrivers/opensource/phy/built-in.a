@@ -1,0 +1,51 @@
+!<thin>
+//                                              2342      `
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/mac_drv.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/bus_drv.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_mii.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_brcm.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/dt_access.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/dt_parsing.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_crossbar.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/brcm_rgmii.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/bus_drv_sf2.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/mdio_drv_common.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/mdio_drv_sf2.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/mac_drv_sf2.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/Serdes6756Class/merlin28_shortfin_config.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_dsl_phy.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_dsl_serdes.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_dsl_i2c.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_dsl_848xx.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_6756class_serdes.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_drv_ext3.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_mac_sec.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/phy_mac_sec_list.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/sha256.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmdrivers/opensource/phy/ephy_led_init.o/
+
+/0              0           0     0     644     5628      `
+/91             0           0     0     644     2264      `
+/182            0           0     0     644     32496     `
+/273            0           0     0     644     4848      `
+/368            0           0     0     644     18520     `
+/464            0           0     0     644     3248      `
+/557            0           0     0     644     9940      `
+/651            0           0     0     644     21596     `
+/751            0           0     0     644     8128      `
+/845            0           0     0     644     2064      `
+/940            0           0     0     644     2572      `
+/1039           0           0     0     644     5876      `
+/1135           0           0     0     644     16404     `
+/1230           0           0     0     644     72680     `
+/1354           0           0     0     644     7168      `
+/1453           0           0     0     644     19184     `
+/1555           0           0     0     644     6412      `
+/1654           0           0     0     644     17864     `
+/1755           0           0     0     644     7780      `
+/1863           0           0     0     644     40068     `
+/1959           0           0     0     644     92772     `
+/2054           0           0     0     644     2420      `
+/2154           0           0     0     644     3372      `
+/2244          /0           0     0     644     7088      `

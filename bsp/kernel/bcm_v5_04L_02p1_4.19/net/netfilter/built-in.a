@@ -1,0 +1,104 @@
+!<thin>
+//                                              924       `
+core.o/
+nf_log.o/
+nf_queue.o/
+nf_sockopt.o/
+utils.o/
+nfnetlink.o/
+nfnetlink_queue.o/
+nf_conntrack_core.o/
+nf_conntrack_standalone.o/
+nf_conntrack_expect.o/
+nf_conntrack_helper.o/
+nf_conntrack_proto.o/
+nf_conntrack_proto_generic.o/
+nf_conntrack_proto_tcp.o/
+nf_conntrack_proto_udp.o/
+nf_conntrack_proto_icmp.o/
+nf_conntrack_extend.o/
+nf_conntrack_acct.o/
+nf_conntrack_seqadj.o/
+nf_conntrack_proto_icmpv6.o/
+nf_conntrack_proto_sctp.o/
+nf_conntrack_proto_gre.o/
+nf_conntrack_ftp.o/
+nf_conntrack_h323_main.o/
+nf_conntrack_h323_asn1.o/
+nf_conntrack_pptp.o/
+nf_log_common.o/
+nf_nat_core.o/
+nf_nat_proto_unknown.o/
+nf_nat_proto_common.o/
+nf_nat_proto_udp.o/
+nf_nat_proto_tcp.o/
+nf_nat_helper.o/
+nf_nat_proto_sctp.o/
+nf_nat_redirect.o/
+nf_nat_ftp.o/
+x_tables.o/
+xt_tcpudp.o/
+xt_mark.o/
+xt_nat.o/
+xt_DSCP.o/
+xt_LOG.o/
+xt_REDIRECT.o/
+xt_TCPMSS.o/
+xt_conntrack.o/
+xt_dscp.o/
+xt_limit.o/
+xt_mac.o/
+xt_multiport.o/
+xt_state.o/
+xt_u32.o/
+/0              0           0     0     644     14944     `
+/8              0           0     0     644     15464     `
+/18             0           0     0     644     5932      `
+/30             0           0     0     644     3560      `
+/44             0           0     0     644     4168      `
+/53             0           0     0     644     12552     `
+/66             0           0     0     644     18012     `
+/85             0           0     0     644     46468     `
+/106            0           0     0     644     12596     `
+/133            0           0     0     644     16388     `
+/156            0           0     0     644     14856     `
+/179            0           0     0     644     18936     `
+/201            0           0     0     644     2672      `
+/231            0           0     0     644     14580     `
+/257            0           0     0     644     4340      `
+/283            0           0     0     644     4440      `
+/310            0           0     0     644     3816      `
+/333            0           0     0     644     4140      `
+/354            0           0     0     644     5212      `
+/377            0           0     0     644     4420      `
+/406            0           0     0     644     9344      `
+/433            0           0     0     644     7652      `
+/459            0           0     0     644     11008     `
+/479            0           0     0     644     21932     `
+/505            0           0     0     644     30804     `
+/531            0           0     0     644     9712      `
+/552           /0           0     0     644     8088      `
+/569            0           0     0     644     20400     `
+/584            0           0     0     644     1416      `
+/608            0           0     0     644     2436      `
+/631            0           0     0     644     1880      `
+/651            0           0     0     644     1904      `
+/671           /0           0     0     644     4760      `
+/688            0           0     0     644     2512      `
+/709            0           0     0     644     3244      `
+/728            0           0     0     644     5232      `
+/742            0           0     0     644     34200     `
+/754            0           0     0     644     4764      `
+/767            0           0     0     644     3048      `
+/778            0           0     0     644     6172      `
+/788            0           0     0     644     3872      `
+/799            0           0     0     644     3636      `
+/809            0           0     0     644     3432      `
+/824            0           0     0     644     6884      `
+/837            0           0     0     644     5472      `
+/853            0           0     0     644     3268      `
+/864            0           0     0     644     4368      `
+/876            0           0     0     644     2740      `
+/886            0           0     0     644     3908      `
+/902            0           0     0     644     3576      `
+/914            0           0     0     644     3840      `

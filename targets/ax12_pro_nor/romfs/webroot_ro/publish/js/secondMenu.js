@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["secondMenu"],{"8be1":function(e,n,u){"use strict";u.r(n);var r=u("0b56"),t=Object(r.a)({},(function render(){return(0,this._self._c)("router-view")}),[],!1,null,null,null);n.default=t.exports}}]);

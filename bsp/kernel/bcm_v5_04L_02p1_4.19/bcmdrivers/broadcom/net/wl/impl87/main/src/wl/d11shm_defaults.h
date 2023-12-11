@@ -1,0 +1,3068 @@
+#ifndef _D11SHM_DEFAULTS_H
+#define _D11SHM_DEFAULTS_H
+
+#ifndef M_SSID
+#define M_SSID INVALID
+#endif
+#ifndef M_PRS_FRM_BYTESZ
+#define M_PRS_FRM_BYTESZ INVALID
+#endif
+#ifndef M_SSID_BYTESZ
+#define M_SSID_BYTESZ INVALID
+#endif
+#ifndef M_PMQADDINT_THSD
+#define M_PMQADDINT_THSD INVALID
+#endif
+#ifndef M_RT_BBRSMAP_A
+#define M_RT_BBRSMAP_A INVALID
+#endif
+#ifndef M_RT_BBRSMAP_B
+#define M_RT_BBRSMAP_B INVALID
+#endif
+#ifndef M_FIFOSIZE0
+#define M_FIFOSIZE0 INVALID
+#endif
+#ifndef M_FIFOSIZE1
+#define M_FIFOSIZE1 INVALID
+#endif
+#ifndef M_FIFOSIZE2
+#define M_FIFOSIZE2 INVALID
+#endif
+#ifndef M_FIFOSIZE3
+#define M_FIFOSIZE3 INVALID
+#endif
+#ifndef M_MBURST_TXOP
+#define M_MBURST_TXOP INVALID
+#endif
+#ifndef M_MBURST_SIZE
+#define M_MBURST_SIZE INVALID
+#endif
+#ifndef M_MODE_CORE
+#define M_MODE_CORE INVALID
+#endif
+#ifndef M_WLCX_CONFIG
+#define M_WLCX_CONFIG INVALID
+#endif
+#ifndef M_WLCX_GPIO_CONFIG
+#define M_WLCX_GPIO_CONFIG INVALID
+#endif
+#ifndef M_DOT11_DTIMPERIOD
+#define M_DOT11_DTIMPERIOD INVALID
+#endif
+#ifndef M_TIMBC_OFFSET
+#define M_TIMBC_OFFSET INVALID
+#endif
+#ifndef M_CCKBOOST_ADJ
+#define M_CCKBOOST_ADJ INVALID
+#endif
+#ifndef M_EDCF_BLKS
+#define M_EDCF_BLKS INVALID
+#endif
+#ifndef M_EDCF_QINFO1
+#define M_EDCF_QINFO1 INVALID
+#endif
+#ifndef M_EDCF_QINFO2
+#define M_EDCF_QINFO2 INVALID
+#endif
+#ifndef M_EDCF_QINFO3
+#define M_EDCF_QINFO3 INVALID
+#endif
+#ifndef M_EDCF_BOFF_CTR
+#define M_EDCF_BOFF_CTR INVALID
+#endif
+#ifndef M_LNA_ROUT
+#define M_LNA_ROUT INVALID
+#endif
+#ifndef M_RXGAIN_HI
+#define M_RXGAIN_HI INVALID
+#endif
+#ifndef M_RXGAIN_LO
+#define M_RXGAIN_LO INVALID
+#endif
+#ifndef M_RXGAINOVR2_VAL
+#define M_RXGAINOVR2_VAL INVALID
+#endif
+#ifndef M_LPFGAIN_HI
+#define M_LPFGAIN_HI INVALID
+#endif
+#ifndef M_LPFGAIN_LO
+#define M_LPFGAIN_LO INVALID
+#endif
+#ifndef M_CUR_TXF_INDEX
+#define M_CUR_TXF_INDEX INVALID
+#endif
+#ifndef M_COREMASK_BLK
+#define M_COREMASK_BLK INVALID
+#endif
+#ifndef M_COREMASK_BPHY
+#define M_COREMASK_BPHY INVALID
+#endif
+#ifndef M_COREMASK_BFM
+#define M_COREMASK_BFM INVALID
+#endif
+#ifndef M_COREMASK_BFM1
+#define M_COREMASK_BFM1 INVALID
+#endif
+#ifndef M_COREMASK_BTRESP
+#define M_COREMASK_BTRESP INVALID
+#endif
+#ifndef M_TXPWR_BLK
+#define M_TXPWR_BLK INVALID
+#endif
+#ifndef M_PS_MORE_DTIM_TBTT
+#define M_PS_MORE_DTIM_TBTT INVALID
+#endif
+#ifndef M_POSTDTIM0_NOSLPTIME
+#define M_POSTDTIM0_NOSLPTIME INVALID
+#endif
+#ifndef M_BCMC_FID
+#define M_BCMC_FID INVALID
+#endif
+#ifndef M_AMT_INFO_PTR
+#define M_AMT_INFO_PTR INVALID
+#endif
+#ifndef M_PRS_MAXTIME
+#define M_PRS_MAXTIME INVALID
+#endif
+#ifndef M_PRETBTT
+#define M_PRETBTT INVALID
+#endif
+#ifndef M_BCN_TXTSF_OFFSET
+#define M_BCN_TXTSF_OFFSET INVALID
+#endif
+#ifndef M_TIMBPOS_INBEACON
+#define M_TIMBPOS_INBEACON INVALID
+#endif
+#ifndef M_AGING_THRSH
+#define M_AGING_THRSH INVALID
+#endif
+#ifndef M_SYNTHPU_DELAY
+#define M_SYNTHPU_DELAY INVALID
+#endif
+#ifndef M_PHYVER
+#define M_PHYVER INVALID
+#endif
+#ifndef M_PHYTYPE
+#define M_PHYTYPE INVALID
+#endif
+#ifndef M_MAX_ANTCNT
+#define M_MAX_ANTCNT INVALID
+#endif
+#ifndef M_MACHW_VER
+#define M_MACHW_VER INVALID
+#endif
+#ifndef M_MACHW_CAP_L
+#define M_MACHW_CAP_L INVALID
+#endif
+#ifndef M_MACHW_CAP_H
+#define M_MACHW_CAP_H INVALID
+#endif
+#ifndef M_SFRMTXCNTFBRTHSD
+#define M_SFRMTXCNTFBRTHSD INVALID
+#endif
+#ifndef M_LFRMTXCNTFBRTHSD
+#define M_LFRMTXCNTFBRTHSD INVALID
+#endif
+#ifndef M_TXDC_BYTESZ
+#define M_TXDC_BYTESZ INVALID
+#endif
+#ifndef M_TXFL_BMAP
+#define M_TXFL_BMAP INVALID
+#endif
+#ifndef M_JSSI_AUX
+#define M_JSSI_AUX INVALID
+#endif
+#ifndef M_DOT11_SLOT
+#define M_DOT11_SLOT INVALID
+#endif
+#ifndef M_DUTY_STRTRATE
+#define M_DUTY_STRTRATE INVALID
+#endif
+#ifndef M_SECRSSI0_MIN
+#define M_SECRSSI0_MIN INVALID
+#endif
+#ifndef M_SECRSSI1_MIN
+#define M_SECRSSI1_MIN INVALID
+#endif
+#ifndef M_MIMO_ANTSEL_RXDFLT
+#define M_MIMO_ANTSEL_RXDFLT INVALID
+#endif
+#ifndef M_MIMO_ANTSEL_TXDFLT
+#define M_MIMO_ANTSEL_TXDFLT INVALID
+#endif
+#ifndef M_ANTSEL_CLKDIV
+#define M_ANTSEL_CLKDIV INVALID
+#endif
+#ifndef M_BOM_REV_MAJOR
+#define M_BOM_REV_MAJOR INVALID
+#endif
+#ifndef M_BOM_REV_MINOR
+#define M_BOM_REV_MINOR INVALID
+#endif
+#ifndef M_HOST_FLAGS
+#define M_HOST_FLAGS INVALID
+#endif
+#ifndef M_HOST_FLAGS2
+#define M_HOST_FLAGS2 INVALID
+#endif
+#ifndef M_HOST_FLAGS3
+#define M_HOST_FLAGS3 INVALID
+#endif
+#ifndef M_HOST_FLAGS4
+#define M_HOST_FLAGS4 INVALID
+#endif
+#ifndef M_HOST_FLAGS5
+#define M_HOST_FLAGS5 INVALID
+#endif
+#ifndef M_HOST_FLAGS6
+#define M_HOST_FLAGS6 INVALID
+#endif
+#ifndef M_REV_L
+#define M_REV_L INVALID
+#endif
+#ifndef M_REV_H
+#define M_REV_H INVALID
+#endif
+#ifndef M_UCODE_FEATURES
+#define M_UCODE_FEATURES INVALID
+#endif
+#ifndef M_ULP_STATUS
+#define M_ULP_STATUS INVALID
+#endif
+#ifndef M_EDCF_QINFO1_OFFSET
+#define M_EDCF_QINFO1_OFFSET INVALID
+#endif
+#ifndef M_MYMAC_ADDR
+#define M_MYMAC_ADDR INVALID
+#endif
+#ifndef M_UTRACE_SPTR
+#define M_UTRACE_SPTR INVALID
+#endif
+#ifndef M_UTRACE_EPTR
+#define M_UTRACE_EPTR INVALID
+#endif
+#ifndef M_UTRACE_STS
+#define M_UTRACE_STS INVALID
+#endif
+#ifndef M_TXFRAME_CNT
+#define M_TXFRAME_CNT INVALID
+#endif
+#ifndef M_TXAMPDU_CNT
+#define M_TXAMPDU_CNT INVALID
+#endif
+#ifndef M_RXSTRT_CNT
+#define M_RXSTRT_CNT INVALID
+#endif
+#ifndef M_RXCRSGLITCH_CNT
+#define M_RXCRSGLITCH_CNT INVALID
+#endif
+#ifndef M_BPHYGLITCH_CNT
+#define M_BPHYGLITCH_CNT INVALID
+#endif
+#ifndef M_RXBADFCS_CNT
+#define M_RXBADFCS_CNT INVALID
+#endif
+#ifndef M_RXBADPLCP_CNT
+#define M_RXBADPLCP_CNT INVALID
+#endif
+#ifndef M_RXBPHY_BADPLCP_CNT
+#define M_RXBPHY_BADPLCP_CNT INVALID
+#endif
+#ifndef M_AC_TXLMT_BLK
+#define M_AC_TXLMT_BLK INVALID
+#endif
+#ifndef M_MAXRXFRM_LEN
+#define M_MAXRXFRM_LEN INVALID
+#endif
+#ifndef M_MAXRXFRM_LEN2
+#define M_MAXRXFRM_LEN2 INVALID
+#endif
+#ifndef M_MAXRXMPDU_LEN
+#define M_MAXRXMPDU_LEN INVALID
+#endif
+#ifndef M_RXCORE_STATE
+#define M_RXCORE_STATE INVALID
+#endif
+#ifndef M_ASSERT_REASON
+#define M_ASSERT_REASON INVALID
+#endif
+#ifndef M_WRDCNT_RXF1OVFL_THRSH
+#define M_WRDCNT_RXF1OVFL_THRSH INVALID
+#endif
+#ifndef M_WRDCNT_RXF0OVFL_THRSH
+#define M_WRDCNT_RXF0OVFL_THRSH INVALID
+#endif
+#ifndef M_NCAL_ACTIVE_CORES
+#define M_NCAL_ACTIVE_CORES INVALID
+#endif
+#ifndef M_NCAL_CFG_BMP
+#define M_NCAL_CFG_BMP INVALID
+#endif
+#ifndef M_NCAL_RFCTRLOVR_0
+#define M_NCAL_RFCTRLOVR_0 INVALID
+#endif
+#ifndef M_NCAL_RXGAINOVR_0
+#define M_NCAL_RXGAINOVR_0 INVALID
+#endif
+#ifndef M_NCAL_RXLPFOVR_0
+#define M_NCAL_RXLPFOVR_0 INVALID
+#endif
+#ifndef M_NCAL_RXGAIN_LO
+#define M_NCAL_RXGAIN_LO INVALID
+#endif
+#ifndef M_NCAL_LPFGAIN_LO
+#define M_NCAL_LPFGAIN_LO INVALID
+#endif
+#ifndef M_NCAL_RXGAIN_HI
+#define M_NCAL_RXGAIN_HI INVALID
+#endif
+#ifndef M_NCAL_LPFGAIN_HI
+#define M_NCAL_LPFGAIN_HI INVALID
+#endif
+#ifndef M_NCAL_RFCTRLOVR_VAL
+#define M_NCAL_RFCTRLOVR_VAL INVALID
+#endif
+#ifndef M_BSR_BLK
+#define M_BSR_BLK INVALID
+#endif
+#ifndef M_SEMAPHORE_BSR
+#define M_SEMAPHORE_BSR INVALID
+#endif
+#ifndef M_BSR_ALLTID_SET0
+#define M_BSR_ALLTID_SET0 INVALID
+#endif
+#ifndef M_BSR_ALLTID_SET1
+#define M_BSR_ALLTID_SET1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R0_1
+#define M_ACKPWRTBL_R0_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R0_2
+#define M_ACKPWRTBL_R0_2 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R1_0
+#define M_ACKPWRTBL_R1_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R1_1
+#define M_ACKPWRTBL_R1_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R2_0
+#define M_ACKPWRTBL_R2_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R2_1
+#define M_ACKPWRTBL_R2_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R3_0
+#define M_ACKPWRTBL_R3_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R3_1
+#define M_ACKPWRTBL_R3_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R4_0
+#define M_ACKPWRTBL_R4_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R4_1
+#define M_ACKPWRTBL_R4_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R5_0
+#define M_ACKPWRTBL_R5_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R5_1
+#define M_ACKPWRTBL_R5_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R6_0
+#define M_ACKPWRTBL_R6_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R6_1
+#define M_ACKPWRTBL_R6_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R7_0
+#define M_ACKPWRTBL_R7_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R7_1
+#define M_ACKPWRTBL_R7_1 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R8_0
+#define M_ACKPWRTBL_R8_0 INVALID
+#endif
+#ifndef M_ACKPWRTBL_R8_1
+#define M_ACKPWRTBL_R8_1 INVALID
+#endif
+#ifndef M_ACK_2GCM_NUMB
+#define M_ACK_2GCM_NUMB INVALID
+#endif
+#ifndef M_BTACK_2GCM_NUMB
+#define M_BTACK_2GCM_NUMB INVALID
+#endif
+#ifndef M_CUR_ACK_OFST
+#define M_CUR_ACK_OFST INVALID
+#endif
+#ifndef M_TXPWRCAP_C0
+#define M_TXPWRCAP_C0 INVALID
+#endif
+#ifndef M_TXPWRCAP_C1
+#define M_TXPWRCAP_C1 INVALID
+#endif
+#ifndef M_TXPWRCAP_C2
+#define M_TXPWRCAP_C2 INVALID
+#endif
+#ifndef M_TXPWRCAP_C0_FS
+#define M_TXPWRCAP_C0_FS INVALID
+#endif
+#ifndef M_TXPWRCAP_C1_FS
+#define M_TXPWRCAP_C1_FS INVALID
+#endif
+#ifndef M_TXPWRCAP_C2_FS
+#define M_TXPWRCAP_C2_FS INVALID
+#endif
+#ifndef M_TXPWRCAP_C0_FSANT
+#define M_TXPWRCAP_C0_FSANT INVALID
+#endif
+#ifndef M_TXPWRCAP_BT_C0
+#define M_TXPWRCAP_BT_C0 INVALID
+#endif
+#ifndef M_TXPWRCAP_BT_C1
+#define M_TXPWRCAP_BT_C1 INVALID
+#endif
+#ifndef M_TXPWRCAP_BT_C2
+#define M_TXPWRCAP_BT_C2 INVALID
+#endif
+#ifndef M_TDMTX_RSSI_THR
+#define M_TDMTX_RSSI_THR INVALID
+#endif
+#ifndef M_TDMTX_TXPWRBOFF
+#define M_TDMTX_TXPWRBOFF INVALID
+#endif
+#ifndef M_TDMTX_TXPWRBOFF_DT
+#define M_TDMTX_TXPWRBOFF_DT INVALID
+#endif
+#ifndef M_CCA_MEASINTV_L
+#define M_CCA_MEASINTV_L INVALID
+#endif
+#ifndef M_CCA_MEASINTV_H
+#define M_CCA_MEASINTV_H INVALID
+#endif
+#ifndef M_CCA_MEASBUSY_L
+#define M_CCA_MEASBUSY_L INVALID
+#endif
+#ifndef M_CCA_MEASBUSY_H
+#define M_CCA_MEASBUSY_H INVALID
+#endif
+#ifndef M_TOF_BLK_PTR
+#define M_TOF_BLK_PTR INVALID
+#endif
+#ifndef M_TOF_CMD_OFFSET
+#define M_TOF_CMD_OFFSET INVALID
+#endif
+#ifndef M_TOF_RSP_OFFSET
+#define M_TOF_RSP_OFFSET INVALID
+#endif
+#ifndef M_TOF_CHNSM_0_OFFSET
+#define M_TOF_CHNSM_0_OFFSET INVALID
+#endif
+#ifndef M_TOF_DOT11DUR_OFFSET
+#define M_TOF_DOT11DUR_OFFSET INVALID
+#endif
+#ifndef M_TOF_PHYCTL0_OFFSET
+#define M_TOF_PHYCTL0_OFFSET INVALID
+#endif
+#ifndef M_TOF_PHYCTL1_OFFSET
+#define M_TOF_PHYCTL1_OFFSET INVALID
+#endif
+#ifndef M_TOF_PHYCTL2_OFFSET
+#define M_TOF_PHYCTL2_OFFSET INVALID
+#endif
+#ifndef M_TOF_PHYCTL0
+#define M_TOF_PHYCTL0 INVALID
+#endif
+#ifndef M_TOF_PHYCTL1
+#define M_TOF_PHYCTL1 INVALID
+#endif
+#ifndef M_TOF_PHYCTL2
+#define M_TOF_PHYCTL2 INVALID
+#endif
+#ifndef M_TOF_HT_PHYCTL0
+#define M_TOF_HT_PHYCTL0 INVALID
+#endif
+#ifndef M_TOF_HT_PHYCTL1
+#define M_TOF_HT_PHYCTL1 INVALID
+#endif
+#ifndef M_TOF_HT_PHYCTL2
+#define M_TOF_HT_PHYCTL2 INVALID
+#endif
+#ifndef M_TOF_HE_PHYCTL0
+#define M_TOF_HE_PHYCTL0 INVALID
+#endif
+#ifndef M_TOF_HE_PHYCTL1
+#define M_TOF_HE_PHYCTL1 INVALID
+#endif
+#ifndef M_TOF_HE_PHYCTL2
+#define M_TOF_HE_PHYCTL2 INVALID
+#endif
+#ifndef M_TOF_LSIG_OFFSET
+#define M_TOF_LSIG_OFFSET INVALID
+#endif
+#ifndef M_TOF_VHTA0_OFFSET
+#define M_TOF_VHTA0_OFFSET INVALID
+#endif
+#ifndef M_TOF_VHTA1_OFFSET
+#define M_TOF_VHTA1_OFFSET INVALID
+#endif
+#ifndef M_TOF_VHTA2_OFFSET
+#define M_TOF_VHTA2_OFFSET INVALID
+#endif
+#ifndef M_TOF_VHTA0
+#define M_TOF_VHTA0 INVALID
+#endif
+#ifndef M_TOF_VHTA1
+#define M_TOF_VHTA1 INVALID
+#endif
+#ifndef M_TOF_VHTA2
+#define M_TOF_VHTA2 INVALID
+#endif
+#ifndef M_TOF_VHTB0_OFFSET
+#define M_TOF_VHTB0_OFFSET INVALID
+#endif
+#ifndef M_TOF_VHTB1_OFFSET
+#define M_TOF_VHTB1_OFFSET INVALID
+#endif
+#ifndef M_TOF_HTSIG0
+#define M_TOF_HTSIG0 INVALID
+#endif
+#ifndef M_TOF_HTSIG1
+#define M_TOF_HTSIG1 INVALID
+#endif
+#ifndef M_TOF_HTSIG2
+#define M_TOF_HTSIG2 INVALID
+#endif
+#ifndef M_TOF_HESIG0
+#define M_TOF_HESIG0 INVALID
+#endif
+#ifndef M_TOF_HESIG1
+#define M_TOF_HESIG1 INVALID
+#endif
+#ifndef M_TOF_HESIG2
+#define M_TOF_HESIG2 INVALID
+#endif
+#ifndef M_TOF_FLAGS_OFFSET
+#define M_TOF_FLAGS_OFFSET INVALID
+#endif
+#ifndef M_TOF_FLAGS
+#define M_TOF_FLAGS INVALID
+#endif
+#ifndef M_TOF_AVB_BLK
+#define M_TOF_AVB_BLK INVALID
+#endif
+#ifndef M_TOF_AVB_BLK_IDX
+#define M_TOF_AVB_BLK_IDX INVALID
+#endif
+#ifndef M_TOF_DBG_BLK_OFFSET
+#define M_TOF_DBG_BLK_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG1_OFFSET
+#define M_TOF_DBG1_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG2_OFFSET
+#define M_TOF_DBG2_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG3_OFFSET
+#define M_TOF_DBG3_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG4_OFFSET
+#define M_TOF_DBG4_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG5_OFFSET
+#define M_TOF_DBG5_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG6_OFFSET
+#define M_TOF_DBG6_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG7_OFFSET
+#define M_TOF_DBG7_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG8_OFFSET
+#define M_TOF_DBG8_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG9_OFFSET
+#define M_TOF_DBG9_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG10_OFFSET
+#define M_TOF_DBG10_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG11_OFFSET
+#define M_TOF_DBG11_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG12_OFFSET
+#define M_TOF_DBG12_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG13_OFFSET
+#define M_TOF_DBG13_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG14_OFFSET
+#define M_TOF_DBG14_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG15_OFFSET
+#define M_TOF_DBG15_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG16_OFFSET
+#define M_TOF_DBG16_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG17_OFFSET
+#define M_TOF_DBG17_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG18_OFFSET
+#define M_TOF_DBG18_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG19_OFFSET
+#define M_TOF_DBG19_OFFSET INVALID
+#endif
+#ifndef M_TOF_DBG20_OFFSET
+#define M_TOF_DBG20_OFFSET INVALID
+#endif
+#ifndef M_FTM_SC_CURPTR
+#define M_FTM_SC_CURPTR INVALID
+#endif
+#ifndef M_FTM_NYSM0
+#define M_FTM_NYSM0 INVALID
+#endif
+#ifndef M_P2P_BLK_PTR
+#define M_P2P_BLK_PTR INVALID
+#endif
+#ifndef M_P2P_PERBSS_BLK
+#define M_P2P_PERBSS_BLK INVALID
+#endif
+#ifndef M_P2P_INTF_BLK
+#define M_P2P_INTF_BLK INVALID
+#endif
+#ifndef M_ADDR_BMP_BLK_OFFSET
+#define M_ADDR_BMP_BLK_OFFSET INVALID
+#endif
+#ifndef M_P2P_INTR_BLK
+#define M_P2P_INTR_BLK INVALID
+#endif
+#ifndef M_P2P_HPS
+#define M_P2P_HPS INVALID
+#endif
+#ifndef M_P2P_HPS_OFFSET
+#define M_P2P_HPS_OFFSET INVALID
+#endif
+#ifndef M_P2P_TSF_OFFSET_BLK
+#define M_P2P_TSF_OFFSET_BLK INVALID
+#endif
+#ifndef M_P2P_GO_CHANNEL
+#define M_P2P_GO_CHANNEL INVALID
+#endif
+#ifndef M_P2P_GO_IND_BMP
+#define M_P2P_GO_IND_BMP INVALID
+#endif
+#ifndef M_P2P_PRETBTT_BLK
+#define M_P2P_PRETBTT_BLK INVALID
+#endif
+#ifndef M_P2P_TSF_DRIFT_WD0
+#define M_P2P_TSF_DRIFT_WD0 INVALID
+#endif
+#ifndef M_P2P_TXSTOP_T_BLK
+#define M_P2P_TXSTOP_T_BLK INVALID
+#endif
+#ifndef M_SHM_BYT_CNT
+#define M_SHM_BYT_CNT INVALID
+#endif
+#ifndef M_MFGTEST_FRMCNT_LO
+#define M_MFGTEST_FRMCNT_LO INVALID
+#endif
+#ifndef M_MFGTEST_FRMCNT_HI
+#define M_MFGTEST_FRMCNT_HI INVALID
+#endif
+#ifndef M_MFGTEST_NUM
+#define M_MFGTEST_NUM INVALID
+#endif
+#ifndef M_MFGTEST_IO1
+#define M_MFGTEST_IO1 INVALID
+#endif
+#ifndef M_RXSTATS_BLK_PTR
+#define M_RXSTATS_BLK_PTR INVALID
+#endif
+#ifndef M_MFGTEST_UOTARXTEST
+#define M_MFGTEST_UOTARXTEST INVALID
+#endif
+#ifndef M_MFGTEST_RXAVGPWR_ANT0
+#define M_MFGTEST_RXAVGPWR_ANT0 INVALID
+#endif
+#ifndef M_MFGTEST_RXAVGPWR_ANT1
+#define M_MFGTEST_RXAVGPWR_ANT1 INVALID
+#endif
+#ifndef M_MFGTEST_RXAVGPWR_ANT2
+#define M_MFGTEST_RXAVGPWR_ANT2 INVALID
+#endif
+#ifndef M_TKMICKEYS_PTR
+#define M_TKMICKEYS_PTR INVALID
+#endif
+#ifndef M_WAPIMICKEYS_PTR
+#define M_WAPIMICKEYS_PTR INVALID
+#endif
+#ifndef M_SECKEYS_PTR
+#define M_SECKEYS_PTR INVALID
+#endif
+#ifndef M_SECKINDX_PTR
+#define M_SECKINDX_PTR INVALID
+#endif
+#ifndef M_TKIP_TTAK_PTR
+#define M_TKIP_TTAK_PTR INVALID
+#endif
+#ifndef M_SECKINDXALGO_BLK
+#define M_SECKINDXALGO_BLK INVALID
+#endif
+#ifndef M_TKIP_TSC_TTAK
+#define M_TKIP_TSC_TTAK INVALID
+#endif
+#ifndef M_BFI_BLK
+#define M_BFI_BLK INVALID
+#endif
+#ifndef M_BFI_REFRESH_THR
+#define M_BFI_REFRESH_THR INVALID
+#endif
+#ifndef M_BFI_NRXC
+#define M_BFI_NRXC INVALID
+#endif
+#ifndef M_PSM2HOST_STATS
+#define M_PSM2HOST_STATS INVALID
+#endif
+#ifndef M_PSM2HOST_EXT_PTR
+#define M_PSM2HOST_EXT_PTR INVALID
+#endif
+#ifndef M_UCODE_DBGST
+#define M_UCODE_DBGST INVALID
+#endif
+#ifndef M_BCN0_FRM_BYTESZ
+#define M_BCN0_FRM_BYTESZ INVALID
+#endif
+#ifndef M_BCN1_FRM_BYTESZ
+#define M_BCN1_FRM_BYTESZ INVALID
+#endif
+#ifndef M_DEBUGBLK_PTR
+#define M_DEBUGBLK_PTR INVALID
+#endif
+#ifndef M_TXERR_NOWRITE
+#define M_TXERR_NOWRITE INVALID
+#endif
+#ifndef M_TXERR_REASON
+#define M_TXERR_REASON INVALID
+#endif
+#ifndef M_TXERR_REASON2
+#define M_TXERR_REASON2 INVALID
+#endif
+#ifndef M_TXERR_CTXTST
+#define M_TXERR_CTXTST INVALID
+#endif
+#ifndef M_TXERR_PCTL0
+#define M_TXERR_PCTL0 INVALID
+#endif
+#ifndef M_TXERR_PCTL1
+#define M_TXERR_PCTL1 INVALID
+#endif
+#ifndef M_TXERR_PCTL2
+#define M_TXERR_PCTL2 INVALID
+#endif
+#ifndef M_TXERR_LSIG0
+#define M_TXERR_LSIG0 INVALID
+#endif
+#ifndef M_TXERR_LSIG1
+#define M_TXERR_LSIG1 INVALID
+#endif
+#ifndef M_TXERR_PLCP0
+#define M_TXERR_PLCP0 INVALID
+#endif
+#ifndef M_TXERR_PLCP1
+#define M_TXERR_PLCP1 INVALID
+#endif
+#ifndef M_TXERR_PLCP2
+#define M_TXERR_PLCP2 INVALID
+#endif
+#ifndef M_TXERR_SIGB0
+#define M_TXERR_SIGB0 INVALID
+#endif
+#ifndef M_TXERR_SIGB1
+#define M_TXERR_SIGB1 INVALID
+#endif
+#ifndef M_TXERR_RXESTATS2
+#define M_TXERR_RXESTATS2 INVALID
+#endif
+#ifndef M_TXNDPA_CNT
+#define M_TXNDPA_CNT INVALID
+#endif
+#ifndef M_TXNDP_CNT
+#define M_TXNDP_CNT INVALID
+#endif
+#ifndef M_TXBFPOLL_CNT
+#define M_TXBFPOLL_CNT INVALID
+#endif
+#ifndef M_TXSF_CNT
+#define M_TXSF_CNT INVALID
+#endif
+#ifndef M_VHTSU_TXNDPA_CNT
+#define M_VHTSU_TXNDPA_CNT INVALID
+#endif
+#ifndef M_VHTMU_TXNDPA_CNT
+#define M_VHTMU_TXNDPA_CNT INVALID
+#endif
+#ifndef M_HESU_TXNDPA_CNT
+#define M_HESU_TXNDPA_CNT INVALID
+#endif
+#ifndef M_HEMU_TXNDPA_CNT
+#define M_HEMU_TXNDPA_CNT INVALID
+#endif
+#ifndef M_VHTSU_RXSF_CNT
+#define M_VHTSU_RXSF_CNT INVALID
+#endif
+#ifndef M_VHTMU_RXSF_CNT
+#define M_VHTMU_RXSF_CNT INVALID
+#endif
+#ifndef M_HESU_RXSF_CNT
+#define M_HESU_RXSF_CNT INVALID
+#endif
+#ifndef M_HEMU_RXSF_CNT
+#define M_HEMU_RXSF_CNT INVALID
+#endif
+#ifndef M_VHTSU_EXPRXSF_CNT
+#define M_VHTSU_EXPRXSF_CNT INVALID
+#endif
+#ifndef M_VHTMU_EXPRXSF_CNT
+#define M_VHTMU_EXPRXSF_CNT INVALID
+#endif
+#ifndef M_HESU_EXPRXSF_CNT
+#define M_HESU_EXPRXSF_CNT INVALID
+#endif
+#ifndef M_HEMU_EXPRXSF_CNT
+#define M_HEMU_EXPRXSF_CNT INVALID
+#endif
+#ifndef M_TXCWRTS_CNT
+#define M_TXCWRTS_CNT INVALID
+#endif
+#ifndef M_TXCWCTS_CNT
+#define M_TXCWCTS_CNT INVALID
+#endif
+#ifndef M_TXBFM_CNT
+#define M_TXBFM_CNT INVALID
+#endif
+#ifndef M_RXNDPAUCAST_CNT
+#define M_RXNDPAUCAST_CNT INVALID
+#endif
+#ifndef M_RXNDPAMCAST_CNT
+#define M_RXNDPAMCAST_CNT INVALID
+#endif
+#ifndef M_RXBFPOLLUCAST_CNT
+#define M_RXBFPOLLUCAST_CNT INVALID
+#endif
+#ifndef M_BFERPTRDY_CNT
+#define M_BFERPTRDY_CNT INVALID
+#endif
+#ifndef M_RXSFUCAST_CNT
+#define M_RXSFUCAST_CNT INVALID
+#endif
+#ifndef M_RXCWRTSUCAST_CNT
+#define M_RXCWRTSUCAST_CNT INVALID
+#endif
+#ifndef M_RXCWCTSUCAST_CNT
+#define M_RXCWCTSUCAST_CNT INVALID
+#endif
+#ifndef M_RXDROP20S_CNT
+#define M_RXDROP20S_CNT INVALID
+#endif
+#ifndef M_RX20S_CNT
+#define M_RX20S_CNT INVALID
+#endif
+#ifndef M_BTCX_RFACT_CTR_L
+#define M_BTCX_RFACT_CTR_L INVALID
+#endif
+#ifndef M_MACSUSP_CNT
+#define M_MACSUSP_CNT INVALID
+#endif
+#ifndef M_MBSSID_BLK
+#define M_MBSSID_BLK INVALID
+#endif
+#ifndef M_MBS_BSSID0
+#define M_MBS_BSSID0 INVALID
+#endif
+#ifndef M_MBS_BSSID1
+#define M_MBS_BSSID1 INVALID
+#endif
+#ifndef M_MBS_BSSID2
+#define M_MBS_BSSID2 INVALID
+#endif
+#ifndef M_MBS_NBCN
+#define M_MBS_NBCN INVALID
+#endif
+#ifndef M_MBS_PRQBASE
+#define M_MBS_PRQBASE INVALID
+#endif
+#ifndef M_MBS_PRETBTT
+#define M_MBS_PRETBTT INVALID
+#endif
+#ifndef M_MBS_BSSIDNUM
+#define M_MBS_BSSIDNUM INVALID
+#endif
+#ifndef M_MBS_PIO_BCBMP
+#define M_MBS_PIO_BCBMP INVALID
+#endif
+#ifndef M_MBS_PRS_TPLPTR
+#define M_MBS_PRS_TPLPTR INVALID
+#endif
+#ifndef M_MBS_PRSLEN_BLK
+#define M_MBS_PRSLEN_BLK INVALID
+#endif
+#ifndef M_MBS_BCFID_BLK
+#define M_MBS_BCFID_BLK INVALID
+#endif
+#ifndef M_MBS_SSIDLEN_BLK
+#define M_MBS_SSIDLEN_BLK INVALID
+#endif
+#ifndef M_MBS_SSID_1
+#define M_MBS_SSID_1 INVALID
+#endif
+#ifndef M_PRQFIFO_RPTR
+#define M_PRQFIFO_RPTR INVALID
+#endif
+#ifndef M_PRQFIFO_WPTR
+#define M_PRQFIFO_WPTR INVALID
+#endif
+#ifndef M_BCN_TPLBLK_BSZ
+#define M_BCN_TPLBLK_BSZ INVALID
+#endif
+#ifndef M_RFLDO_ON_L
+#define M_RFLDO_ON_L INVALID
+#endif
+#ifndef M_RFLDO_ON_H
+#define M_RFLDO_ON_H INVALID
+#endif
+#ifndef M_PAPDOFF_MCS
+#define M_PAPDOFF_MCS INVALID
+#endif
+#ifndef M_LPF_PASSIVE_RC_OFDM
+#define M_LPF_PASSIVE_RC_OFDM INVALID
+#endif
+#ifndef M_LPF_PASSIVE_RC_CCK
+#define M_LPF_PASSIVE_RC_CCK INVALID
+#endif
+#ifndef M_SMPL_COL_BMP
+#define M_SMPL_COL_BMP INVALID
+#endif
+#ifndef M_SMPL_COL_CTL
+#define M_SMPL_COL_CTL INVALID
+#endif
+#ifndef M_RT_DIRMAP_A
+#define M_RT_DIRMAP_A INVALID
+#endif
+#ifndef M_RT_DIRMAP_B
+#define M_RT_DIRMAP_B INVALID
+#endif
+#ifndef M_CTS_DURATION
+#define M_CTS_DURATION INVALID
+#endif
+#ifndef M_TSSI_0
+#define M_TSSI_0 INVALID
+#endif
+#ifndef M_TSSI_1
+#define M_TSSI_1 INVALID
+#endif
+#ifndef M_IFS_PRICRS
+#define M_IFS_PRICRS INVALID
+#endif
+#ifndef M_TSSI_OFDM_0
+#define M_TSSI_OFDM_0 INVALID
+#endif
+#ifndef M_TSSI_OFDM_1
+#define M_TSSI_OFDM_1 INVALID
+#endif
+#ifndef M_CURCHANNEL
+#define M_CURCHANNEL INVALID
+#endif
+#ifndef M_PWRIND_BLKS
+#define M_PWRIND_BLKS INVALID
+#endif
+#ifndef M_PWRIND_MAP0
+#define M_PWRIND_MAP0 INVALID
+#endif
+#ifndef M_PWRIND_MAP1
+#define M_PWRIND_MAP1 INVALID
+#endif
+#ifndef M_PWRIND_MAP2
+#define M_PWRIND_MAP2 INVALID
+#endif
+#ifndef M_PWRIND_MAP3
+#define M_PWRIND_MAP3 INVALID
+#endif
+#ifndef M_PWRIND_MAP4
+#define M_PWRIND_MAP4 INVALID
+#endif
+#ifndef M_PWRIND_MAP5
+#define M_PWRIND_MAP5 INVALID
+#endif
+#ifndef M_HWACI_STATUS
+#define M_HWACI_STATUS INVALID
+#endif
+#ifndef M_HWACI_EN_IND
+#define M_HWACI_EN_IND INVALID
+#endif
+#ifndef M_FCBS_BLK
+#define M_FCBS_BLK INVALID
+#endif
+#ifndef M_FCBS_TEMPLATE_LENS
+#define M_FCBS_TEMPLATE_LENS INVALID
+#endif
+#ifndef M_FCBS_BPHY_CTRL
+#define M_FCBS_BPHY_CTRL INVALID
+#endif
+#ifndef M_FCBS_TEMPLATE_PTR
+#define M_FCBS_TEMPLATE_PTR INVALID
+#endif
+#ifndef M_AFEOVR_PTR
+#define M_AFEOVR_PTR INVALID
+#endif
+#ifndef M_RXGAININFO_ANT0_OFFSET
+#define M_RXGAININFO_ANT0_OFFSET INVALID
+#endif
+#ifndef M_RXAUXGAININFO_ANT0_OFFSET
+#define M_RXAUXGAININFO_ANT0_OFFSET INVALID
+#endif
+#ifndef M_RADAR_REG
+#define M_RADAR_REG INVALID
+#endif
+#ifndef M_RADIOPWRUP_PTR
+#define M_RADIOPWRUP_PTR INVALID
+#endif
+#ifndef M_RADIOPWRDWN_PTR
+#define M_RADIOPWRDWN_PTR INVALID
+#endif
+#ifndef M_EXT_AVAIL3
+#define M_EXT_AVAIL3 INVALID
+#endif
+#ifndef M_TXPWR_MAX
+#define M_TXPWR_MAX INVALID
+#endif
+#ifndef M_TXPWR_CUR
+#define M_TXPWR_CUR INVALID
+#endif
+#ifndef M_BCMC_TIMEOUT
+#define M_BCMC_TIMEOUT INVALID
+#endif
+#ifndef M_BCMCROLL_TMOUT
+#define M_BCMCROLL_TMOUT INVALID
+#endif
+#ifndef M_TXPWR_M
+#define M_TXPWR_M INVALID
+#endif
+#ifndef M_TXPWR_TARGET
+#define M_TXPWR_TARGET INVALID
+#endif
+#ifndef M_USEQ_PWRUP_PTR
+#define M_USEQ_PWRUP_PTR INVALID
+#endif
+#ifndef M_USEQ_PWRDN_PTR
+#define M_USEQ_PWRDN_PTR INVALID
+#endif
+#ifndef M_SLP_RDY_INT
+#define M_SLP_RDY_INT INVALID
+#endif
+#ifndef M_TPCNNUM_INTG_LOG2
+#define M_TPCNNUM_INTG_LOG2 INVALID
+#endif
+#ifndef M_TSSI_SENS_LMT1
+#define M_TSSI_SENS_LMT1 INVALID
+#endif
+#ifndef M_TSSI_SENS_LMT2
+#define M_TSSI_SENS_LMT2 INVALID
+#endif
+#ifndef M_BTCX_BLK_PTR
+#define M_BTCX_BLK_PTR INVALID
+#endif
+#ifndef M_BTCX_PRED_PER
+#define M_BTCX_PRED_PER INVALID
+#endif
+#ifndef M_BTCX_LAST_SCO
+#define M_BTCX_LAST_SCO INVALID
+#endif
+#ifndef M_BTCX_LAST_SCO_H
+#define M_BTCX_LAST_SCO_H INVALID
+#endif
+#ifndef M_BTCX_BLE_SCAN_GRANT_THRESH
+#define M_BTCX_BLE_SCAN_GRANT_THRESH INVALID
+#endif
+#ifndef M_BTCX_NEXT_SCO
+#define M_BTCX_NEXT_SCO INVALID
+#endif
+#ifndef M_BTCX_REQ_START
+#define M_BTCX_REQ_START INVALID
+#endif
+#ifndef M_BTCX_REQ_START_H
+#define M_BTCX_REQ_START_H INVALID
+#endif
+#ifndef M_BTCX_LAST_DATA
+#define M_BTCX_LAST_DATA INVALID
+#endif
+#ifndef M_BTCX_BT_TYPE
+#define M_BTCX_BT_TYPE INVALID
+#endif
+#ifndef M_BTCX_ECI0
+#define M_BTCX_ECI0 INVALID
+#endif
+#ifndef M_BTCX_ECI1
+#define M_BTCX_ECI1 INVALID
+#endif
+#ifndef M_BTCX_ECI2
+#define M_BTCX_ECI2 INVALID
+#endif
+#ifndef M_BTCX_ECI3
+#define M_BTCX_ECI3 INVALID
+#endif
+#ifndef M_BTCX_LAST_A2DP
+#define M_BTCX_LAST_A2DP INVALID
+#endif
+#ifndef M_BTCX_PRI_MAP_LO
+#define M_BTCX_PRI_MAP_LO INVALID
+#endif
+#ifndef M_BTCX_HOLDSCO_LIMIT_OFFSET
+#define M_BTCX_HOLDSCO_LIMIT_OFFSET INVALID
+#endif
+#ifndef M_BTCX_SCO_GRANT_HOLD_RATIO_OFFSET
+#define M_BTCX_SCO_GRANT_HOLD_RATIO_OFFSET INVALID
+#endif
+#ifndef M_BTCX_PRED_COUNT
+#define M_BTCX_PRED_COUNT INVALID
+#endif
+#ifndef M_BTCX_PROT_RSSI_THRESH_OFFSET
+#define M_BTCX_PROT_RSSI_THRESH_OFFSET INVALID
+#endif
+#ifndef M_BTCX_PROT_RSSI_THRESH
+#define M_BTCX_PROT_RSSI_THRESH INVALID
+#endif
+#ifndef M_BTCX_HOST_FLAGS_OFFSET
+#define M_BTCX_HOST_FLAGS_OFFSET INVALID
+#endif
+#ifndef M_BTCX_HOST_FLAGS
+#define M_BTCX_HOST_FLAGS INVALID
+#endif
+#ifndef M_BTCX_RSSI
+#define M_BTCX_RSSI INVALID
+#endif
+#ifndef M_BTCX_BT_TXPWR
+#define M_BTCX_BT_TXPWR INVALID
+#endif
+#ifndef M_BTCX_HIGH_THRESH
+#define M_BTCX_HIGH_THRESH INVALID
+#endif
+#ifndef M_BTCX_LOW_THRESH
+#define M_BTCX_LOW_THRESH INVALID
+#endif
+#ifndef M_BTCX_CONFIG_OFFSET
+#define M_BTCX_CONFIG_OFFSET INVALID
+#endif
+#ifndef M_BTCX_CONFIG
+#define M_BTCX_CONFIG INVALID
+#endif
+#ifndef M_BTCX_NUM_TASKS_OFFSET
+#define M_BTCX_NUM_TASKS_OFFSET INVALID
+#endif
+#ifndef M_BTCX_NUM_TASKS
+#define M_BTCX_NUM_TASKS INVALID
+#endif
+#ifndef M_BTCXDBG_BLK
+#define M_BTCXDBG_BLK INVALID
+#endif
+#ifndef M_BTCX_RFSWMSK_BT_OFFSET
+#define M_BTCX_RFSWMSK_BT_OFFSET INVALID
+#endif
+#ifndef M_BTCX_RFSWMSK_BT
+#define M_BTCX_RFSWMSK_BT INVALID
+#endif
+#ifndef M_BTCX_RFSWMSK_WL_OFFSET
+#define M_BTCX_RFSWMSK_WL_OFFSET INVALID
+#endif
+#ifndef M_BTCX_RFSWMSK_WL
+#define M_BTCX_RFSWMSK_WL INVALID
+#endif
+#ifndef M_BTCX_AGG_OFF_BM
+#define M_BTCX_AGG_OFF_BM INVALID
+#endif
+#ifndef M_BTCX_PKTABORTCTL_VAL
+#define M_BTCX_PKTABORTCTL_VAL INVALID
+#endif
+#ifndef M_BTCX_BT_TASKS_BM_LOW
+#define M_BTCX_BT_TASKS_BM_LOW INVALID
+#endif
+#ifndef M_BTCX_BT_TASKS_BM_HI
+#define M_BTCX_BT_TASKS_BM_HI INVALID
+#endif
+#ifndef M_BTCX_ABORT_CNT
+#define M_BTCX_ABORT_CNT INVALID
+#endif
+#ifndef M_BTCX_LATENCY_CNT
+#define M_BTCX_LATENCY_CNT INVALID
+#endif
+#ifndef M_BTCX_HOST_FLAGS2_OFFSET
+#define M_BTCX_HOST_FLAGS2_OFFSET INVALID
+#endif
+#ifndef M_BTCX_HOST_FLAGS2
+#define M_BTCX_HOST_FLAGS2 INVALID
+#endif
+#ifndef M_BTCX_IBSS_TSF_L
+#define M_BTCX_IBSS_TSF_L INVALID
+#endif
+#ifndef M_BTCX_IBSS_TSF_ML
+#define M_BTCX_IBSS_TSF_ML INVALID
+#endif
+#ifndef M_BTCX_IBSS_TSF_SCO_L
+#define M_BTCX_IBSS_TSF_SCO_L INVALID
+#endif
+#ifndef M_BTCX_SUCC_PM_PROTECT_CNT
+#define M_BTCX_SUCC_PM_PROTECT_CNT INVALID
+#endif
+#ifndef M_BTCX_SUCC_CTS2A_CNT
+#define M_BTCX_SUCC_CTS2A_CNT INVALID
+#endif
+#ifndef M_BTCX_WLAN_TX_PREEMPT_CNT
+#define M_BTCX_WLAN_TX_PREEMPT_CNT INVALID
+#endif
+#ifndef M_BTCX_WLAN_RX_PREEMPT_CNT
+#define M_BTCX_WLAN_RX_PREEMPT_CNT INVALID
+#endif
+#ifndef M_BTCX_APTX_AFTER_PM_CNT
+#define M_BTCX_APTX_AFTER_PM_CNT INVALID
+#endif
+#ifndef M_BTCX_PERAUD_CUMU_GRANT_CNT
+#define M_BTCX_PERAUD_CUMU_GRANT_CNT INVALID
+#endif
+#ifndef M_BTCX_PERAUD_CUMU_DENY_CNT
+#define M_BTCX_PERAUD_CUMU_DENY_CNT INVALID
+#endif
+#ifndef M_BTCX_A2DP_CUMU_GRANT_CNT
+#define M_BTCX_A2DP_CUMU_GRANT_CNT INVALID
+#endif
+#ifndef M_BTCX_A2DP_CUMU_DENY_CNT
+#define M_BTCX_A2DP_CUMU_DENY_CNT INVALID
+#endif
+#ifndef M_BTCX_SNIFF_CUMU_GRANT_CNT
+#define M_BTCX_SNIFF_CUMU_GRANT_CNT INVALID
+#endif
+#ifndef M_BTCX_SNIFF_CUMU_DENY_CNT
+#define M_BTCX_SNIFF_CUMU_DENY_CNT INVALID
+#endif
+#ifndef M_LTECX_FLAGS
+#define M_LTECX_FLAGS INVALID
+#endif
+#ifndef M_LTECX_STATE
+#define M_LTECX_STATE INVALID
+#endif
+#ifndef M_LTECX_HOST_FLAGS
+#define M_LTECX_HOST_FLAGS INVALID
+#endif
+#ifndef M_LTECX_TX_LOOKAHEAD_DUR
+#define M_LTECX_TX_LOOKAHEAD_DUR INVALID
+#endif
+#ifndef M_LTECX_PROT_ADV_TIME
+#define M_LTECX_PROT_ADV_TIME INVALID
+#endif
+#ifndef M_LTECX_WCI2_TST_LPBK_NBYTES_TX
+#define M_LTECX_WCI2_TST_LPBK_NBYTES_TX INVALID
+#endif
+#ifndef M_LTECX_WCI2_TST_LPBK_NBYTES_ERR
+#define M_LTECX_WCI2_TST_LPBK_NBYTES_ERR INVALID
+#endif
+#ifndef M_LTECX_WCI2_TST_LPBK_NBYTES_RX
+#define M_LTECX_WCI2_TST_LPBK_NBYTES_RX INVALID
+#endif
+#ifndef M_LTECX_RX_REAGGR
+#define M_LTECX_RX_REAGGR INVALID
+#endif
+#ifndef M_LTECX_ACTUALTX_DURATION
+#define M_LTECX_ACTUALTX_DURATION INVALID
+#endif
+#ifndef M_LTECX_CRTI_MSG
+#define M_LTECX_CRTI_MSG INVALID
+#endif
+#ifndef M_LTECX_CRTI_INTERVAL
+#define M_LTECX_CRTI_INTERVAL INVALID
+#endif
+#ifndef M_LTECX_CRTI_REPEATS
+#define M_LTECX_CRTI_REPEATS INVALID
+#endif
+#ifndef M_LTECX_WCI2_TST_MSG
+#define M_LTECX_WCI2_TST_MSG INVALID
+#endif
+#ifndef M_LTECX_RXPRI_THRESH
+#define M_LTECX_RXPRI_THRESH INVALID
+#endif
+#ifndef M_LTECX_MWSSCAN_BM_LO
+#define M_LTECX_MWSSCAN_BM_LO INVALID
+#endif
+#ifndef M_LTECX_MWSSCAN_BM_HI
+#define M_LTECX_MWSSCAN_BM_HI INVALID
+#endif
+#ifndef M_LTECX_PWRCP_C0
+#define M_LTECX_PWRCP_C0 INVALID
+#endif
+#ifndef M_LTECX_PWRCP_C0_FS
+#define M_LTECX_PWRCP_C0_FS INVALID
+#endif
+#ifndef M_LTECX_PWRCP_C0_FSANT
+#define M_LTECX_PWRCP_C0_FSANT INVALID
+#endif
+#ifndef M_LTECX_PWRCP_C1
+#define M_LTECX_PWRCP_C1 INVALID
+#endif
+#ifndef M_LTECX_PWRCP_C1_FS
+#define M_LTECX_PWRCP_C1_FS INVALID
+#endif
+#ifndef M_LTECX_FS_OFFSET
+#define M_LTECX_FS_OFFSET INVALID
+#endif
+#ifndef M_LTECX_TXNOISE_CNT
+#define M_LTECX_TXNOISE_CNT INVALID
+#endif
+#ifndef M_LTECX_NOISE_DELTA
+#define M_LTECX_NOISE_DELTA INVALID
+#endif
+#ifndef M_LTECX_TYPE4_TXINHIBIT_DURATION
+#define M_LTECX_TYPE4_TXINHIBIT_DURATION INVALID
+#endif
+#ifndef M_LTECX_TYPE4_NONE_ZERO_CNT
+#define M_LTECX_TYPE4_NONE_ZERO_CNT INVALID
+#endif
+#ifndef M_LTECX_TYPE4_TIMEOUT_CNT
+#define M_LTECX_TYPE4_TIMEOUT_CNT INVALID
+#endif
+#ifndef M_LTECX_RXPRI_DURATION
+#define M_LTECX_RXPRI_DURATION INVALID
+#endif
+#ifndef M_LTECX_RXPRI_CNT
+#define M_LTECX_RXPRI_CNT INVALID
+#endif
+#ifndef M_LTECX_TYP6_DURATION
+#define M_LTECX_TYP6_DURATION INVALID
+#endif
+#ifndef M_LTECX_TYP6_CNT
+#define M_LTECX_TYP6_CNT INVALID
+#endif
+#ifndef M_LTECX_TS_PROT_FRAME_CNT
+#define M_LTECX_TS_PROT_FRAME_CNT INVALID
+#endif
+#ifndef M_LTECX_TS_GRANT_CNT
+#define M_LTECX_TS_GRANT_CNT INVALID
+#endif
+#ifndef M_LTECX_TS_GRANT_TIME_DUR
+#define M_LTECX_TS_GRANT_TIME_DUR INVALID
+#endif
+#ifndef M_CCASTATS_PTR
+#define M_CCASTATS_PTR INVALID
+#endif
+#ifndef M_CCA_STATS_BLK
+#define M_CCA_STATS_BLK INVALID
+#endif
+#ifndef M_CCA_TXDUR_L_OFFSET
+#define M_CCA_TXDUR_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_TXDUR_H_OFFSET
+#define M_CCA_TXDUR_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_INBSS_L_OFFSET
+#define M_CCA_INBSS_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_INBSS_H_OFFSET
+#define M_CCA_INBSS_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_OBSS_L_OFFSET
+#define M_CCA_OBSS_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_OBSS_H_OFFSET
+#define M_CCA_OBSS_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_NOCTG_L_OFFSET
+#define M_CCA_NOCTG_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_NOCTG_H_OFFSET
+#define M_CCA_NOCTG_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_NOPKT_L_OFFSET
+#define M_CCA_NOPKT_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_NOPKT_H_OFFSET
+#define M_CCA_NOPKT_H_OFFSET INVALID
+#endif
+#ifndef M_MAC_SLPDUR_L_OFFSET
+#define M_MAC_SLPDUR_L_OFFSET INVALID
+#endif
+#ifndef M_MAC_SLPDUR_H_OFFSET
+#define M_MAC_SLPDUR_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_TXOP_L_OFFSET
+#define M_CCA_TXOP_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_TXOP_H_OFFSET
+#define M_CCA_TXOP_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_GDTXDUR_L_OFFSET
+#define M_CCA_GDTXDUR_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_GDTXDUR_H_OFFSET
+#define M_CCA_GDTXDUR_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_BDTXDUR_L_OFFSET
+#define M_CCA_BDTXDUR_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_BDTXDUR_H_OFFSET
+#define M_CCA_BDTXDUR_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_WIFI_L_OFFSET
+#define M_CCA_WIFI_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_WIFI_H_OFFSET
+#define M_CCA_WIFI_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_EDCRSDUR_L_OFFSET
+#define M_CCA_EDCRSDUR_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_EDCRSDUR_H_OFFSET
+#define M_CCA_EDCRSDUR_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_TXDUR_L
+#define M_CCA_TXDUR_L INVALID
+#endif
+#ifndef M_CCA_TXDUR_H
+#define M_CCA_TXDUR_H INVALID
+#endif
+#ifndef M_CCA_INBSS_L
+#define M_CCA_INBSS_L INVALID
+#endif
+#ifndef M_CCA_INBSS_H
+#define M_CCA_INBSS_H INVALID
+#endif
+#ifndef M_CCA_OBSS_L
+#define M_CCA_OBSS_L INVALID
+#endif
+#ifndef M_CCA_OBSS_H
+#define M_CCA_OBSS_H INVALID
+#endif
+#ifndef M_CCA_NOCTG_L
+#define M_CCA_NOCTG_L INVALID
+#endif
+#ifndef M_CCA_NOCTG_H
+#define M_CCA_NOCTG_H INVALID
+#endif
+#ifndef M_CCA_NOPKT_L
+#define M_CCA_NOPKT_L INVALID
+#endif
+#ifndef M_CCA_NOPKT_H
+#define M_CCA_NOPKT_H INVALID
+#endif
+#ifndef M_MAC_SLPDUR_L
+#define M_MAC_SLPDUR_L INVALID
+#endif
+#ifndef M_MAC_SLPDUR_H
+#define M_MAC_SLPDUR_H INVALID
+#endif
+#ifndef M_CCA_TXOP_L
+#define M_CCA_TXOP_L INVALID
+#endif
+#ifndef M_CCA_TXOP_H
+#define M_CCA_TXOP_H INVALID
+#endif
+#ifndef M_CCA_GDTXDUR_L
+#define M_CCA_GDTXDUR_L INVALID
+#endif
+#ifndef M_CCA_GDTXDUR_H
+#define M_CCA_GDTXDUR_H INVALID
+#endif
+#ifndef M_CCA_BDTXDUR_L
+#define M_CCA_BDTXDUR_L INVALID
+#endif
+#ifndef M_CCA_BDTXDUR_H
+#define M_CCA_BDTXDUR_H INVALID
+#endif
+#ifndef M_CCA_RXPRI_LO
+#define M_CCA_RXPRI_LO INVALID
+#endif
+#ifndef M_CCA_RXPRI_HI
+#define M_CCA_RXPRI_HI INVALID
+#endif
+#ifndef M_CCA_RXSEC20_LO
+#define M_CCA_RXSEC20_LO INVALID
+#endif
+#ifndef M_CCA_RXSEC20_HI
+#define M_CCA_RXSEC20_HI INVALID
+#endif
+#ifndef M_CCA_RXSEC40_LO
+#define M_CCA_RXSEC40_LO INVALID
+#endif
+#ifndef M_CCA_RXSEC40_HI
+#define M_CCA_RXSEC40_HI INVALID
+#endif
+#ifndef M_CCA_RXSEC80_LO
+#define M_CCA_RXSEC80_LO INVALID
+#endif
+#ifndef M_CCA_RXSEC80_HI
+#define M_CCA_RXSEC80_HI INVALID
+#endif
+#ifndef M_CCA_SUSP_L
+#define M_CCA_SUSP_L INVALID
+#endif
+#ifndef M_CCA_SUSP_H
+#define M_CCA_SUSP_H INVALID
+#endif
+#ifndef M_CCA_WIFI_L
+#define M_CCA_WIFI_L INVALID
+#endif
+#ifndef M_CCA_WIFI_H
+#define M_CCA_WIFI_H INVALID
+#endif
+#ifndef M_CCA_EDCRSDUR_L
+#define M_CCA_EDCRSDUR_L INVALID
+#endif
+#ifndef M_CCA_EDCRSDUR_H
+#define M_CCA_EDCRSDUR_H INVALID
+#endif
+#ifndef M_SECRSSI0
+#define M_SECRSSI0 INVALID
+#endif
+#ifndef M_SECRSSI1
+#define M_SECRSSI1 INVALID
+#endif
+#ifndef M_SECRSSI2
+#define M_SECRSSI2 INVALID
+#endif
+#ifndef M_SISO_RXDUR_L
+#define M_SISO_RXDUR_L INVALID
+#endif
+#ifndef M_SISO_RXDUR_H
+#define M_SISO_RXDUR_H INVALID
+#endif
+#ifndef M_SISO_TXOP_L
+#define M_SISO_TXOP_L INVALID
+#endif
+#ifndef M_SISO_TXOP_H
+#define M_SISO_TXOP_H INVALID
+#endif
+#ifndef M_MIMO_RXDUR_L
+#define M_MIMO_RXDUR_L INVALID
+#endif
+#ifndef M_MIMO_RXDUR_H
+#define M_MIMO_RXDUR_H INVALID
+#endif
+#ifndef M_MIMO_TXOP_L
+#define M_MIMO_TXOP_L INVALID
+#endif
+#ifndef M_MIMO_TXOP_H
+#define M_MIMO_TXOP_H INVALID
+#endif
+#ifndef M_MIMO_TXDUR_1X_L
+#define M_MIMO_TXDUR_1X_L INVALID
+#endif
+#ifndef M_MIMO_TXDUR_1X_H
+#define M_MIMO_TXDUR_1X_H INVALID
+#endif
+#ifndef M_MIMO_TXDUR_2X_L
+#define M_MIMO_TXDUR_2X_L INVALID
+#endif
+#ifndef M_MIMO_TXDUR_2X_H
+#define M_MIMO_TXDUR_2X_H INVALID
+#endif
+#ifndef M_MIMO_TXDUR_3X_L
+#define M_MIMO_TXDUR_3X_L INVALID
+#endif
+#ifndef M_MIMO_TXDUR_3X_H
+#define M_MIMO_TXDUR_3X_H INVALID
+#endif
+#ifndef M_SISO_SIFS_L
+#define M_SISO_SIFS_L INVALID
+#endif
+#ifndef M_SISO_SIFS_H
+#define M_SISO_SIFS_H INVALID
+#endif
+#ifndef M_MIMO_SIFS_L
+#define M_MIMO_SIFS_L INVALID
+#endif
+#ifndef M_MIMO_SIFS_H
+#define M_MIMO_SIFS_H INVALID
+#endif
+#ifndef M_CCA_TXNODE0_L_OFFSET
+#define M_CCA_TXNODE0_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_TXNODE0_H_OFFSET
+#define M_CCA_TXNODE0_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_RXNODE0_L_OFFSET
+#define M_CCA_RXNODE0_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_RXNODE0_H_OFFSET
+#define M_CCA_RXNODE0_H_OFFSET INVALID
+#endif
+#ifndef M_CCA_XXOBSS_L_OFFSET
+#define M_CCA_XXOBSS_L_OFFSET INVALID
+#endif
+#ifndef M_CCA_XXOBSS_H_OFFSET
+#define M_CCA_XXOBSS_H_OFFSET INVALID
+#endif
+#ifndef M_MESHCCA_STATS_BLK
+#define M_MESHCCA_STATS_BLK INVALID
+#endif
+#ifndef M_MESHCCA_TXNODE0_OFFSET
+#define M_MESHCCA_TXNODE0_OFFSET INVALID
+#endif
+#ifndef M_MESHCCA_RXNODE0_OFFSET
+#define M_MESHCCA_RXNODE0_OFFSET INVALID
+#endif
+#ifndef M_MESHCCA_OBSSNODE_OFFSET
+#define M_MESHCCA_OBSSNODE_OFFSET INVALID
+#endif
+#ifndef M_MESHCCA_TXNODE0
+#define M_MESHCCA_TXNODE0 INVALID
+#endif
+#ifndef M_MESHCCA_RXNODE0
+#define M_MESHCCA_RXNODE0 INVALID
+#endif
+#ifndef M_MESHCCA_OBSSNODE
+#define M_MESHCCA_OBSSNODE INVALID
+#endif
+#ifndef M_HUGENAV_RTS_CNT
+#define M_HUGENAV_RTS_CNT INVALID
+#endif
+#ifndef M_HUGENAV_CTS_CNT
+#define M_HUGENAV_CTS_CNT INVALID
+#endif
+#ifndef M_TXFS_PTR
+#define M_TXFS_PTR INVALID
+#endif
+#ifndef M_AMP_STATS_PTR
+#define M_AMP_STATS_PTR INVALID
+#endif
+#ifndef M_MIMO_MAXSYM
+#define M_MIMO_MAXSYM INVALID
+#endif
+#ifndef M_WATCHDOG_8TU
+#define M_WATCHDOG_8TU INVALID
+#endif
+#ifndef M_BTAMP_GAIN_DELTA
+#define M_BTAMP_GAIN_DELTA INVALID
+#endif
+#ifndef M_BCN_TXPCTL0
+#define M_BCN_TXPCTL0 INVALID
+#endif
+#ifndef M_BCN_TXPCTL1
+#define M_BCN_TXPCTL1 INVALID
+#endif
+#ifndef M_BCN_TXPCTL2
+#define M_BCN_TXPCTL2 INVALID
+#endif
+#ifndef M_RSP_TXPCTL0
+#define M_RSP_TXPCTL0 INVALID
+#endif
+#ifndef M_RSP_TXPCTL1
+#define M_RSP_TXPCTL1 INVALID
+#endif
+#ifndef M_UPRS_INTVL_L
+#define M_UPRS_INTVL_L INVALID
+#endif
+#ifndef M_UPRS_INTVL_H
+#define M_UPRS_INTVL_H INVALID
+#endif
+#ifndef M_UPRS_FD_TSF_LOC
+#define M_UPRS_FD_TSF_LOC INVALID
+#endif
+#ifndef M_UPRS_FD_TXTSF_OFFSET
+#define M_UPRS_FD_TXTSF_OFFSET INVALID
+#endif
+#ifndef M_TXDUTY_RATIOX16_CCK
+#define M_TXDUTY_RATIOX16_CCK INVALID
+#endif
+#ifndef M_TXDUTY_RATIOX16_OFDM
+#define M_TXDUTY_RATIOX16_OFDM INVALID
+#endif
+#ifndef M_BCN_PCTLWD
+#define M_BCN_PCTLWD INVALID
+#endif
+#ifndef M_BCN_PCTL1WD
+#define M_BCN_PCTL1WD INVALID
+#endif
+#ifndef M_SWDIV_SWCTRL_REG
+#define M_SWDIV_SWCTRL_REG INVALID
+#endif
+#ifndef M_SWDIV_PREF_ANT
+#define M_SWDIV_PREF_ANT INVALID
+#endif
+#ifndef M_SWDIV_TX_PREF_ANT
+#define M_SWDIV_TX_PREF_ANT INVALID
+#endif
+#ifndef M_LCNXN_SWCTRL_MASK
+#define M_LCNXN_SWCTRL_MASK INVALID
+#endif
+#ifndef M_4324_RXTX_WAR_PTR
+#define M_4324_RXTX_WAR_PTR INVALID
+#endif
+#ifndef M_TX_MODE_0xb0_OFFSET
+#define M_TX_MODE_0xb0_OFFSET INVALID
+#endif
+#ifndef M_TX_MODE_0x14d_OFFSET
+#define M_TX_MODE_0x14d_OFFSET INVALID
+#endif
+#ifndef M_TX_MODE_0xb1_OFFSET
+#define M_TX_MODE_0xb1_OFFSET INVALID
+#endif
+#ifndef M_TX_MODE_0x14e_OFFSET
+#define M_TX_MODE_0x14e_OFFSET INVALID
+#endif
+#ifndef M_TX_MODE_0xb4_OFFSET
+#define M_TX_MODE_0xb4_OFFSET INVALID
+#endif
+#ifndef M_TX_MODE_0x151_OFFSET
+#define M_TX_MODE_0x151_OFFSET INVALID
+#endif
+#ifndef M_RX_MODE_0xb0_OFFSET
+#define M_RX_MODE_0xb0_OFFSET INVALID
+#endif
+#ifndef M_RX_MODE_0x14d_OFFSET
+#define M_RX_MODE_0x14d_OFFSET INVALID
+#endif
+#ifndef M_RX_MODE_0xb1_OFFSET
+#define M_RX_MODE_0xb1_OFFSET INVALID
+#endif
+#ifndef M_RX_MODE_0x14e_OFFSET
+#define M_RX_MODE_0x14e_OFFSET INVALID
+#endif
+#ifndef M_RX_MODE_0xb4_OFFSET
+#define M_RX_MODE_0xb4_OFFSET INVALID
+#endif
+#ifndef M_RX_MODE_0x151_OFFSET
+#define M_RX_MODE_0x151_OFFSET INVALID
+#endif
+#ifndef M_CHIP_CHECK_OFFSET
+#define M_CHIP_CHECK_OFFSET INVALID
+#endif
+#ifndef M_CTXPRS_BLK
+#define M_CTXPRS_BLK INVALID
+#endif
+#ifndef M_RADIO_PWR
+#define M_RADIO_PWR INVALID
+#endif
+#ifndef M_IFSCTL1
+#define M_IFSCTL1 INVALID
+#endif
+#ifndef M_TX_IDLE_BUSY_RATIO_X_16_CCK
+#define M_TX_IDLE_BUSY_RATIO_X_16_CCK INVALID
+#endif
+#ifndef M_TX_IDLE_BUSY_RATIO_X_16_OFDM
+#define M_TX_IDLE_BUSY_RATIO_X_16_OFDM INVALID
+#endif
+#ifndef M_RSP_PCTLWD
+#define M_RSP_PCTLWD INVALID
+#endif
+#ifndef M_BCN_POWER_ADJUST
+#define M_BCN_POWER_ADJUST INVALID
+#endif
+#ifndef M_PRS_POWER_ADJUST
+#define M_PRS_POWER_ADJUST INVALID
+#endif
+#ifndef M_BCNTRIM_BLK
+#define M_BCNTRIM_BLK INVALID
+#endif
+#ifndef M_BCNTRIM_PER_OFFSET
+#define M_BCNTRIM_PER_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_TIMEND_OFFSET
+#define M_BCNTRIM_TIMEND_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_TSFLMT_OFFSET
+#define M_BCNTRIM_TSFLMT_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_CNT_OFFSET
+#define M_BCNTRIM_CNT_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_RSSI_OFFSET
+#define M_BCNTRIM_RSSI_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_CHAN_OFFSET
+#define M_BCNTRIM_CHAN_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_SNR_OFFSET
+#define M_BCNTRIM_SNR_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_CUR_OFFSET
+#define M_BCNTRIM_CUR_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_PREVLEN_OFFSET
+#define M_BCNTRIM_PREVLEN_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_TIMLEN_OFFSET
+#define M_BCNTRIM_TIMLEN_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_RXMBSS_OFFSET
+#define M_BCNTRIM_RXMBSS_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_TIMNOTFOUND_OFFSET
+#define M_BCNTRIM_TIMNOTFOUND_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_CANTRIM_OFFSET
+#define M_BCNTRIM_CANTRIM_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_LENCHG_OFFSET
+#define M_BCNTRIM_LENCHG_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_TSFDRF_OFFSET
+#define M_BCNTRIM_TSFDRF_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_TIMBITSET_OFFSET
+#define M_BCNTRIM_TIMBITSET_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_WAKE_OFFSET
+#define M_BCNTRIM_WAKE_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_SSID_OFFSET
+#define M_BCNTRIM_SSID_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_DTIM_OFFSET
+#define M_BCNTRIM_DTIM_OFFSET INVALID
+#endif
+#ifndef M_BCNTRIM_SSIDBLK_OFFSET
+#define M_BCNTRIM_SSIDBLK_OFFSET INVALID
+#endif
+#ifndef M_PHY_NOISE
+#define M_PHY_NOISE INVALID
+#endif
+#ifndef M_RSSI_LOCK_OFFSET
+#define M_RSSI_LOCK_OFFSET INVALID
+#endif
+#ifndef M_RSSI_LOGNSAMPS_OFFSET
+#define M_RSSI_LOGNSAMPS_OFFSET INVALID
+#endif
+#ifndef M_RSSI_NSAMPS_OFFSET
+#define M_RSSI_NSAMPS_OFFSET INVALID
+#endif
+#ifndef M_RSSI_IQEST_EN_OFFSET
+#define M_RSSI_IQEST_EN_OFFSET INVALID
+#endif
+#ifndef M_RSSI_BOARDATTEN_DBG_OFFSET
+#define M_RSSI_BOARDATTEN_DBG_OFFSET INVALID
+#endif
+#ifndef M_RSSI_IQPWR_DBG_OFFSET
+#define M_RSSI_IQPWR_DBG_OFFSET INVALID
+#endif
+#ifndef M_RSSI_IQPWR_DB_DBG_OFFSET
+#define M_RSSI_IQPWR_DB_DBG_OFFSET INVALID
+#endif
+#ifndef M_NOISE_IQPWR
+#define M_NOISE_IQPWR INVALID
+#endif
+#ifndef M_NOISE_IQPWR_OFFSET
+#define M_NOISE_IQPWR_OFFSET INVALID
+#endif
+#ifndef M_NOISE_IQPWR_DB_OFFSET
+#define M_NOISE_IQPWR_DB_OFFSET INVALID
+#endif
+#ifndef M_NOISE_LOGNSAMPS
+#define M_NOISE_LOGNSAMPS INVALID
+#endif
+#ifndef M_NOISE_LOGNSAMPS_OFFSET
+#define M_NOISE_LOGNSAMPS_OFFSET INVALID
+#endif
+#ifndef M_NOISE_NSAMPS
+#define M_NOISE_NSAMPS INVALID
+#endif
+#ifndef M_NOISE_NSAMPS_OFFSET
+#define M_NOISE_NSAMPS_OFFSET INVALID
+#endif
+#ifndef M_NOISE_IQEST_EN_OFFSET
+#define M_NOISE_IQEST_EN_OFFSET INVALID
+#endif
+#ifndef M_NOISE_IQEST_PENDING
+#define M_NOISE_IQEST_PENDING INVALID
+#endif
+#ifndef M_NOISE_IQEST_PENDING_OFFSET
+#define M_NOISE_IQEST_PENDING_OFFSET INVALID
+#endif
+#ifndef M_RSSI_IQEST_PENDING_OFFSET
+#define M_RSSI_IQEST_PENDING_OFFSET INVALID
+#endif
+#ifndef M_NOISE_LTE_ON
+#define M_NOISE_LTE_ON INVALID
+#endif
+#ifndef M_NOISE_LTE_IQPWR_DB_OFFSET
+#define M_NOISE_LTE_IQPWR_DB_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_RSSI_0_OFFSET
+#define M_SSLPN_RSSI_0_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_0_logchPowAccOut_OFFSET
+#define M_SSLPN_SNR_0_logchPowAccOut_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_0_errAccOut_OFFSET
+#define M_SSLPN_SNR_0_errAccOut_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_RSSI_1_OFFSET
+#define M_SSLPN_RSSI_1_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_1_logchPowAccOut_OFFSET
+#define M_SSLPN_SNR_1_logchPowAccOut_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_1_errAccOut_OFFSET
+#define M_SSLPN_SNR_1_errAccOut_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_RSSI_2_OFFSET
+#define M_SSLPN_RSSI_2_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_2_logchPowAccOut_OFFSET
+#define M_SSLPN_SNR_2_logchPowAccOut_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_2_errAccOut_OFFSET
+#define M_SSLPN_SNR_2_errAccOut_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_RSSI_3_OFFSET
+#define M_SSLPN_RSSI_3_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_3_logchPowAccOut_OFFSET
+#define M_SSLPN_SNR_3_logchPowAccOut_OFFSET INVALID
+#endif
+#ifndef M_SSLPN_SNR_3_errAccOut_OFFSET
+#define M_SSLPN_SNR_3_errAccOut_OFFSET INVALID
+#endif
+#ifndef M_RSSI_QDB_0_OFFSET
+#define M_RSSI_QDB_0_OFFSET INVALID
+#endif
+#ifndef M_RSSI_QDB_1_OFFSET
+#define M_RSSI_QDB_1_OFFSET INVALID
+#endif
+#ifndef M_RSSI_QDB_2_OFFSET
+#define M_RSSI_QDB_2_OFFSET INVALID
+#endif
+#ifndef M_RSSI_QDB_3_OFFSET
+#define M_RSSI_QDB_3_OFFSET INVALID
+#endif
+#ifndef M_WOWL_TEST_CYCLE
+#define M_WOWL_TEST_CYCLE INVALID
+#endif
+#ifndef M_WOWL_TMR_L
+#define M_WOWL_TMR_L INVALID
+#endif
+#ifndef M_WOWL_TMR_ML
+#define M_WOWL_TMR_ML INVALID
+#endif
+#ifndef M_KEYRC_LAST
+#define M_KEYRC_LAST INVALID
+#endif
+#ifndef M_NETPAT_BLK_PTR
+#define M_NETPAT_BLK_PTR INVALID
+#endif
+#ifndef M_WOWL_GPIOSEL
+#define M_WOWL_GPIOSEL INVALID
+#endif
+#ifndef M_NETPAT_NUM
+#define M_NETPAT_NUM INVALID
+#endif
+#ifndef M_AESTABLES_PTR
+#define M_AESTABLES_PTR INVALID
+#endif
+#ifndef M_AID_NBIT
+#define M_AID_NBIT INVALID
+#endif
+#ifndef M_HOST_WOWLBM
+#define M_HOST_WOWLBM INVALID
+#endif
+#ifndef M_GROUPKEY_UPBM
+#define M_GROUPKEY_UPBM INVALID
+#endif
+#ifndef M_WOWL_OFFLOADCFG_PTR
+#define M_WOWL_OFFLOADCFG_PTR INVALID
+#endif
+#ifndef M_CTX_GTKMSG2
+#define M_CTX_GTKMSG2 INVALID
+#endif
+#ifndef M_TXPHYERR_CNT
+#define M_TXPHYERR_CNT INVALID
+#endif
+#ifndef M_SECSUITE
+#define M_SECSUITE INVALID
+#endif
+#ifndef M_TSCPN_BLK
+#define M_TSCPN_BLK INVALID
+#endif
+#ifndef M_WAKEEVENT_IND
+#define M_WAKEEVENT_IND INVALID
+#endif
+#ifndef M_EAPOLMICKEY_BLK
+#define M_EAPOLMICKEY_BLK INVALID
+#endif
+#ifndef M_RXFRM_SRA0
+#define M_RXFRM_SRA0 INVALID
+#endif
+#ifndef M_RXFRM_SRA1
+#define M_RXFRM_SRA1 INVALID
+#endif
+#ifndef M_RXFRM_SRA2
+#define M_RXFRM_SRA2 INVALID
+#endif
+#ifndef M_RXFRM_RA0
+#define M_RXFRM_RA0 INVALID
+#endif
+#ifndef M_RXFRM_RA1
+#define M_RXFRM_RA1 INVALID
+#endif
+#ifndef M_RXFRM_RA2
+#define M_RXFRM_RA2 INVALID
+#endif
+#ifndef M_TXPSPFRM_CNT
+#define M_TXPSPFRM_CNT INVALID
+#endif
+#ifndef M_WOWL_NOBCN
+#define M_WOWL_NOBCN INVALID
+#endif
+#ifndef M_DRVR_UCODE_IF_PTR
+#define M_DRVR_UCODE_IF_PTR INVALID
+#endif
+#ifndef M_ULP_FEATURES_OFFSET
+#define M_ULP_FEATURES_OFFSET INVALID
+#endif
+#ifndef M_DRIVER_BLOCK_OFFSET
+#define M_DRIVER_BLOCK_OFFSET INVALID
+#endif
+#ifndef M_CRX_BLK
+#define M_CRX_BLK INVALID
+#endif
+#ifndef M_RXFRM_BASE_ADDR
+#define M_RXFRM_BASE_ADDR INVALID
+#endif
+#ifndef M_SAVERESTORE_4335_BLK
+#define M_SAVERESTORE_4335_BLK INVALID
+#endif
+#ifndef M_ILP_PER_H_OFFSET
+#define M_ILP_PER_H_OFFSET INVALID
+#endif
+#ifndef M_ILP_PER_L_OFFSET
+#define M_ILP_PER_L_OFFSET INVALID
+#endif
+#ifndef M_DRIVER_BLOCK
+#define M_DRIVER_BLOCK INVALID
+#endif
+#ifndef M_FCBS_DS1_MAC_INIT_BLOCK_OFFSET
+#define M_FCBS_DS1_MAC_INIT_BLOCK_OFFSET INVALID
+#endif
+#ifndef M_FCBS_DS1_PHY_RADIO_BLOCK_OFFSET
+#define M_FCBS_DS1_PHY_RADIO_BLOCK_OFFSET INVALID
+#endif
+#ifndef M_FCBS_DS1_RADIO_PD_BLOCK_OFFSET
+#define M_FCBS_DS1_RADIO_PD_BLOCK_OFFSET INVALID
+#endif
+#ifndef M_FCBS_DS1_EXIT_BLOCK_OFFSET
+#define M_FCBS_DS1_EXIT_BLOCK_OFFSET INVALID
+#endif
+#ifndef M_FCBS_DS0_RADIO_PU_BLOCK_OFFSET
+#define M_FCBS_DS0_RADIO_PU_BLOCK_OFFSET INVALID
+#endif
+#ifndef M_FCBS_DS0_RADIO_PD_BLOCK_OFFSET
+#define M_FCBS_DS0_RADIO_PD_BLOCK_OFFSET INVALID
+#endif
+#ifndef M_ULP_WAKE_IND
+#define M_ULP_WAKE_IND INVALID
+#endif
+#ifndef M_ILP_PER_H
+#define M_ILP_PER_H INVALID
+#endif
+#ifndef M_ILP_PER_L
+#define M_ILP_PER_L INVALID
+#endif
+#ifndef M_DS1_CTRL_SDIO_PIN
+#define M_DS1_CTRL_SDIO_PIN INVALID
+#endif
+#ifndef M_DS1_CTRL_SDIO
+#define M_DS1_CTRL_SDIO INVALID
+#endif
+#ifndef M_RXBEACONMBSS_CNT
+#define M_RXBEACONMBSS_CNT INVALID
+#endif
+#ifndef M_FRRUN_LBCN_CNT
+#define M_FRRUN_LBCN_CNT INVALID
+#endif
+#ifndef M_FCBS_DS0_RADIO_PU_BLOCK
+#define M_FCBS_DS0_RADIO_PU_BLOCK INVALID
+#endif
+#ifndef M_FCBS_DS0_RADIO_PD_BLOCK
+#define M_FCBS_DS0_RADIO_PD_BLOCK INVALID
+#endif
+#ifndef M_TS_SYNC_GPIO
+#define M_TS_SYNC_GPIO INVALID
+#endif
+#ifndef M_TS_SYNC_TSF_L
+#define M_TS_SYNC_TSF_L INVALID
+#endif
+#ifndef M_TS_SYNC_TSF_ML
+#define M_TS_SYNC_TSF_ML INVALID
+#endif
+#ifndef M_TS_SYNC_AVB_L
+#define M_TS_SYNC_AVB_L INVALID
+#endif
+#ifndef M_TS_SYNC_AVB_H
+#define M_TS_SYNC_AVB_H INVALID
+#endif
+#ifndef M_TS_SYNC_PMU_L
+#define M_TS_SYNC_PMU_L INVALID
+#endif
+#ifndef M_TS_SYNC_PMU_H
+#define M_TS_SYNC_PMU_H INVALID
+#endif
+#ifndef M_TS_SYNC_TXTSF_ML
+#define M_TS_SYNC_TXTSF_ML INVALID
+#endif
+#ifndef M_TS_SYNC_GPIOMINDLY
+#define M_TS_SYNC_GPIOMINDLY INVALID
+#endif
+#ifndef M_TS_SYNC_GPIOREALDLY
+#define M_TS_SYNC_GPIOREALDLY INVALID
+#endif
+#ifndef M_OPS_MODE
+#define M_OPS_MODE INVALID
+#endif
+#ifndef M_OPS_RSSI_THRSH
+#define M_OPS_RSSI_THRSH INVALID
+#endif
+#ifndef M_OPS_MAX_LMT
+#define M_OPS_MAX_LMT INVALID
+#endif
+#ifndef M_OPS_HIST
+#define M_OPS_HIST INVALID
+#endif
+#ifndef M_OPS_LIGHT_L
+#define M_OPS_LIGHT_L INVALID
+#endif
+#ifndef M_OPS_LIGHT_H
+#define M_OPS_LIGHT_H INVALID
+#endif
+#ifndef M_OPS_FULL_L
+#define M_OPS_FULL_L INVALID
+#endif
+#ifndef M_OPS_FULL_H
+#define M_OPS_FULL_H INVALID
+#endif
+#ifndef M_OPS_NAV_CNT
+#define M_OPS_NAV_CNT INVALID
+#endif
+#ifndef M_OPS_PLCP_CNT
+#define M_OPS_PLCP_CNT INVALID
+#endif
+#ifndef M_OPS_RSSI_CNT
+#define M_OPS_RSSI_CNT INVALID
+#endif
+#ifndef M_OPS_MISS_CNT
+#define M_OPS_MISS_CNT INVALID
+#endif
+#ifndef M_OPS_MAXLMT_CNT
+#define M_OPS_MAXLMT_CNT INVALID
+#endif
+#ifndef M_OPS_MYBSS_CNT
+#define M_OPS_MYBSS_CNT INVALID
+#endif
+#ifndef M_OPS_OBSS_CNT
+#define M_OPS_OBSS_CNT INVALID
+#endif
+#ifndef M_OPS_WAKE_CNT
+#define M_OPS_WAKE_CNT INVALID
+#endif
+#ifndef M_OPS_BCN_CNT
+#define M_OPS_BCN_CNT INVALID
+#endif
+#ifndef M_UCODE_MACSTAT
+#define M_UCODE_MACSTAT INVALID
+#endif
+#ifndef M_UCODE_MACSTAT1_PTR
+#define M_UCODE_MACSTAT1_PTR INVALID
+#endif
+#ifndef M_SYNTHPU_DLY
+#define M_SYNTHPU_DLY INVALID
+#endif
+#ifndef MX_PSM_SOFT_REGS
+#define MX_PSM_SOFT_REGS INVALID
+#endif
+#ifndef MX_BOM_REV_MAJOR
+#define MX_BOM_REV_MAJOR INVALID
+#endif
+#ifndef MX_BOM_REV_MINOR
+#define MX_BOM_REV_MINOR INVALID
+#endif
+#ifndef MX_UCODE_FEATURES
+#define MX_UCODE_FEATURES INVALID
+#endif
+#ifndef MX_UCODE_DATE
+#define MX_UCODE_DATE INVALID
+#endif
+#ifndef MX_UCODE_TIME
+#define MX_UCODE_TIME INVALID
+#endif
+#ifndef MX_UCODE_DBGST
+#define MX_UCODE_DBGST INVALID
+#endif
+#ifndef MX_WATCHDOG_8TU
+#define MX_WATCHDOG_8TU INVALID
+#endif
+#ifndef MX_MACHW_VER
+#define MX_MACHW_VER INVALID
+#endif
+#ifndef MX_PHYVER
+#define MX_PHYVER INVALID
+#endif
+#ifndef MX_PHYTYPE
+#define MX_PHYTYPE INVALID
+#endif
+#ifndef MX_HOST_FLAGS0
+#define MX_HOST_FLAGS0 INVALID
+#endif
+#ifndef MX_HOST_FLAGS1
+#define MX_HOST_FLAGS1 INVALID
+#endif
+#ifndef MX_HOST_FLAGS2
+#define MX_HOST_FLAGS2 INVALID
+#endif
+#ifndef MX_BFI_BLK
+#define MX_BFI_BLK INVALID
+#endif
+#ifndef MX_NDPPWR_TBL
+#define MX_NDPPWR_TBL INVALID
+#endif
+#ifndef MX_VMU_NDPPWR_TBL
+#define MX_VMU_NDPPWR_TBL INVALID
+#endif
+#ifndef MX_HMU_NDPPWR_TBL
+#define MX_HMU_NDPPWR_TBL INVALID
+#endif
+#ifndef MX_MUSND_PER
+#define MX_MUSND_PER INVALID
+#endif
+#ifndef MX_UTRACE_SPTR
+#define MX_UTRACE_SPTR INVALID
+#endif
+#ifndef MX_UTRACE_EPTR
+#define MX_UTRACE_EPTR INVALID
+#endif
+#ifndef M_AGGMPDU_HISTO
+#define M_AGGMPDU_HISTO INVALID
+#endif
+#ifndef M_AGGSTOP_HISTO
+#define M_AGGSTOP_HISTO INVALID
+#endif
+#ifndef M_MBURST_HISTO
+#define M_MBURST_HISTO INVALID
+#endif
+#ifndef M_TXBCN_DUR
+#define M_TXBCN_DUR INVALID
+#endif
+#ifndef M_PHYPREEMPT_VAL
+#define M_PHYPREEMPT_VAL INVALID
+#endif
+#ifndef M_COREMASK_HETB
+#define M_COREMASK_HETB INVALID
+#endif
+#ifndef M_RXTRIG_CMNINFO
+#define M_RXTRIG_CMNINFO INVALID
+#endif
+#ifndef M_RXTRIG_USRINFO
+#define M_RXTRIG_USRINFO INVALID
+#endif
+#ifndef M_TXERR_PHYSTS
+#define M_TXERR_PHYSTS INVALID
+#endif
+#ifndef M_TXERR_REASON0
+#define M_TXERR_REASON0 INVALID
+#endif
+#ifndef M_TXERR_REASON1
+#define M_TXERR_REASON1 INVALID
+#endif
+#ifndef M_TXERR_TXDUR
+#define M_TXERR_TXDUR INVALID
+#endif
+#ifndef M_TXERR_PCTLEN
+#define M_TXERR_PCTLEN INVALID
+#endif
+#ifndef M_TXERR_PCTL4
+#define M_TXERR_PCTL4 INVALID
+#endif
+#ifndef M_TXERR_PCTL9
+#define M_TXERR_PCTL9 INVALID
+#endif
+#ifndef M_TXERR_PCTL10
+#define M_TXERR_PCTL10 INVALID
+#endif
+#ifndef M_TXERR_CCLEN
+#define M_TXERR_CCLEN INVALID
+#endif
+#ifndef M_TXERR_TXBYTES_L
+#define M_TXERR_TXBYTES_L INVALID
+#endif
+#ifndef M_TXERR_TXBYTES_H
+#define M_TXERR_TXBYTES_H INVALID
+#endif
+#ifndef M_TXERR_UNFLSTS
+#define M_TXERR_UNFLSTS INVALID
+#endif
+#ifndef M_TXERR_USR
+#define M_TXERR_USR INVALID
+#endif
+#ifndef M_RXTRIG_MYAID_CNT
+#define M_RXTRIG_MYAID_CNT INVALID
+#endif
+#ifndef M_RXTRIG_RAND_CNT
+#define M_RXTRIG_RAND_CNT INVALID
+#endif
+#ifndef M_RXSWRST_CNT
+#define M_RXSWRST_CNT INVALID
+#endif
+#ifndef M_RXSFCQI_CNT
+#define M_RXSFCQI_CNT INVALID
+#endif
+#ifndef M_NDPAUSR_CNT
+#define M_NDPAUSR_CNT INVALID
+#endif
+#ifndef M_BFD_DONE_CNT
+#define M_BFD_DONE_CNT INVALID
+#endif
+#ifndef M_BFD_FAIL_CNT
+#define M_BFD_FAIL_CNT INVALID
+#endif
+#ifndef M_RXSFERR_CNT
+#define M_RXSFERR_CNT INVALID
+#endif
+#ifndef M_RXPFFLUSH_CNT
+#define M_RXPFFLUSH_CNT INVALID
+#endif
+#ifndef M_RXFLUCMT_CNT
+#define M_RXFLUCMT_CNT INVALID
+#endif
+#ifndef M_RXFLUOV_CNT
+#define M_RXFLUOV_CNT INVALID
+#endif
+#ifndef MX_HEMSCH_BLKS
+#define MX_HEMSCH_BLKS INVALID
+#endif
+#ifndef MX_HEMSCH0_BLK
+#define MX_HEMSCH0_BLK INVALID
+#endif
+#ifndef MX_HEMSCH0_SIGA
+#define MX_HEMSCH0_SIGA INVALID
+#endif
+#ifndef MX_HEMSCH0_PCTL0
+#define MX_HEMSCH0_PCTL0 INVALID
+#endif
+#ifndef MX_HEMSCH0_N
+#define MX_HEMSCH0_N INVALID
+#endif
+#ifndef MX_HEMSCH0_USR
+#define MX_HEMSCH0_USR INVALID
+#endif
+#ifndef MX_HEMSCH0_URDY0
+#define MX_HEMSCH0_URDY0 INVALID
+#endif
+#ifndef M_TXTRIG_FLAG
+#define M_TXTRIG_FLAG INVALID
+#endif
+#ifndef M_TXTRIG_NUM
+#define M_TXTRIG_NUM INVALID
+#endif
+#ifndef M_TXTRIG_LEN
+#define M_TXTRIG_LEN INVALID
+#endif
+#ifndef M_TXTRIG_RATE
+#define M_TXTRIG_RATE INVALID
+#endif
+#ifndef M_MUAGG_HISTO
+#define M_MUAGG_HISTO INVALID
+#endif
+#ifndef M_HEMMUAGG_HISTO
+#define M_HEMMUAGG_HISTO INVALID
+#endif
+#ifndef M_HEOMUAGG_HISTO
+#define M_HEOMUAGG_HISTO INVALID
+#endif
+#ifndef M_TXAMPDUSU_CNT
+#define M_TXAMPDUSU_CNT INVALID
+#endif
+#ifndef M_TXTRIG_MINTIME
+#define M_TXTRIG_MINTIME INVALID
+#endif
+#ifndef M_TXTRIG_FRAME
+#define M_TXTRIG_FRAME INVALID
+#endif
+#ifndef M_TXTRIG_CMNINFO
+#define M_TXTRIG_CMNINFO INVALID
+#endif
+#ifndef M_ULRXCTL_BLK
+#define M_ULRXCTL_BLK INVALID
+#endif
+#ifndef M_RTS_MINLEN_L
+#define M_RTS_MINLEN_L INVALID
+#endif
+#ifndef M_RTS_MINLEN_H
+#define M_RTS_MINLEN_H INVALID
+#endif
+#ifndef M_AGG0_CNT
+#define M_AGG0_CNT INVALID
+#endif
+#ifndef M_TRIGREFILL_CNT
+#define M_TRIGREFILL_CNT INVALID
+#endif
+#ifndef M_TXTRIG_CNT
+#define M_TXTRIG_CNT INVALID
+#endif
+#ifndef M_RXHETBBA_CNT
+#define M_RXHETBBA_CNT INVALID
+#endif
+#ifndef M_TXBAMTID_CNT
+#define M_TXBAMTID_CNT INVALID
+#endif
+#ifndef M_TXBAMSTA_CNT
+#define M_TXBAMSTA_CNT INVALID
+#endif
+#ifndef M_TXMBA_CNT
+#define M_TXMBA_CNT INVALID
+#endif
+#ifndef M_RXMYDTINRSP
+#define M_RXMYDTINRSP INVALID
+#endif
+#ifndef M_RXEXIT_CNT
+#define M_RXEXIT_CNT INVALID
+#endif
+#ifndef M_PHYRXSFULL_CNT
+#define M_PHYRXSFULL_CNT INVALID
+#endif
+#ifndef M_BFECAP_HE
+#define M_BFECAP_HE INVALID
+#endif
+#ifndef M_BFECAP_VHT
+#define M_BFECAP_VHT INVALID
+#endif
+#ifndef M_BFECAP_HT
+#define M_BFECAP_HT INVALID
+#endif
+#ifndef M_BSS_BLK
+#define M_BSS_BLK INVALID
+#endif
+#ifndef MX_MUBFI_BLK
+#define MX_MUBFI_BLK INVALID
+#endif
+#ifndef M_TXTRIG_SRXCTL
+#define M_TXTRIG_SRXCTL INVALID
+#endif
+#ifndef M_TXTRIG_SRXCTLUSR
+#define M_TXTRIG_SRXCTLUSR INVALID
+#endif
+#ifndef M_ULTX_STS
+#define M_ULTX_STS INVALID
+#endif
+#ifndef M_ULTX_ACMASK
+#define M_ULTX_ACMASK INVALID
+#endif
+#ifndef M_BCN_TXPCTL6
+#define M_BCN_TXPCTL6 INVALID
+#endif
+#ifndef MX_OQEXPECTN_BLK
+#define MX_OQEXPECTN_BLK INVALID
+#endif
+#ifndef MX_OQMAXN_BLK
+#define MX_OQMAXN_BLK INVALID
+#endif
+#ifndef MX_OMSCH_TMOUT
+#define MX_OMSCH_TMOUT INVALID
+#endif
+#ifndef MX_SNDREQ_BLK
+#define MX_SNDREQ_BLK INVALID
+#endif
+#ifndef M_BFI_GENCFG
+#define M_BFI_GENCFG INVALID
+#endif
+#ifndef MX_TRIG_TXCFG
+#define MX_TRIG_TXCFG INVALID
+#endif
+#ifndef MX_TRIG_TXLMT
+#define MX_TRIG_TXLMT INVALID
+#endif
+#ifndef M_PHYREG_TDSFO_VAL
+#define M_PHYREG_TDSFO_VAL INVALID
+#endif
+#ifndef M_PHYREG_HWOBSS_VAL
+#define M_PHYREG_HWOBSS_VAL INVALID
+#endif
+#ifndef M_PHYREG_TX_SHAPER_COMMON12_VAL
+#define M_PHYREG_TX_SHAPER_COMMON12_VAL INVALID
+#endif
+#ifndef M_BSS_BSRT_BLK
+#define M_BSS_BSRT_BLK INVALID
+#endif
+#ifndef M_STXVM_BLK
+#define M_STXVM_BLK INVALID
+#endif
+#ifndef MX_TXVBMP_BLK
+#define MX_TXVBMP_BLK INVALID
+#endif
+#ifndef MX_MRQ_UPDPEND
+#define MX_MRQ_UPDPEND INVALID
+#endif
+#ifndef MX_TXVM_BLK
+#define MX_TXVM_BLK INVALID
+#endif
+#ifndef MX_CQIBMP_BLK
+#define MX_CQIBMP_BLK INVALID
+#endif
+#ifndef MX_CQIM_BLK
+#define MX_CQIM_BLK INVALID
+#endif
+#ifndef M_TXBRPTRIG_CNT
+#define M_TXBRPTRIG_CNT INVALID
+#endif
+#ifndef MX_MACREQ_BLK
+#define MX_MACREQ_BLK INVALID
+#endif
+#ifndef M_TXVMSTATS_BLK
+#define M_TXVMSTATS_BLK INVALID
+#endif
+#ifndef M_CQIMSTATS_BLK
+#define M_CQIMSTATS_BLK INVALID
+#endif
+#ifndef M_TXVFULL_CNT
+#define M_TXVFULL_CNT INVALID
+#endif
+#ifndef MX_SNDAGE_THRSH
+#define MX_SNDAGE_THRSH INVALID
+#endif
+#ifndef M_HETB_CSTHRSH_LO
+#define M_HETB_CSTHRSH_LO INVALID
+#endif
+#ifndef M_HETB_CSTHRSH_HI
+#define M_HETB_CSTHRSH_HI INVALID
+#endif
+#ifndef MX_CURCHANNEL
+#define MX_CURCHANNEL INVALID
+#endif
+#ifndef MX_OQMINN_BLK
+#define MX_OQMINN_BLK INVALID
+#endif
+#ifndef M_D11SR_BLK
+#define M_D11SR_BLK INVALID
+#endif
+#ifndef M_D11SR_NSRG_PDMIN
+#define M_D11SR_NSRG_PDMIN INVALID
+#endif
+#ifndef M_D11SR_NSRG_PDMAX
+#define M_D11SR_NSRG_PDMAX INVALID
+#endif
+#ifndef M_D11SR_SRG_PDMIN
+#define M_D11SR_SRG_PDMIN INVALID
+#endif
+#ifndef M_D11SR_SRG_PDMAX
+#define M_D11SR_SRG_PDMAX INVALID
+#endif
+#ifndef M_D11SR_TXPWRREF
+#define M_D11SR_TXPWRREF INVALID
+#endif
+#ifndef M_D11SR_NSRG_TXPWRREF0
+#define M_D11SR_NSRG_TXPWRREF0 INVALID
+#endif
+#ifndef M_D11SR_SRG_TXPWRREF0
+#define M_D11SR_SRG_TXPWRREF0 INVALID
+#endif
+#ifndef M_D11SR_OPTIONS
+#define M_D11SR_OPTIONS INVALID
+#endif
+#ifndef M_D11SROPP_CNT
+#define M_D11SROPP_CNT INVALID
+#endif
+#ifndef M_D11SRTX_CNT
+#define M_D11SRTX_CNT INVALID
+#endif
+#ifndef M_TWTCMD
+#define M_TWTCMD INVALID
+#endif
+#ifndef M_TWTINT_DATA
+#define M_TWTINT_DATA INVALID
+#endif
+#ifndef M_PRETWT_US
+#define M_PRETWT_US INVALID
+#endif
+#ifndef M_TWT_PRESTRT
+#define M_TWT_PRESTRT INVALID
+#endif
+#ifndef M_TWT_PRESTOP
+#define M_TWT_PRESTOP INVALID
+#endif
+#ifndef MX_TWT_PRESTRT
+#define MX_TWT_PRESTRT INVALID
+#endif
+#ifndef MX_ULOMAXN_BLK
+#define MX_ULOMAXN_BLK INVALID
+#endif
+#ifndef M_TXTRIGWT0_VAL
+#define M_TXTRIGWT0_VAL INVALID
+#endif
+#ifndef M_TXTRIGWT1_VAL
+#define M_TXTRIGWT1_VAL INVALID
+#endif
+#ifndef MX_ULC_NUM
+#define MX_ULC_NUM INVALID
+#endif
+#ifndef MX_M2VMSG_CNT
+#define MX_M2VMSG_CNT INVALID
+#endif
+#ifndef MX_V2MMSG_CNT
+#define MX_V2MMSG_CNT INVALID
+#endif
+#ifndef MX_M2VGRP_CNT
+#define MX_M2VGRP_CNT INVALID
+#endif
+#ifndef MX_V2MGRP_CNT
+#define MX_V2MGRP_CNT INVALID
+#endif
+#ifndef MX_V2MGRPINV_CNT
+#define MX_V2MGRPINV_CNT INVALID
+#endif
+#ifndef MX_M2VSND_CNT
+#define MX_M2VSND_CNT INVALID
+#endif
+#ifndef MX_V2MSND_CNT
+#define MX_V2MSND_CNT INVALID
+#endif
+#ifndef MX_V2MSNDINV_CNT
+#define MX_V2MSNDINV_CNT INVALID
+#endif
+#ifndef MX_M2VCQI_CNT
+#define MX_M2VCQI_CNT INVALID
+#endif
+#ifndef MX_V2MCQI_CNT
+#define MX_V2MCQI_CNT INVALID
+#endif
+#ifndef MX_FFQADD_CNT
+#define MX_FFQADD_CNT INVALID
+#endif
+#ifndef MX_FFQDEL_CNT
+#define MX_FFQDEL_CNT INVALID
+#endif
+#ifndef MX_MFQADD_CNT
+#define MX_MFQADD_CNT INVALID
+#endif
+#ifndef MX_MFQDEL_CNT
+#define MX_MFQDEL_CNT INVALID
+#endif
+#ifndef MX_MFOQADD_CNT
+#define MX_MFOQADD_CNT INVALID
+#endif
+#ifndef MX_MFOQDEL_CNT
+#define MX_MFOQDEL_CNT INVALID
+#endif
+#ifndef MX_OFQADD_CNT
+#define MX_OFQADD_CNT INVALID
+#endif
+#ifndef MX_OFQDEL_CNT
+#define MX_OFQDEL_CNT INVALID
+#endif
+#ifndef MX_RUCFG_CNT
+#define MX_RUCFG_CNT INVALID
+#endif
+#ifndef MX_M2VRU_CNT
+#define MX_M2VRU_CNT INVALID
+#endif
+#ifndef MX_V2MRU_CNT
+#define MX_V2MRU_CNT INVALID
+#endif
+#ifndef MX_OFQAGG0_CNT
+#define MX_OFQAGG0_CNT INVALID
+#endif
+#ifndef MX_ULO_QNULLTHRSH
+#define MX_ULO_QNULLTHRSH INVALID
+#endif
+#ifndef MX_MACREQ_CNT
+#define MX_MACREQ_CNT INVALID
+#endif
+#ifndef MX_SNDFL_CNT
+#define MX_SNDFL_CNT INVALID
+#endif
+#ifndef MX_M2SQ0_CNT
+#define MX_M2SQ0_CNT INVALID
+#endif
+#ifndef MX_M2SQ1_CNT
+#define MX_M2SQ1_CNT INVALID
+#endif
+#ifndef MX_M2SQ2_CNT
+#define MX_M2SQ2_CNT INVALID
+#endif
+#ifndef MX_M2SQ3_CNT
+#define MX_M2SQ3_CNT INVALID
+#endif
+#ifndef MX_M2SQ4_CNT
+#define MX_M2SQ4_CNT INVALID
+#endif
+#ifndef MX_HEMUCAPINV_CNT
+#define MX_HEMUCAPINV_CNT INVALID
+#endif
+#ifndef MX_M2SQTXVEVT_CNT
+#define MX_M2SQTXVEVT_CNT INVALID
+#endif
+#ifndef MX_MMUREGRP_CNT
+#define MX_MMUREGRP_CNT INVALID
+#endif
+#ifndef MX_MMUEMGCGRP_CNT
+#define MX_MMUEMGCGRP_CNT INVALID
+#endif
+#ifndef MX_M2VGRPWAIT_CNT
+#define MX_M2VGRPWAIT_CNT INVALID
+#endif
+#ifndef MX_OM2SQ0_CNT
+#define MX_OM2SQ0_CNT INVALID
+#endif
+#ifndef MX_OM2SQ1_CNT
+#define MX_OM2SQ1_CNT INVALID
+#endif
+#ifndef MX_OM2SQ2_CNT
+#define MX_OM2SQ2_CNT INVALID
+#endif
+#ifndef MX_OM2SQ3_CNT
+#define MX_OM2SQ3_CNT INVALID
+#endif
+#ifndef MX_OM2SQ4_CNT
+#define MX_OM2SQ4_CNT INVALID
+#endif
+#ifndef MX_OM2SQ5_CNT
+#define MX_OM2SQ5_CNT INVALID
+#endif
+#ifndef MX_OM2SQ6_CNT
+#define MX_OM2SQ6_CNT INVALID
+#endif
+#ifndef MX_TAFWMISMATCH_CNT
+#define MX_TAFWMISMATCH_CNT INVALID
+#endif
+#ifndef MX_OMREDIST_CNT
+#define MX_OMREDIST_CNT INVALID
+#endif
+#ifndef MX_OMUTXDLMEMTCH_CNT
+#define MX_OMUTXDLMEMTCH_CNT INVALID
+#endif
+#ifndef M_CSI_STATUS
+#define M_CSI_STATUS INVALID
+#endif
+#ifndef M_CSI_BLKS
+#define M_CSI_BLKS INVALID
+#endif
+#ifndef M_TXMURTS_CNT
+#define M_TXMURTS_CNT INVALID
+#endif
+#ifndef M_TXTRIGAMPDU_CNT
+#define M_TXTRIGAMPDU_CNT INVALID
+#endif
+#ifndef M_TXMUBAR_CNT
+#define M_TXMUBAR_CNT INVALID
+#endif
+#ifndef M_BSS_BCNPRS_PWR_BLK
+#define M_BSS_BCNPRS_PWR_BLK INVALID
+#endif
+#ifndef M_PPR_BLK
+#define M_PPR_BLK INVALID
+#endif
+#ifndef M_MAX_TXPWR
+#define M_MAX_TXPWR INVALID
+#endif
+#ifndef M_BRDLMT_BLK
+#define M_BRDLMT_BLK INVALID
+#endif
+#ifndef M_RULMT_BLK
+#define M_RULMT_BLK INVALID
+#endif
+#ifndef MX_SCHED_HIST
+#define MX_SCHED_HIST INVALID
+#endif
+#ifndef MX_SCHED_MAX
+#define MX_SCHED_MAX INVALID
+#endif
+#ifndef M_PSMWDS_PC
+#define M_PSMWDS_PC INVALID
+#endif
+#ifndef MX_PSMWDS_PC
+#define MX_PSMWDS_PC INVALID
+#endif
+#ifndef M_TXQNL_CNT
+#define M_TXQNL_CNT INVALID
+#endif
+#ifndef M_HETBFP_CNT
+#define M_HETBFP_CNT INVALID
+#endif
+#ifndef M_TXHETBBA_CNT
+#define M_TXHETBBA_CNT INVALID
+#endif
+#ifndef MX_ULOFIFO_BASE
+#define MX_ULOFIFO_BASE INVALID
+#endif
+#ifndef MX_ULOFIFO_BMP
+#define MX_ULOFIFO_BMP INVALID
+#endif
+#ifndef M_NAV_MAX_VAL
+#define M_NAV_MAX_VAL INVALID
+#endif
+#ifndef M_RPTOVRD_CNT
+#define M_RPTOVRD_CNT INVALID
+#endif
+#ifndef MX_GRP_HIST_BLK
+#define MX_GRP_HIST_BLK INVALID
+#endif
+#ifndef MX_FFQ_GAP_BLK
+#define MX_FFQ_GAP_BLK INVALID
+#endif
+#ifndef M_ULTX_HOLDTM_L
+#define M_ULTX_HOLDTM_L INVALID
+#endif
+#ifndef M_ULTX_HOLDTM_H
+#define M_ULTX_HOLDTM_H INVALID
+#endif
+#ifndef M_CUR_BSSCOLOR
+#define M_CUR_BSSCOLOR INVALID
+#endif
+#ifndef M_MY_BSSCOLOR
+#define M_MY_BSSCOLOR INVALID
+#endif
+#ifndef M_COCLS_CNT
+#define M_COCLS_CNT INVALID
+#endif
+#ifndef M_SKIP_FFQCONS_CNT
+#define M_SKIP_FFQCONS_CNT INVALID
+#endif
+#ifndef MX_AGGX_SUTHRSH
+#define MX_AGGX_SUTHRSH INVALID
+#endif
+#ifndef MX_AGGX_MUTHRSH
+#define MX_AGGX_MUTHRSH INVALID
+#endif
+#ifndef M_RSSICOR_BLK
+#define M_RSSICOR_BLK INVALID
+#endif
+#ifndef M_DTIM_TXENQD_BMBP
+#define M_DTIM_TXENQD_BMBP INVALID
+#endif
+#ifndef M_DTIMCNT_MBSS_BMBP
+#define M_DTIMCNT_MBSS_BMBP INVALID
+#endif
+#ifndef M_ODAP_ACK_TMOUT
+#define M_ODAP_ACK_TMOUT INVALID
+#endif
+#ifndef M_ODAP_ACK_TMOUT_TEST
+#define M_ODAP_ACK_TMOUT_TEST INVALID
+#endif
+#ifndef M_MBS_DAGGOFF_BMP
+#define M_MBS_DAGGOFF_BMP INVALID
+#endif
+#ifndef M_CTRL_CHANNEL
+#define M_CTRL_CHANNEL INVALID
+#endif
+#ifndef M_ENT_HOST_FLAGS1
+#define M_ENT_HOST_FLAGS1 INVALID
+#endif
+#ifndef M_EAP_BLK_0
+#define M_EAP_BLK_0 INVALID
+#endif
+#ifndef M_EAP_BLK_1
+#define M_EAP_BLK_1 INVALID
+#endif
+#ifndef M_UCODE_CAP_L
+#define M_UCODE_CAP_L INVALID
+#endif
+#ifndef M_UCODE_CAP_H
+#define M_UCODE_CAP_H INVALID
+#endif
+#ifndef M_UCODE_FEATURE_EN_L
+#define M_UCODE_FEATURE_EN_L INVALID
+#endif
+#ifndef M_UCODE_FEATURE_EN_H
+#define M_UCODE_FEATURE_EN_H INVALID
+#endif
+#ifndef M_PRS_RETRY_THR
+#define M_PRS_RETRY_THR INVALID
+#endif
+#ifndef M_MBSS_CCK_BITMAP
+#define M_MBSS_CCK_BITMAP INVALID
+#endif
+#ifndef M_GEN_DBG0
+#define M_GEN_DBG0 INVALID
+#endif
+#ifndef M_EAP_BLK_2
+#define M_EAP_BLK_2 INVALID
+#endif
+#ifndef M_SAS_DEBUG_BLK
+#define M_SAS_DEBUG_BLK INVALID
+#endif
+#ifndef M_EAPSC1_SUCC_CNT
+#define M_EAPSC1_SUCC_CNT INVALID
+#endif
+#ifndef M_EAPSC1_FAIL_CNT
+#define M_EAPSC1_FAIL_CNT INVALID
+#endif
+#ifndef M_EAPSP1_SUCC_CNT
+#define M_EAPSP1_SUCC_CNT INVALID
+#endif
+#ifndef M_EAPSP1_FAIL_CNT
+#define M_EAPSP1_FAIL_CNT INVALID
+#endif
+#ifndef M_EAPFC_SUCC_CNT
+#define M_EAPFC_SUCC_CNT INVALID
+#endif
+#ifndef M_EAPFC_FAIL_CNT
+#define M_EAPFC_FAIL_CNT INVALID
+#endif
+#ifndef M_EAPFC1_SUCC_CNT
+#define M_EAPFC1_SUCC_CNT INVALID
+#endif
+#ifndef M_EAPFC1_FAIL_CNT
+#define M_EAPFC1_FAIL_CNT INVALID
+#endif
+#ifndef M_SAS_RESP_AI_BLK
+#define M_SAS_RESP_AI_BLK INVALID
+#endif
+#ifndef M_DTIM_MBSS_BLK
+#define M_DTIM_MBSS_BLK INVALID
+#endif
+#ifndef M_TIM_OFF_MBSS_BLK
+#define M_TIM_OFF_MBSS_BLK INVALID
+#endif
+#ifndef M_SAS_RESP_AI_IDX
+#define M_SAS_RESP_AI_IDX INVALID
+#endif
+#ifndef M_SAS_RESP_AI_BLK_PTR
+#define M_SAS_RESP_AI_BLK_PTR INVALID
+#endif
+#ifndef M_SAS_DBG_4
+#define M_SAS_DBG_4 INVALID
+#endif
+#ifndef M_SAS_DBG_5
+#define M_SAS_DBG_5 INVALID
+#endif
+#ifndef M_SASAIFIFO_OFLO_CNT
+#define M_SASAIFIFO_OFLO_CNT INVALID
+#endif
+#ifndef M_TXQ_PRUNE_TABLE
+#define M_TXQ_PRUNE_TABLE INVALID
+#endif
+#ifndef M_FFT_SMPL_FFT_GAIN_RX0
+#define M_FFT_SMPL_FFT_GAIN_RX0 INVALID
+#endif
+#ifndef M_FFT_SMPL_FFT_GAIN_RX1
+#define M_FFT_SMPL_FFT_GAIN_RX1 INVALID
+#endif
+#ifndef M_FFT_SMPL_FFT_GAIN_RX2
+#define M_FFT_SMPL_FFT_GAIN_RX2 INVALID
+#endif
+#ifndef M_FFT_SMPL_CTRL
+#define M_FFT_SMPL_CTRL INVALID
+#endif
+#ifndef M_FFT_SMPL_TS
+#define M_FFT_SMPL_TS INVALID
+#endif
+#ifndef M_FFT_SMPL_FRMCNT
+#define M_FFT_SMPL_FRMCNT INVALID
+#endif
+#ifndef M_FFT_SMPL_RX_CHAIN
+#define M_FFT_SMPL_RX_CHAIN INVALID
+#endif
+#ifndef M_SASAIFIFO_RPTR
+#define M_SASAIFIFO_RPTR INVALID
+#endif
+#ifndef M_SASAIFIFO_WPTR
+#define M_SASAIFIFO_WPTR INVALID
+#endif
+#ifndef M_FFT_SMPL_WLAN_GAIN_RX0
+#define M_FFT_SMPL_WLAN_GAIN_RX0 INVALID
+#endif
+#ifndef M_FFT_SMPL_WLAN_GAIN_RX1
+#define M_FFT_SMPL_WLAN_GAIN_RX1 INVALID
+#endif
+#ifndef M_FFT_SMPL_WLAN_GAIN_RX2
+#define M_FFT_SMPL_WLAN_GAIN_RX2 INVALID
+#endif
+#ifndef M_FFT_SMPL_STATUS
+#define M_FFT_SMPL_STATUS INVALID
+#endif
+#ifndef M_FFT_SMPL_SEQUENCE_NUM
+#define M_FFT_SMPL_SEQUENCE_NUM INVALID
+#endif
+#ifndef M_FFT_CRS_GLITCH_CNT
+#define M_FFT_CRS_GLITCH_CNT INVALID
+#endif
+#ifndef M_FAST_NOISE_TS
+#define M_FAST_NOISE_TS INVALID
+#endif
+#ifndef M_FAST_NOISE_DIFF
+#define M_FAST_NOISE_DIFF INVALID
+#endif
+#ifndef M_SAS_FRM_RX_AI
+#define M_SAS_FRM_RX_AI INVALID
+#endif
+#ifndef M_SAS_IMPBF_AI
+#define M_SAS_IMPBF_AI INVALID
+#endif
+#ifndef M_FAST_NOISE_FORCE
+#define M_FAST_NOISE_FORCE INVALID
+#endif
+#ifndef M_FFT_SMPL_CHANNEL
+#define M_FFT_SMPL_CHANNEL INVALID
+#endif
+#ifndef M_FFT_SMPL_FFT_GAIN_RX3
+#define M_FFT_SMPL_FFT_GAIN_RX3 INVALID
+#endif
+#ifndef M_FAST_NOISE_MEASURE
+#define M_FAST_NOISE_MEASURE INVALID
+#endif
+#ifndef M_FAST_NOISE_DUR
+#define M_FAST_NOISE_DUR INVALID
+#endif
+#ifndef M_SAS_DEFAULT_AI_RXD
+#define M_SAS_DEFAULT_AI_RXD INVALID
+#endif
+#ifndef M_SAS_DEFAULT_AI_TXD
+#define M_SAS_DEFAULT_AI_TXD INVALID
+#endif
+#ifndef M_SAS_GPIO_CLK
+#define M_SAS_GPIO_CLK INVALID
+#endif
+#ifndef M_SAS_GPIO_DATA
+#define M_SAS_GPIO_DATA INVALID
+#endif
+#ifndef M_FFT_SMPL_ENABLE
+#define M_FFT_SMPL_ENABLE INVALID
+#endif
+#ifndef M_FFT_SMPL_INTERVAL
+#define M_FFT_SMPL_INTERVAL INVALID
+#endif
+#ifndef M_EAP_BLK_RESERVED_1
+#define M_EAP_BLK_RESERVED_1 INVALID
+#endif
+#ifndef M_EAP_BLK_RESERVED_2
+#define M_EAP_BLK_RESERVED_2 INVALID
+#endif
+#ifndef M_FIPS_LPB_ENC_BLK
+#define M_FIPS_LPB_ENC_BLK INVALID
+#endif
+#ifndef M_FIPS_LPB_MIC_BLK
+#define M_FIPS_LPB_MIC_BLK INVALID
+#endif
+#ifndef M_NM_ATTEMPTS
+#define M_NM_ATTEMPTS INVALID
+#endif
+#ifndef M_NM_IFS_START
+#define M_NM_IFS_START INVALID
+#endif
+#ifndef M_NM_IFS_END
+#define M_NM_IFS_END INVALID
+#endif
+#ifndef M_NM_EDCRS
+#define M_NM_EDCRS INVALID
+#endif
+#ifndef M_NM_PKTPROC
+#define M_NM_PKTPROC INVALID
+#endif
+#ifndef M_NM_POST_CLEAN
+#define M_NM_POST_CLEAN INVALID
+#endif
+#ifndef M_NM_PKTPROC2
+#define M_NM_PKTPROC2 INVALID
+#endif
+#ifndef M_NM_IFS_MID
+#define M_NM_IFS_MID INVALID
+#endif
+#ifndef M_DIAG_FLAGS
+#define M_DIAG_FLAGS INVALID
+#endif
+
+#endif

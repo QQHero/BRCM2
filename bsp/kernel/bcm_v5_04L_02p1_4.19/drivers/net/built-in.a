@@ -1,0 +1,34 @@
+!<thin>
+//                                              210       `
+dummy.o/
+ifb.o/
+Space.o/
+loopback.o/
+tun.o/
+vxlan.o/
+ppp/ppp_generic.o/
+ppp/ppp_async.o/
+ppp/bsd_comp.o/
+ppp/ppp_deflate.o/
+ppp/ppp_mppe.o/
+ppp/ppp_synctty.o/
+ppp/pppox.o/
+ppp/pppoe.o/
+ppp/pptp.o/
+slip/slhc.o/
+/0              0           0     0     644     7016      `
+/9              0           0     0     644     7716      `
+/16             0           0     0     644     2000      `
+/25             0           0     0     644     5288      `
+/37             0           0     0     644     46028     `
+/44             0           0     0     644     52036     `
+/53             0           0     0     644     39832     `
+/72             0           0     0     644     12924     `
+/89             0           0     0     644     7860      `
+/105            0           0     0     644     7496      `
+/124            0           0     0     644     11000     `
+/140            0           0     0     644     11000     `
+/159            0           0     0     644     5004      `
+/172            0           0     0     644     17252     `
+/185            0           0     0     644     12360     `
+/197            0           0     0     644     7320      `

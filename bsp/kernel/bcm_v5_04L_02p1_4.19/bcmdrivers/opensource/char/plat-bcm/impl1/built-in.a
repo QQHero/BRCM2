@@ -1,0 +1,28 @@
+!<thin>
+//                                              198       `
+bcm_arm_cpuidle.o/
+blxargs.o/
+bcm_arm_setup.o/
+bcm_rsvmem.o/
+bcm_legacy_io_map.o/
+bcm_arm_irq.o/
+bcm_memc_irq.o/
+setup.o/
+bcm_dt.o/
+bcm_arm_smp.o/
+bcm-ca9mp-headsmp.o/
+bcm_arm_hotplug.o/
+bcm_i2c.o/
+/0              0           0     0     644     4020      `
+/19             0           0     0     644     5168      `
+/30            /0           0     0     644     3236      `
+/47             0           0     0     644     8580      `
+/61             0           0     0     644     4704      `
+/82             0           0     0     644     11720     `
+/97             0           0     0     644     1628      `
+/113            0           0     0     644     5884      `
+/122            0           0     0     644     5356      `
+/132            0           0     0     644     3296      `
+/147            0           0     0     644     880       `
+/168            0           0     0     644     1836      `
+/187            0           0     0     644     17136     `

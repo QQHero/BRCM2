@@ -1,0 +1,50 @@
+#!/bin/sh
+
+######################
+# AUTHOR: zengfanfan #
+######################
+
+db_file=/cfg/database/kv.db
+fixed_db_file=/cfg/database/kv.fixed
+mem_db_file=/var/kv.db
+
+help()
+{
+    echo
+    echo "Usage: ${0##*/} [option] <key> <value>"
+    echo
+    echo 'Available options:'
+    echo '  -h        Display this information.'
+    echo '  -f        Fixed value (used when reset).'
+    echo '  -m        Temporary value (in memory).'
+    echo
+    exit 1
+}
+
+while getopts 'hfm' opt; do
+    case $opt in
+        f) db_file=$fixed_db_file;;
+        m) db_file=$mem_db_file;;
+        *) help;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
+if [ $# -lt 2 ]; then
+    help
+else
+    key=$1
+    value=$2
+fi
+
+if [ -z "$key" ]; then
+    help
+fi
+
+sqlcmd="REPLACE INTO kv(key, value) VALUES('$key', '$value');"
+sqlite3 "$db_file" "$sqlcmd" -cmd ".timeout 2000"
+if [ "$db_file" != "$mem_db_file" ]; then
+    bak_db_file=${db_file%.db}.bak.db
+    sqlite3 "$bak_db_file" "$sqlcmd" -cmd ".timeout 2000"
+fi

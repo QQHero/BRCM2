@@ -1,0 +1,474 @@
+buildtime=$(shell date +%Y-%m-%d-%H:%M)
+git_support=$(shell if [ -d ../.git/ ]; then echo 1; else echo 0; fi)
+svn_support=$(shell if [ -d .svn/ ]; then echo 1; else echo 0; fi)
+
+macro_config:
+	rm -f $(MACRO_PATH)
+	rm -rf $(ROMFS_PATH)/etc_ro/fireversion.cfg
+ifdef CUSTOM_VERSION
+	@echo 'fireversion =$(CUSTOM_VERSION)'>>$(ROMFS_PATH)/etc_ro/fireversion.cfg
+else
+	@echo "fireversion=$(CONFIG_PRODUCT)_V2.0.0.0($(SVN_VERSION))_$(CONFIG_WEB_LANG)">>$(ROMFS_PATH)/etc_ro/fireversion.cfg
+endif
+	echo "builder: $(LOGNAME) at `hostname`" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg
+	echo -e "buildtime: $(buildtime)\n" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg
+
+	@if [ "$(svn_support)" -eq "1" ]; then		\
+		echo "-------------------SVN----------------" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+		echo "Version:  $(shell svn info | grep "Last Changed Rev" | cut -c 18-)" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+		echo "Author:   $(shell svn info | grep "Last Changed Author" | cut -c 21-)" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+		echo "svnDate:  $(shell svn info | grep "Last Changed Date" | cut -c 19-38)" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+	elif [ "$(git_support)" -eq "1" ]; then	\
+		echo "-------------------GIT----------------" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+		echo "Version:  $(shell git log | head -n 1 | cut -c 8-)" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+		echo "Author:   $(shell git log | grep Author | head -n 1 | cut -c 9-)" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+		echo "gitDate:  $(shell git log --date=iso8601 | grep Date | head -n 1 | cut -c 9-28)" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;	\
+	else	\
+		echo "NOT!!!" >>$(ROMFS_PATH)/etc_ro/fireversion.cfg;\
+	fi
+	
+ifdef CONFIG_NAT_SESSION_NUMBER
+	@echo 'var CONFIG_NAT_SESSION_NUMBER =$(CONFIG_NAT_SESSION_NUMBER);' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WAN_NUMBER
+	@echo 'var CONFIG_WAN_NUMBER =$(CONFIG_WAN_NUMBER);' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_GROUP_IP_NUMBER
+	@echo 'var CONFIG_GROUP_IP_NUMBER =$(CONFIG_GROUP_IP_NUMBER);' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_GROUP_TIMER_NUMBER
+	@echo 'var CONFIG_GROUP_TIMER_NUMBER =$(CONFIG_GROUP_TIMER_NUMBER);' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_MAX_DHCP_CLIENT
+	@echo 'var CONFIG_MAX_DHCP_CLIENT =$(CONFIG_MAX_DHCP_CLIENT);' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_MAX_SSID_NUMBER
+	@echo 'var CONFIG_MAX_SSID_NUMBER =$(CONFIG_MAX_SSID_NUMBER);' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_DHCPS_STATIC_IP_NUM
+	@echo 'var CONFIG_DHCPS_STATIC_IP_NUM =$(CONFIG_DHCPS_STATIC_IP_NUM);' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_MULTI_WAN
+	@echo 'var CONFIG_NET_MULTI_WAN ="$(CONFIG_NET_MULTI_WAN)";' >> $(MACRO_PATH)
+endif
+ifdef	CONFIG_PRODUCT
+	@echo 'var CONFIG_PRODUCT ="$(CONFIG_PRODUCT)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_CHIP_VENDER
+	@echo 'var CONFIG_CHIP_VENDER ="$(CONFIG_CHIP_VENDER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_CHIP_MODEL
+	@echo 'var CONFIG_CHIP_MODEL ="$(CONFIG_CHIP_MODEL)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFICHIP_MODEL
+	@echo 'var CONFIG_WIFICHIP_MODEL ="$(CONFIG_WIFICHIP_MODEL)";' >> $(MACRO_PATH)
+endif
+
+
+ifdef CONFIG_PLATFORM
+	@echo 'var CONFIG_PLATFORM ="$(CONFIG_PLATFORM)";' >> $(MACRO_PATH)
+endif
+ifdef  CONFIG_PROD
+	@echo 'var CONFIG_PROD ="$(CONFIG_PROD)";' >> $(MACRO_PATH)
+endif
+ifdef PLATFORM_VERSION
+	@echo 'var PLATFORM_VERSION ="$(PLATFORM_VERSION)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_CWMPD
+	@echo 'var CONFIG_CWMPD ="$(CONFIG_CWMPD)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_CWMPD ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_IPV6_SUPPORT
+	@echo 'var CONFIG_IPV6_SUPPORT ="$(CONFIG_IPV6_SUPPORT)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_IPV6_SUPPORT ="n";' >> $(MACRO_PATH)
+endif
+ifdef SUPPORT_HTTP_IPV6
+	@echo 'var SUPPORT_HTTP_IPV6 ="$(SUPPORT_HTTP_IPV6)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NEW_NETCTRL
+	@echo 'var CONFIG_NEW_NETCTRL ="$(CONFIG_NEW_NETCTRL)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI
+	@echo 'var CONFIG_WIFI ="$(CONFIG_WIFI)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_APSTA
+	@echo 'var CONFIG_WIFI_APSTA ="$(CONFIG_WIFI_APSTA)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_AUTH_1X
+	@echo 'var CONFIG_WIFI_AUTH_1X ="$(CONFIG_WIFI_AUTH_1X)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_WPS
+	@echo 'var CONFIG_WIFI_WPS ="$(CONFIG_WIFI_WPS)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_AC
+	@echo 'var CONFIG_WIFI_AC ="$(CONFIG_WIFI_AC)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_EMF
+	@echo 'var CONFIG_WIFI_EMF ="$(CONFIG_WIFI_EMF)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_2_4G
+	@echo 'var CONFIG_WIFI_2_4G ="$(CONFIG_WIFI_2_4G)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_5G
+	@echo 'var CONFIG_WIFI_5G ="$(CONFIG_WIFI_5G)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_SUPPORT_6G
+	@echo 'var CONFIG_WIFI_SUPPORT_6G ="$(CONFIG_WIFI_SUPPORT_6G)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_WIFI_SUPPORT_6G ="n";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_WISP
+	@echo 'var CONFIG_WIFI_WISP ="$(CONFIG_WIFI_WISP)";' >> $(MACRO_PATH)
+endif
+ifeq ($(CONFIG_WIFI_SUPPORT_WISP), y)
+	@echo 'var CONFIG_WIFI_SUPPORT_WISP ="y";' >> $(WEB_PATH)/publish/js/macro_config.js
+endif
+ifdef CONFIG_WIFI_SUPPORT_APCLIENT
+	@echo 'var CONFIG_WIFI_SUPPORT_APCLIENT ="$(CONFIG_WIFI_SUPPORT_APCLIENT)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_WIFI_GUEST
+	@echo 'var CONFIG_WIFI_GUEST ="$(CONFIG_WIFI_GUEST)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_MULTI_LAN
+	@echo 'var CONFIG_MULTI_LAN ="$(CONFIG_MULTI_LAN)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_LAN_VLAN
+	@echo 'var CONFIG_LAN_VLAN ="$(CONFIG_LAN_VLAN)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_3G
+	@echo 'var CONFIG_3G ="$(CONFIG_3G)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_WAN_STATIC
+	@echo 'var CONFIG_NET_WAN_STATIC ="$(CONFIG_NET_WAN_STATIC)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_WAN_DHCP
+	@echo 'var CONFIG_NET_WAN_DHCP ="$(CONFIG_NET_WAN_DHCP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_DHCP
+	@echo 'var CONFIG_NET_DHCP ="$(CONFIG_NET_DHCP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_WAN_PPPOE
+	@echo 'var CONFIG_NET_WAN_PPPOE ="$(CONFIG_NET_WAN_PPPOE)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_PPPoE_SERVER
+	@echo 'var CONFIG_PPPoE_SERVER ="$(CONFIG_PPPoE_SERVER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_WAN_PPTP
+	@echo 'var CONFIG_NET_WAN_PPTP ="$(CONFIG_NET_WAN_PPTP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_WAN_L2TP
+	@echo 'var CONFIG_NET_WAN_L2TP ="$(CONFIG_NET_WAN_L2TP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_DOUBLE_PPTP
+	@echo 'var CONFIG_NET_DOUBLE_PPTP ="$(CONFIG_NET_DOUBLE_PPTP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_DOUBLE_L2TP
+	@echo 'var CONFIG_NET_DOUBLE_L2TP ="$(CONFIG_NET_DOUBLE_L2TP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_DOUBLE_PPOE
+	@echo 'var CONFIG_NET_DOUBLE_PPOE ="$(CONFIG_NET_DOUBLE_PPOE)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_CHINA_NET_CLIENT
+	@echo 'var CONFIG_CHINA_NET_CLIENT ="$(CONFIG_CHINA_NET_CLIENT)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_UPNP
+	@echo 'var CONFIG_ADVANCE_UPNP ="$(CONFIG_ADVANCE_UPNP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_SYSTEM_SNTP
+	@echo 'var CONFIG_SYSTEM_SNTP ="$(CONFIG_SYSTEM_SNTP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_DDNS
+	@echo 'var CONFIG_ADVANCE_DDNS ="$(CONFIG_ADVANCE_DDNS)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_DYNDNS
+	@echo 'var CONFIG_ADVANCE_DYNDNS ="$(CONFIG_ADVANCE_DYNDNS)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_3322
+	@echo 'var CONFIG_ADVANCE_3322 ="$(CONFIG_ADVANCE_3322)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_88IP
+	@echo 'var CONFIG_ADVANCE_88IP ="$(CONFIG_ADVANCE_88IP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_ORAY
+	@echo 'var CONFIG_ADVANCE_ORAY ="$(CONFIG_ADVANCE_ORAY)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_GNWAY
+	@echo 'var CONFIG_ADVANCE_GNWAY ="$(CONFIG_ADVANCE_GNWAY)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_NOIP
+	@echo 'var CONFIG_ADVANCE_NOIP ="$(CONFIG_ADVANCE_NOIP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_VPN
+	@echo 'var CONFIG_VPN ="$(CONFIG_VPN)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_VPN_PPTP
+	@echo 'var CONFIG_VPN_PPTP ="$(CONFIG_VPN_PPTP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_VPN_L2TP
+	@echo 'var CONFIG_VPN_L2TP ="$(CONFIG_VPN_L2TP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_VPN_IPSEC
+	@echo 'var CONFIG_VPN_IPSEC ="$(CONFIG_VPN_IPSEC)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_IGMPPROXY_SUPPORT
+	@echo 'var CONFIG_IGMPPROXY_SUPPORT ="$(CONFIG_IGMPPROXY_SUPPORT)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_IGMP_SNOOPING
+	@echo 'var CONFIG_IGMP_SNOOPING ="$(CONFIG_IGMP_SNOOPING)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_APPS_IPTABLES_140
+	@echo 'var CONFIG_APPS_IPTABLES_140 ="$(CONFIG_APPS_IPTABLES_140)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_EBTABLES_TOOL
+	@echo 'var CONFIG_EBTABLES_TOOL ="$(CONFIG_EBTABLES_TOOL)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_BEHAVIOR_MANAGER
+	@echo 'var CONFIG_BEHAVIOR_MANAGER ="$(CONFIG_BEHAVIOR_MANAGER)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_MAC_FILTER
+	@echo 'var CONFIG_MAC_FILTER ="$(CONFIG_MAC_FILTER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_IP_MAC_BIND
+	@echo 'var CONFIG_IP_MAC_BIND ="$(CONFIG_IP_MAC_BIND)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_PRIVILEGE_IP
+	@echo 'var CONFIG_PRIVILEGE_IP ="$(CONFIG_PRIVILEGE_IP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_PORT_FILTER
+	@echo 'var CONFIG_PORT_FILTER ="$(CONFIG_PORT_FILTER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_URL_FILTER
+	@echo 'var CONFIG_URL_FILTER ="$(CONFIG_URL_FILTER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ONLINE_IP
+	@echo 'var CONFIG_ONLINE_IP ="$(CONFIG_ONLINE_IP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_APP_IDENTIFY
+	@echo 'var CONFIG_APP_IDENTIFY ="$(CONFIG_APP_IDENTIFY)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_APP_FILTER
+	@echo 'var CONFIG_APP_FILTER ="$(CONFIG_APP_FILTER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ACCOUNT_FILTER
+	@echo 'var CONFIG_ACCOUNT_FILTER ="$(CONFIG_ACCOUNT_FILTER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_QOS
+	@echo 'var CONFIG_QOS ="$(CONFIG_QOS)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_SAFE_ATTACK
+	@echo 'var CONFIG_SAFE_ATTACK ="$(CONFIG_SAFE_ATTACK)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_SAFE_ARP
+	@echo 'var CONFIG_SAFE_ARP ="$(CONFIG_SAFE_ARP)";' >> $(MACRO_PATH)
+endif
+
+
+ifdef WEBS_SSL_SUPPORT
+	@echo 'var WEBS_SSL_SUPPORT ="$(WEBS_SSL_SUPPORT)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_CTL_WEB_ACCESS_LAN
+	@echo 'var CONFIG_NET_CTL_WEB_ACCESS_LAN ="$(CONFIG_NET_CTL_WEB_ACCESS_LAN)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_CTL_WEB_ACCESS_WAN
+	@echo 'var CONFIG_NET_CTL_WEB_ACCESS_WAN ="$(CONFIG_NET_CTL_WEB_ACCESS_WAN)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_PORT_CFG_WAN_NUMBER
+	@echo 'var CONFIG_NET_PORT_CFG_WAN_NUMBER ="$(CONFIG_NET_PORT_CFG_WAN_NUMBER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_PORT_CFG_MIRROR
+	@echo 'var CONFIG_NET_PORT_CFG_MIRROR ="$(CONFIG_NET_PORT_CFG_MIRROR)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_PORT_CFG_PORT_LINK_MODE
+	@echo 'var CONFIG_NET_PORT_CFG_PORT_LINK_MODE ="$(CONFIG_NET_PORT_CFG_PORT_LINK_MODE)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_PORT_CFG_MAC_CLONE
+	@echo 'var CONFIG_NET_PORT_CFG_MAC_CLONE ="$(CONFIG_NET_PORT_CFG_MAC_CLONE)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_DMZ
+	@echo 'var CONFIG_NET_DMZ ="$(CONFIG_NET_DMZ)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_PORTAL_AUTH
+	@echo 'var CONFIG_PORTAL_AUTH ="$(CONFIG_PORTAL_AUTH)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_EMAIL_CC
+	@echo 'var CONFIG_EMAIL_CC ="$(CONFIG_EMAIL_CC)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ARP_GATEWAY
+	@echo 'var CONFIG_ARP_GATEWAY ="$(CONFIG_ARP_GATEWAY)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADDRESS_MASQUERADE
+	@echo 'var CONFIG_ADDRESS_MASQUERADE ="$(CONFIG_ADDRESS_MASQUERADE)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_P2P_NAT
+	@echo 'var CONFIG_ADVANCE_P2P_NAT ="$(CONFIG_ADVANCE_P2P_NAT)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NAT_SPEEDUP
+	@echo 'var CONFIG_NAT_SPEEDUP ="$(CONFIG_NAT_SPEEDUP)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ADVANCE_VIRTUAL_SERVER
+	@echo 'var CONFIG_ADVANCE_VIRTUAL_SERVER ="$(CONFIG_ADVANCE_VIRTUAL_SERVER)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_ADVANCE_WEB_NOTIFICATION
+	@echo 'var CONFIG_ADVANCE_WEB_NOTIFICATION ="$(CONFIG_ADVANCE_WEB_NOTIFICATION)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_ROUTE_TABLE
+	@echo 'var CONFIG_ROUTE_TABLE ="$(CONFIG_ROUTE_TABLE)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_NET_GMAC
+	@echo 'var CONFIG_NET_GMAC ="$(CONFIG_NET_GMAC)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_FTP_SERVER
+	@echo 'var CONFIG_FTP_SERVER ="$(CONFIG_FTP_SERVER)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_SYSTEM_UPDATE_LAYER7_PROTOCOL
+	@echo 'var CONFIG_SYSTEM_UPDATE_LAYER7_PROTOCOL ="$(CONFIG_SYSTEM_UPDATE_LAYER7_PROTOCOL)";' >> $(MACRO_PATH)
+endif
+ifdef CONFIG_INTERNET_LED
+	@echo 'var CONFIG_INTERNET_LED ="$(CONFIG_INTERNET_LED)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_USB_SUPPORT
+	@echo 'var CONFIG_USB_MODULES ="$(CONFIG_USB_SUPPORT)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_USB_MODULES ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_FTP_SERVER
+	@echo 'var CONFIG_FILE_SHARE ="$(CONFIG_FTP_SERVER)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_FILE_SHARE ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_DLNA_SERVER
+	@echo 'var CONFIG_DLNA_SERVER ="$(CONFIG_DLNA_SERVER)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_DLNA_SERVER ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_IPPD
+	@echo 'var CONFIG_PRINTER_SERVER ="$(CONFIG_IPPD)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_PRINTER_SERVER ="n";' >> $(MACRO_PATH)
+endif
+
+ifeq ($(findstring $(CONFIG_PRODUCT),"fh1901 ac6"),$(CONFIG_PRODUCT))
+	@echo 'var CONFIG_IPTV_STB ="3";' >> $(MACRO_PATH)
+endif
+
+ifeq ($(findstring $(CONFIG_PRODUCT),"ac9 ac18"),$(CONFIG_PRODUCT))
+	@echo 'var CONFIG_IPTV_STB ="4";' >> $(MACRO_PATH)
+endif
+
+ifeq ($(findstring $(CONFIG_PRODUCT),"fh1901 ac9 ac18 ac10"),$(CONFIG_PRODUCT))
+	@echo 'var CONFIG_1000M_ETH ="y";' >> $(MACRO_PATH)
+endif
+
+ifeq ($(findstring $(CONFIG_PRODUCT),"ac6 ac6v2_rtl ac5"),$(CONFIG_PRODUCT))
+	@echo 'var CONFIG_1000M_ETH ="n";' >> $(MACRO_PATH)
+endif
+
+ifeq ($(CONFIG_PRODUCT),ac18)
+	@echo 'var CONFIG_LED_CLOSE_TYPE ="y";' >> $(MACRO_PATH)
+endif
+
+ifdef CUSTOM_VERSION
+	@echo 'var CONFIG_FIRWARE_VERION ="$(CUSTOM_VERSION)";' >> $(MACRO_PATH)
+else
+	@echo "var CONFIG_FIRWARE_VERION ='$(CONFIG_PRODUCT)_V2.0.0.0($(SVN_VERSION))_$(CONFIG_WEB_LANG)'; ">>$(MACRO_PATH)
+endif
+	@echo 'var CONFIG_FIRWARE_DATE ="$(shell (date +%Y-%m-%d))";' >> $(MACRO_PATH)
+
+ifdef CONFIG_AUTO_SYNCHRO
+	@echo 'var CONFIG_SYNC_ACCOUNT ="$(CONFIG_AUTO_SYNCHRO)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_SYNC_ACCOUNT ="n";' >> $(MACRO_PATH)
+endif
+
+ifeq ($(CONFIG_PRODUCT),ac5)
+	@echo 'var CONFIG_WRL_SIGNAL ="y";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_WRL_SIGNAL ="n";' >> $(MACRO_PATH)
+endif
+
+ifeq ($(CONFIG_CHIP_VENDER), realtek)
+	@echo 'var CONFIG_ANTI_INTERFERENCE ="y";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_ANTI_INTERFERENCE ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_PAGE_HAVE_SERV_NAME
+	@echo 'var CONFIG_PAGE_HAVE_SERV_NAME ="$(CONFIG_PAGE_HAVE_SERV_NAME)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_MULTI_LANGUAGE_SORFWARE
+	@echo 'var CONFIG_MULTI_LANGUAGE_SORFWARE ="en,zh,brpt,cs,de,es,fr,hu,it,ko,laes,nl,pl,pt,ro,ru,tr,uk";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_MULTI_LANGUAGE_SORFWARE ="cn";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_WIFI_BTN
+	@echo 'var CONFIG_WIFIBTN ="$(CONFIG_WIFI_BTN)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_WIFIBTN ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_LED_SHARE_WITH_SYS
+	@echo 'var CONFIG_LED_SHARE_WITH_SYS ="$(CONFIG_LED_SHARE_WITH_SYS)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_LED_SHARE_WITH_SYS ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_SELECT_ISP
+	@echo 'var CONFIG_SELECT_ISP ="$(CONFIG_SELECT_ISP)";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_ISP_TYPE ="$(CONFIG_SELECT_ISP)";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_SUPPORT_ISP ="$(CONFIG_SELECT_ISP)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_SELECT_ISP ="n";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_ISP_TYPE ="n";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_SUPPORT_ISP ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_SYSCHK
+	@echo 'var CONFIG_SYSCHK ="$(CONFIG_SYSCHK)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_SYSCHK ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_WEB_MESH_BUTTON
+	@echo 'var CONFIG_WEB_MESH_BUTTON ="$(CONFIG_WEB_MESH_BUTTON)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_WEB_MESH_BUTTON ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_SCHED_WIFI
+	@echo 'var CONFIG_SCHED_WIFI ="$(CONFIG_SCHED_WIFI)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_SCHED_WIFI ="n";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_WIFI_SUPPORT_SWITCH
+	@echo 'var CONFIG_WIFI_SUPPORT_SWITCH ="$(CONFIG_WIFI_SUPPORT_SWITCH)";' >> $(MACRO_PATH)
+endif
+
+ifdef CONFIG_AUTO_SYNCHRO
+	@echo 'var CONFIG_AUTO_SYNCHRO ="$(CONFIG_AUTO_SYNCHRO)";' >> $(MACRO_PATH)
+else
+	@echo 'var CONFIG_AUTO_SYNCHRO ="n";' >> $(MACRO_PATH)
+endif
+
+	@echo 'var CONFIG_SUPPORT_TOPO="y";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_24G_SUPPORT_WPA3 ="y";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_24G_SUPPORT_11AX ="y";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_5G_SUPPORT_160M ="y";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_ROUTER_DEVICE="y";' >> $(MACRO_PATH)
+	@echo 'var CONFIG_MESH_SUPPORT="y";' >> $(MACRO_PATH)
+
+

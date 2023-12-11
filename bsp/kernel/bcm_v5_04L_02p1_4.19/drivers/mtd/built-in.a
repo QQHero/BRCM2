@@ -1,0 +1,59 @@
+!<thin>
+//                                              368       `
+mtdcore.o/
+mtdsuper.o/
+mtdconcat.o/
+mtdpart.o/
+mtdchar.o/
+ofpart.o/
+cmdlinepart.o/
+mtd_blkdevs.o/
+mtdblock.o/
+chips/chipreg.o/
+chips/map_rom.o/
+maps/map_funcs.o/
+devices/m25p80.o/
+spi-nor/spi-nor.o/
+ubi/vtbl.o/
+ubi/vmt.o/
+ubi/upd.o/
+ubi/build.o/
+ubi/cdev.o/
+ubi/kapi.o/
+ubi/eba.o/
+ubi/io.o/
+ubi/wl.o/
+ubi/attach.o/
+ubi/misc.o/
+ubi/debug.o/
+ubi/block.o/
+ubi/gluebi.o/
+
+/0              0           0     0     644     36340     `
+/11             0           0     0     644     3636      `
+/23             0           0     0     644     11320     `
+/36             0           0     0     644     16492     `
+/47             0           0     0     644     14008     `
+/58             0           0     0     644     6256      `
+/68             0           0     0     644     6676      `
+/83             0           0     0     644     12016     `
+/98             0           0     0     644     5872      `
+/110            0           0     0     644     3616      `
+/127            0           0     0     644     3620      `
+/144            0           0     0     644     2920      `
+/162            0           0     0     644     8520      `
+/180            0           0     0     644     30532     `
+/199            0           0     0     644     10168     `
+/211            0           0     0     644     13488     `
+/222            0           0     0     644     6388      `
+/233            0           0     0     644     23316     `
+/246            0           0     0     644     14008     `
+/258            0           0     0     644     12984     `
+/270            0           0     0     644     17996     `
+/281            0           0     0     644     19096     `
+/291            0           0     0     644     20472     `
+/301            0           0     0     644     18304     `
+/315            0           0     0     644     4192      `
+/327            0           0     0     644     16552     `
+/340            0           0     0     644     13976     `
+/353            0           0     0     644     8032      `

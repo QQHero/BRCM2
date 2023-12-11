@@ -1,0 +1,33 @@
+
+.form-group{
+  /* text-align: center; */
+  margin-left: 80px;
+  width: 550px;
+}
+.mode .v-radio__list .v-radio__item{
+  font-size: 18px;
+  margin-left: 18px;
+  width: 600px;
+}
+.form-group .v-radio__label{
+  display: inline;
+}
+.page-line{
+  background-color: rgb(0 0 0 / 10%);
+  height: 1px;
+  width: 100%;
+  margin: 12px 0 23px 0;
+}
+.tps{
+  margin-top: 10px;
+  font-size: 14px;
+  color: rgb(141 141 141);
+  line-height: 22px;
+}
+.speed{
+  height: 100px;
+  margin: 15px 0px 10px 10px;
+}
+
+
+

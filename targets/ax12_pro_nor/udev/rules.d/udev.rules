@@ -1,0 +1,2 @@
+KERNEL=="*",ACTION=="add",SUBSYSTEMS=="usb",DRIVERS=="usb",RUN="/usr/sbin/Printer.sh add",OPTIONS="last_rule"
+KERNEL=="*",ACTION=="remove",SUBSYSTEMS=="usb",DRIVERS=="usb",RUN="/usr/sbin/Printer.sh remove",OPTIONS="last_rule"

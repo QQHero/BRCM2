@@ -1,0 +1,1176 @@
+menu "basic system info"
+	menu "chip select"
+	choice 
+		prompt "Chip Selection"
+		default BROADCOM
+	config BROADCOM
+		bool "broadcom"
+	config RaLink
+		bool "ranlink"
+	config Realtek
+		bool "realtek"
+	endchoice
+	choice 
+		prompt "Chip Model Selection"
+		depends on BROADCOM
+		default BCM4708
+	config BCM4708
+		bool "bcm4708"
+	config BCM4709C0
+		bool "bcm4709c0"	
+	config BCM47189
+		bool "bcm47189"
+	config BCM4706
+		bool "bcm4706"	
+	config BCM5356C0
+		bool "bcm5356c0"	
+	config BCM53573
+		bool "bcm53573"        
+	config BCM96755
+		bool "bcm96755"
+	config BCM96756
+		bool "bcm96756"		
+	endchoice
+	choice 
+		prompt "Chip Model Selection"
+		depends on Realtek
+		default RTL8196e
+		config RTL8196e
+			bool "rtl8196e"
+		config RTL8197f
+			bool "rtl8197F"
+		config RTL819xD
+			bool "rtl819xD"
+		config RTL8198D
+			bool "RTL8198D"
+		config RTL8198FH
+			bool "RTL8198FH"
+    endchoice
+	choice 
+		prompt "Switch Chip Selection"
+		default SWITCH_BROADCOM
+		config SWITCH_BROADCOM
+			bool "broadcom"
+		config SWITCH_REALTEK
+			bool "realtek"
+		config SWITCH_NONE
+			bool "no switch support"
+	endchoice
+	choice 
+		prompt "Switch Chip Model Selection"
+		depends on SWITCH_BROADCOM
+		default BCM53125
+		config BCM53125
+			bool "bcm53125"
+		config BCM5325E
+			bool "bcm5325e"	
+	endchoice
+	choice 
+		prompt "Switch Chip Model Selection"
+		depends on SWITCH_REALTEK
+		default RTL8196e
+		config RTL8196e
+			bool "rtl8196e"
+		config RTL8197f
+			bool "rtl8197F"
+		config RTL819xD
+			bool "rtl819xD"
+		config RTL8198D
+			bool "RTL8198D"
+		config RTL8198FH
+			bool "RTL8198FH"
+	endchoice
+	choice 
+		prompt "Ethernet phy chip Selection"
+		default ETHERNET_PHY_NONE
+		config ETHERNET_PHY_NONE
+			bool "no ethernet phy api drv support"
+	endchoice
+	choice 
+	prompt "Wifi Chip Selection"
+	default BCM4360_11ACWL14_93
+	config BCM4360_11ACWL14_93
+		bool "bcm4360_11acwl14.93"
+	config BCM4360_11AC
+		bool "bcm4360_11ac"
+	config BCM4331
+		bool "bcm4331.93"
+	config BCM4709_178_27
+		bool "bcm4709_178.27"
+	config BCM_47189
+		bool "bcm_47189"
+	config RTL8196e_WIFI
+		bool "rtl8196e_wifi"
+	config RTL8197f_WIFI
+		bool "rtl8197fs_wifi"
+	config CONFIG_WIFI_BCM6755
+		bool "bcm6755"
+	config CONFIG_WIFI_BCM6756
+		bool "bcm6756"
+	endchoice
+	choice 
+			prompt "Rtl Board Selection"
+			depends on Realtek
+			default CONFIG_BOARD_rtl8196e
+	config CONFIG_BOARD_rtl8196e
+		bool "board_rtl8196e"
+	config CONFIG_BOARD_rtl8196c
+		bool "board_rtl8196c"
+	endchoice
+	choice 
+			prompt "Rtl Config Model"
+			depends on Realtek 
+			default CONFIG_MODEL_RTL8197F_8812BR_8367R_WAC
+	config CONFIG_MODEL_RTL8197F_8812BR_8367R_WAC
+		bool "model_rtl8197f_8812br_8367r"
+	endchoice
+	config CONFIG_CHIP_VENDER
+		string 
+		default "broadcom" if BROADCOM=y
+		default "realtek"  if Realtek=y
+	config CONFIG_CHIP_MODEL
+		string 
+		default "bcm4708" if BCM4708=y
+		default "bcm4709c0" if BCM4709C0=y
+		default "bcm4706" if BCM4706=y
+		default "rtl8196e" if RTL8196e=y
+		default "rtl8197F" if RTL8197f=y
+		default "rtl819xD" if RTL819xD=y
+		default "bcm5356c0" if BCM5356C0=y
+		default "bcm47189" if BCM47189=y
+		default "bcm53573" if BCM53573=y
+	config CONFIG_WIFI_CHIP
+		string  "wifi chip type"
+		default "bcm4360"
+	config CONFIG_WIFICHIP_MODEL
+		string
+		default "bcm4360_11ac" if BCM4360_11AC=y
+		default "bcm4360_11acwl14.93" if BCM4360_11ACWL14_93=y
+		default "bcm4331.93" if BCM4331=y
+		default "bcm4709_178.27" if BCM4709_178_27
+		default "bcm_47189" if BCM_47189=y
+		default "rtl8196e_wifi" if RTL8196e_WIFI=y
+		default "rtl8197fs_wifi" if RTL8197f_WIFI=y
+	config CONFIG_SWITCH_VENDER
+		string 
+		default "broadcom" if SWITCH_BROADCOM=y
+		default "realtek" if SWITCH_REALTEK=y
+	config CONFIG_SWITCH_MODEL
+		string 
+		default "bcm53125" if BCM53125=y
+		default "bcm5325e" if BCM5325E=y
+		default "rtl8196e" if RTL8196e=y
+		default "rtl8197F" if RTL8197f=y
+	config PLATFORM_VERSION
+		string
+		default "rtl8196e" if RTL8196e=y
+		default "rtl8197fx" if RTL8197f=y
+	endmenu
+	
+	menu "Configuration mtd selection and size"
+	config CONFIG_MTD_ALL_SIZE
+		hex "mtd flash all size"
+		default 0x1000000
+	config CONFIG_MTD_CFM_SIZE
+		hex "mtd cfm size"
+		default 0x0010000
+	config CONFIG_MTD_NVRAM_SIZE
+		hex "mtd  nvram size"
+		default 0x0010000
+	config CONFIG_CFM_WEBFS
+		bool "Support webfs mtd"
+		default n
+	config CONFIG_MTD_WEBFS_SIZE
+		hex "mtd_webfs_size"
+		depends on CONFIG_CFM_WEBFS
+		default 0x0080000
+	config CONFIG_URL_MTD
+		bool "Support URL mtd"
+		default n
+	config CONFIG_MTD_CFM_URL_SIZE
+		hex "mtd_url_size"
+		depends on CONFIG_URL_MTD
+		default 0x0020000
+	config CONFIG_CFM_BACKUP
+		bool "Support cfm double backup"
+		default y
+	config CONFIG_VPN_IPSEC_CERT_MTD
+		depends on CONFIG_VPN_IPSEC
+		bool "Support vpn ipsec cert mtd"
+		default n
+	config CONFIG_MTD_CERT_SIZE
+		hex "mtd_cert_size"
+		depends on CONFIG_VPN_IPSEC_CERT_MTD
+		default 0x0010000
+	config CONFIG_PICTURE
+		bool "Support Picture mtd"
+		default n
+	config CONFIG_MTD_PICTURE_SIZE
+		hex "mtd picture size"
+		depends on CONFIG_PICTURE
+		default 0xf0000
+	config CONFIG_POLICY
+		bool "Support policy mtd"
+		default n
+	config CONFIG_MTD_POLICY_SIZE
+		hex "mtd policy size"
+		depends on CONFIG_POLICY
+		default 0x2
+	config CONFIG_LOG
+		bool "Support log mtd"
+		default n
+	config CONFIG_MTD_LOG_SIZE
+		hex "mtd_log_size"
+		depends on CONFIG_LOG
+		default 0x0030000
+	config CONFIG_USE_SQUASHFS
+		bool "Support SQUASHFS"
+		default y
+	config CONFIG_BOOT_FROM_SPIFLASH
+		bool 'System boot from SPI Flash,ac_manage(if the function exists) start from Nand Flash'
+		default n
+	endmenu
+
+	menu "Product infomation"
+	config CONFIG_PRODUCT
+		string "Product Name"
+		default "ac10"
+	config CONFIG_PRODUCT_NAME
+		string "Product Name to UI"
+		#default "\"AC1200 Wireless Hotspot Router\""
+	config CONFIG_BRAND
+		string "Product Brand"
+		default "IP-COM"	
+	config CONFIG_LOGIN_DOMAIN_NAME
+		string "Product login domain name"
+		default "www.tendawifi.com"	
+	config CONFIG_WAN_LEFT
+		bool 'wan is left '
+	config CONFIG_LAN_LEFT
+		bool 'lan is left '
+	config CONFIG_WAN_LAN_COUNT_FROM_ZERO
+		bool 'wan/lan count from 0 '
+	config CONFIG_LAN_COUNT_BASE_ON_WAN
+		bool 'lan count base on wan number.eg:WAN1 LAN2 LAN3 LAN4 LAN5'
+		default n
+	config CONFIG_WAN_LAN_EXCHANGE 
+		bool 'Support change lan to wan or wan to lan '
+		default n
+	config CONFIG_WAN_STOPPAGE_CHECK
+		bool 'Support wan stoppage check '
+	config CONFIG_WAN_SAME_VLAN
+		bool 'multi wan can be in same vlan '
+		comment 'PHY speed settings'
+	config CONFIG_WAN_IP_CONFLICT_AUTO_HANDLE
+		bool 'wan ip conflict auto handle '
+	config CONFIG_UI_QUICK_CONFIG
+		bool 'Support quick config webpage after restore'
+		default n
+	config CONFIG_MULTI_LANGUAGE_SORFWARE
+		bool "Support multi language"
+		default n
+	config CONFIG_SUPPORT_HTTP_KEEP_ALIVE
+		bool "Support http keep alive option"
+		default n
+	config CONFIG_UI_LOGIN_USERNAME_SUPPORT
+		bool 'Support UI Login Username'
+	config CONFIG_MESH_FEATURES
+		bool 'Support mesh features'
+		default n
+	config CONFIG_PHY_SETTINGS
+		bool 'Support set phy speed'
+		choice
+		prompt "set phy port 100M"
+		config CONFIG_ALL_FE
+			bool "all"
+		config CONFIG_TWO_FE
+			bool "two"
+		endchoice
+	config CONFIG_PROD
+		bool "Support prod"
+		default y
+	config CONFIG_NEW_NETCTRL
+		bool "Support New Netctrl"
+		default y
+	config CONFIG_PORT_PIC_VIEW
+		bool 'display port pic view'
+		default n
+	config CONFIG_DHCPS_CHANGE_DOWN_LAN_PHY_CONNECT
+		bool "Support down lan phy connect when dhcps config change"
+		default n
+	endmenu
+endmenu
+
+menu "major feature"
+	comment 'common driver'
+	config CONFIG_WAN_AUTO_DETECT
+		bool 'support wan port auto detect'
+	config CONFIG_COMM_GPIO
+		bool 'broadcom/rtl8197fx/rtl819xd:Support common gpio driver'
+	config CONFIG_PHY_CHECK
+		bool 'rtl8196e:Support phy link check'
+	config CONFIG_SWITCH
+		bool 'Support switch drv'
+	config CONFIG_SWITCH_MISC_MODE
+		bool 'support switch misc mode'
+	config CONFIG_ETHERNET_PHY_API_DRV
+		bool 'Support ethernet phy api drv'
+	config CONFIG_PHY_SETTINGS
+		bool "phy setting"
+	config CONFIG_ETHERNET
+		bool 'support ethernet driver'
+	menu "ipv6"
+	config CONFIG_IPV6_SUPPORT
+		bool "Enable IPv6"
+		default n
+	config SUPPORT_HTTP_IPV6
+		bool "Support HTTP IPv6"
+		default n
+	config CONFIG_IPV6_NAT66
+		bool "Support IPv6 NAT66"
+		default n
+	endmenu
+	menu "wifi"
+	config CONFIG_CE_POWER
+		bool "support CE power"
+	config CONFIG_CE_POWER_TSSI
+		bool "support CE power for TSSI"
+		depends on CONFIG_CE_POWER
+		default n
+	config CONFIG_WIFI_POWER_ADJUST
+		bool "support web adjust wifi power"
+	config CONFIG_WIFI
+		bool "Enable Wifi"
+		default y
+	config CONFIG_WIFI6
+		depends on CONFIG_WIFI
+		bool "Enable Wifi6"
+		default y
+	config CONFIG_WIFI_CHINESE_SSID
+		depends on CONFIG_WIFI
+		bool "Enable WIFI_CHINESE_SSID"
+		default n
+	config CONFIG_WIFI_2_4G_CHIP_BCM_ARM
+		depends on CONFIG_WIFI_2_4G
+		bool "2.4G wifi chip type broadcom ARM"
+		default n
+	config CONFIG_WIFI_2_4G_CHIP_11AC
+		depends on CONFIG_WIFI_2_4G
+		bool "2.4G wifi chip support 11ac, else 11n"
+		default n	
+	config CONFIG_WIFI_2_4G_CHIP_PRE
+		depends on CONFIG_WIFI_2_4G
+	    string "wifi 2.4g interface param name prefix.eg:0:macaddr sb/1/macaddr" 
+		default "0:" if CONFIG_WIFI_2_4G=y	
+	config CONFIG_WIFI_5G_CHIP_PRE
+		depends on CONFIG_WIFI_5G
+	    string "wifi 5g interface param name prefix.eg:0:macaddr sb/1/macaddr" 
+		default "1:" if CONFIG_WIFI_5G=y
+	config CONFIG_WIFI_APSTA
+		depends on CONFIG_WIFI
+		bool "Support APSTA mode"
+	config CONFIG_WIFI_AUTH_1X
+		depends on CONFIG_WIFI
+		bool "Support Protocal 802.1x"
+	config CONFIG_WIFI_POWER_REGULATE
+		depends on CONFIG_WIFI
+		bool "Support Power regulate"
+	config CONFIG_WIFI_WPS
+		depends on CONFIG_WIFI
+		bool "Support Wps"
+    config CONFIG_ALEXA_WIFI_WPS_SET
+        depends on CONFIG_WIFI
+        bool "Support Alexa set WPS"
+	config CONFIG_WIFI_BTN
+		depends on CONFIG_WIFI
+		bool "Sopport Btn"
+	config CONFIG_WIFI_AC
+		depends on CONFIG_WIFI
+		bool "Support 11Ac"
+	config CONFIG_WIFI_EMF
+		depends on CONFIG_WIFI
+		bool "Support EMF"
+	config CONFIG_WIFI_2_4G
+		depends on CONFIG_WIFI
+		bool "Support 2.4G"
+	config CONFIG_WIFI_5G
+		depends on CONFIG_WIFI
+		bool "Support 5G"
+	config CONFIG_WIFI_WISP
+		depends on CONFIG_WIFI
+		bool "Support WISP"
+	config CONFIG_WIFI_GUEST
+		depends on CONFIG_WIFI
+		bool "Support Guest network"
+	config CONFIG_SET_GUEST_SSID
+		depends on CONFIG_WIFI
+		bool "Support Set Guest Ssid"	
+	config CONFIG_ALEXA_GUSET_WIFI_SET
+		depends on CONFIG_WIFI
+		bool "Support Set Guest Alexa"
+	config 	CONFIG_WIFI_SUPPORT_SWITCH
+		depends on CONFIG_WIFI
+		bool "Wifi Support Switch"
+		default n
+	config CONFIG_WIFI_ANTJ
+		depends on CONFIG_WIFI
+		bool "Support Wifi Antijam"
+	config CONFIG_WIFI_FATAL_ERROR_MONITOR
+		depends on CONFIG_WIFI
+		bool "Support WiFi-Fatal-Error-Monitor"
+	config CONFIG_WIFI_FILTER_NUMBER
+		depends on CONFIG_WIFI
+		int "wifi filter number "
+		default 32
+	config CONFIG_SSID_MAC_FILTER_NUMBER
+		depends on CONFIG_WIFI
+		int "The maximum number of Mac that can be added for a SSID"
+		default 64
+	config CONFIG_WIFI_FILTER_ADD_NUMBER
+		depends on CONFIG_WIFI
+		int "The maximum number of Mac that can be added at a time"
+		default 5
+	config CONFIG_2_4G_MAX_SSID_NUMBER
+		depends on CONFIG_WIFI
+		int  "Maximum 2.4G SSID Number"
+		default 8
+	config CONFIG_5G_MAX_SSID_NUMBER
+		depends on CONFIG_WIFI
+		int  "Maximum 5G SSID Number"
+		default 8
+	config CONFIG_SCHED_WIFI
+		depends on CONFIG_WIFI
+		bool "Support Sched Wifi"
+	choice 
+		prompt '2.4G pci interference Configuration'
+		depends on CONFIG_WIFI_2_4G
+		config CONFIG_24G_PCI1
+			bool "PCI1"  
+		config CONFIG_24G_PCI2
+			bool "PCI2"  
+		config CONFIG_24G_PCI3
+			bool "PCI3"
+	endchoice
+	choice 
+		prompt '5G pci interference Configuration'
+		depends on CONFIG_WIFI_5G
+		config CONFIG_5G_PCI1
+			bool "PCI1"  
+		config CONFIG_5G_PCI2
+			bool "PCI2"  
+		config CONFIG_5G_PCI3
+			bool "PCI3"
+	endchoice
+	config CONFIG_AUTO_SSID_HIDE
+		depends on CONFIG_WIFI
+		bool  "Support auto_ssid_hide"
+	config CONFIG_INTERFERENCE_MODE
+		depends on CONFIG_WIFI
+		bool  "Support interference mode"
+	config CONFIG_RSSI_MANAGE
+		depends on CONFIG_WIFI
+		bool  "Support RSSI Management"
+	config CONFIG_RECV_SENSITIVITY
+		depends on CONFIG_WIFI
+		bool  "Support RECV SENSITIVITY config"
+	config CONFIG_WL_PRIO_5G
+	depends on CONFIG_WIFI_5G
+		bool  "Support priority 5G SSID"
+    config CONFIG_PROBE_BROADCAST_SUPPRESSION
+        bool "Support Drop broadcast Probrequst"
+	config CONFIG_WL_PRIO_ICMP
+		bool "Support priority icmp" 
+	config CONFIG_TENDA_WLAN_DBG
+		bool "Support DEBUG wlan tx/rx path && mgmt process "
+	config CONFIG_WL_RATE_OPTIMIZE
+		bool "Support 2.4G rate optimize "
+	config CONFIG_WL_DHCP_OPTIMIZE
+		bool "Support DHCP optimize in WL"
+    config CONFIG_ALEXA_WIFI_SCHEDULE_SET
+        depends on CONFIG_WIFI
+        bool "Support Alexa to turn on/off wifi schedule"
+    config CONFIG_ALEXA_WIFI_POWER_SET
+        depends on CONFIG_WIFI
+        bool "Support Alexa to set wifi power"
+	endmenu
+	
+	menu "lan"
+	config CONFIG_MULTI_LAN	
+	bool 'Support MultiLan'
+	config  CONFIG_LAN_VLAN
+	bool 'Support LanVlan'
+	config CONFIG_LAN_PORT_VLAN
+	bool 'Support lan port vlan'
+	comment 'Lan Service'
+	config WEBS_SSL_SUPPORT
+		bool 'Support SSL'
+		default n
+	config CONFIG_NET_CTL_WEB_ACCESS_LAN
+		bool 'Support Lan Control'
+	config CONFIG_MAX_LAN_PORT_NUMBER
+		int 'max lan port num'
+		default 2
+	endmenu
+	
+	
+	
+	menu "wan"
+	config CONFIG_NET_MULTI_WAN
+		bool 'Support MultiWan'
+	config CONFIG_MULTI_DIAL
+		bool 'Support Multi Dial'	
+	config CONFIG_MAX_STATIC_ROUTE_NUM
+	int 'max static route num'
+	default 10
+	config CONFIG_3G
+	bool 'Wan 3G Mode'
+	config CONFIG_NET_WAN_STATIC
+	bool 'Wan Static Mode'
+	comment 'Others Dial Method'
+	config CONFIG_NET_WAN_PPTP
+		bool  'support PPTP'
+	config CONFIG_NET_WAN_L2TP
+		bool  'Support L2tp'
+	config CONFIG_NET_DOUBLE_PPTP
+		bool  'Support double PPTP'
+	config CONFIG_NET_DOUBLE_L2TP
+		bool  'Support double L2tp'
+	config CONFIG_NET_DOUBLE_PPOE
+		bool  'Support double pppoe'
+	config CONFIG_CHINA_NET_CLIENT
+		bool  'Support China Net'
+	config CONFIG_WAN_MAX_STREAM
+		int 'Support max wan stream'
+		default 100
+		
+	comment 'DNS'
+	config CONFIG_ADVANCE_DDNS
+		bool 'Support DDNS'
+	config CONFIG_ADVANCE_DYNDNS
+		bool 'Dynamic DNS support'
+	config CONFIG_ADVANCE_3322
+		bool 'Support 3322'
+	config CONFIG_ADVANCE_88IP
+		bool 'Support 88Ip'
+	config CONFIG_ADVANCE_ORAY
+		bool 'Support ORAY'
+	config CONFIG_ADVANCE_GNWAY	
+		bool 'Support GNWAY'
+	config CONFIG_ADVANCE_NOIP 
+		bool 'Support NOIP'
+	comment 'VPN'
+	config CONFIG_VPN
+		bool 'Support vpn'
+	if  CONFIG_VPN
+		config CONFIG_VPN_PPTP
+			bool 'Support vpn pptp'
+		config CONFIG_VPN_L2TP
+			bool 'Support vpn l2tp'
+		config CONFIG_VPN_IPSEC
+			bool 'Support vpn ipsec'
+		config OPEN_SSL_SUPPORT
+			bool 'Support Open SSL'
+			default n
+		config CONFIG_VPN_CONNECT_NUMBER 
+			default 15
+			int 'Support vpn connect number'
+		config CONFIG_VPN_USER_NUMBER 
+			default 20
+			int 'Support vpn user number'
+		config CONFIG_VPN_SERVER_USER_ADD_NUMBER 
+			default 5
+			int 'The maximum number of vpn user that can be added at a time'
+		config CONFIG_IPSEC_TUNNEL_NUMBER 
+			default 10
+			int 'Support ipsec tunnel number'
+	endif
+	comment 'WAN Service'
+	config CONFIG_NET_CTL_WEB_ACCESS_WAN
+		bool 'Support Wan Control'
+	config CONFIG_NET_PORT_CFG_WAN_NUMBER
+		bool 'Support Wan Change Number'
+	config CONFIG_WAN_NUMBER
+		default 1
+		int 'Maximum WAN Number'
+	config  CONFIG_MAX_PHY_PORT_NUM 
+		default 4
+		int 'Maximum PHY Ports Number'
+	comment 'TR069'
+	config CONFIG_TR069_SUPPORT
+		bool "Enable tr069"
+		default n
+		if CONFIG_TR069_SUPPORT
+			comment 'CWMP Protocol'
+			choice 
+			prompt 'CWMP Protocol'
+			config CONFIG_CWMP_TR098
+				bool "cwmp_tr098"
+				default y
+			config CONFIG_CWMP_TR181
+				bool "cwmp_tr181"
+				default n
+			endchoice
+		endif
+	endmenu
+		
+	menu "nat"
+	comment 'Iptables Version'
+	choice 
+		prompt 'Iptables Version'
+		config CONFIG_APPS_IPTABLES_1412
+			bool "Iptables_1_4_12 "
+		config CONFIG_APPS_IPTABLES_140
+			bool "Iptables_1_4_0"
+		config CONFIG_APPS_IPTABLES_144
+			bool "Iptables_1_4_4"
+		config CONFIG_APPS_IPTABLES
+			bool "Iptables support"
+	endchoice
+	comment 'Ebtables'
+	config CONFIG_EBTABLES_TOOL
+		bool 'Support Ebtables'
+	config CONFIG_MAX_PORT_MAP_NUM
+	int 'max port map num'
+	default 10
+	config CONFIG_PORT_RANGE_MAP
+	bool 'port range map'
+	comment 'Port Parameter'
+	config CONFIG_NET_PORT_CFG_MIRROR
+		bool 'Support Port MiRROR'
+	if CONFIG_NET_PORT_CFG_MIRROR
+		config CONFIG_MIRROR_WATCH_LAN_PORT
+		int 'the phy port receive mirror package,[0-4]'
+		default 0
+	endif
+	config CONFIG_NET_PORT_CFG_PORT_LINK_MODE
+		bool 'Support Port CFG Port Mode'
+	config CONFIG_NET_PORT_CFG_MAC_CLONE
+		bool 'Support Mac Clone'
+
+	comment 'Dmz'
+	config CONFIG_NET_DMZ
+		bool 'Support Dmz'
+	comment 'Portal'
+	config  CONFIG_PORTAL_AUTH
+		bool 'Support Portal'
+	config CONFIG_WEIXIN_WIFI
+		bool 'Support weixin wifi'
+	if CONFIG_PORTAL_AUTH
+		config CONFIG_PORTAL_MATCH_WL_IFNAME
+			bool 'Support Wireless Portal'
+		config CONFIG_PORTAL_NO_AUTHENTICATE
+			bool 'Support No authenticate'
+		config CONFIG_AUTH_ADD_NUMBER
+			int 'The maximum number of Mac that can be added at a time.'
+			default 5
+		config CONFIG_PORTAL_NO_LAN_AUTHENTICATE 
+			bool 'Support No lan authenticate'
+		config CONFIG_PORTAL_UNONLINE
+			bool 'Support Unonline portal'
+		config CONFIG_PORTAL_USERSPACE_TIME_CHECK
+			bool 'Support userspace time check'
+		config 	CONFIG_PORTAL_WIRED_IFNAME
+			bool 'Support Wired portal sepcified port'
+		config CONFIG_PORTAL_AUTH_DURING_SPECIFIC_TIME
+			bool 'Support sepcified online time area'
+		config CONFIG_PORTAL_MAC_WHITE_LIST
+			bool 'Support white mac list'
+		config CONFIG_PORTAL_AUTH_WHITE_NUMBER
+			int 'Maximum MAC/IP number is not required for portal authentication'
+			default 20
+		config CONFIG_PORTAL_URL_HIJACKING
+			bool 'Support url hijacking'
+		config CONFIG_PORTAL_URL_WHITE_LIST
+			bool 'Support url white list '
+		config CONFIG_PORTAL_WEIXIN_AUTH
+			bool 'Support url weixin auth'
+		config CONFIG_PORTAL_CLOUD_AUTH
+			bool 'Support url cloud auth'
+		config CONFIG_PORTAL_JS_INJECT
+			bool 'Support portal js inject'
+		config CONFIG_PORTAL_WEB_AUTH_MAX_USR_NUM
+			default	100
+			int	'Support max web auth user number'
+		config CONFIG_AUTH_USER_ADD_NUMBER
+			default	5
+			int	'The maximum number of user that can be added at a time.'
+	endif 
+	
+	config CONFIG_EMAIL_CC
+		bool 'Support Email CC'
+	config CONFIG_ARP_GATEWAY
+		bool 'Support ArpGateWay'
+	config CONFIG_ADD_IPGROUP_BY_HOTEL_MODE
+		bool 'Support whole ip range group when arpGateWay on.'
+		default n
+	config CONFIG_ADDRESS_MASQUERADE
+		bool 'Support Address Masquerede'
+	config CONFIG_ADVANCE_P2P_NAT
+		bool 'Support Point to Point Nat'
+	config CONFIG_NAT_SPEEDUP
+		bool 'Support FastNat'
+	config CONFIG_ADVANCE_VIRTUAL_SERVER
+		bool 'Support Vitual Service'
+	config  CONFIG_ADVANCE_VIRTUAL_SERVER_TIME_OUT
+		bool 'Support Vitual Service config timeout'
+	config  CONFIG_NAT_SESSION_NUMBER 
+		default 25000
+		int 'Maximum NAT Session'
+	config CONFIG_SYSTEM_FIX_TOOL 
+		bool 'Support system fix tool'
+	config CONFIG_POLICY_UPDATE_ONLINE
+		bool 'Support update policy online'
+	endmenu
+
+	menu 'DHCP'
+	config CONFIG_NET_WAN_DHCP
+		bool 'WAN DHCP Client'
+	config CONFIG_LAN_DHCPC
+		bool 'LAN DHCP Client'
+	config CONFIG_NET_DHCP
+		bool 'DHCP Server'
+	config CONFIG_DHCPS_LIST_MAX_NUM
+		int 'Maximum Dhcp Server List Number'
+		default 20
+	config CONFIG_NET_DHCP_STATIC
+		depends on CONFIG_NET_DHCP
+		bool 'DHCP Server support staticDHCP'
+		default   n
+	config CONFIG_MAX_DHCP_CLIENT
+		int 'Maximum Dhcp Client'
+		default   256
+	config CONFIG_DHCPS_STATIC_IP_NUM
+		int 'Maximum Dhcp Static Entries'
+		default	32
+	config CONFIG_BRIDGE_HANDLE_DHCP_OPTION
+		bool 'Bridge handle dhcp option'
+	endmenu
+	
+	menu 'PPPoE'
+	config CONFIG_NET_WAN_PPPOE
+		bool 'Support PPPoE Client'
+	config CONFIG_PPPoE_SERVER
+		bool 'Support PPPOE Server'
+	config CONFIG_AUTO_SYNCHRO
+		bool "Support Auto Synchro"
+	config CONFIG_PAGE_HAVE_SERV_NAME
+		bool "Support config server sevice name"
+		default n
+	if CONFIG_PPPoE_SERVER
+	   comment 'PPPOE Server Advanced Configurations'
+		config CONFIG_WEB_AUTH
+		   bool 'Support webAuth'
+		config CONFIG_PPP_CHAP_AUTH
+		   bool 'Support for  CHAP'
+		config CONFIG_PPP_PAP_AUTH
+		   bool 'Support for  PAP'
+		config CONFIG_PPPoE_EXPORT_MODIFY
+		   bool 'Support PPPoE Server cfg import without crc check'
+		   default n
+		config CONFIG_PPPOE_SESS_NUM
+		   int 'Maximum PPPOE Client'
+		   default 100
+		config CONFIG_PPPoE_WHITE_MAC_NUM
+		   int 'Maximum MAC number is not required for authentication'
+		   default 20
+		config CONFIG_PPPOE_WHITE_MAC_ADD_NUMBER
+		   int 'The maximum number of Mac that can be added at a time.'
+		   default 5
+	endif
+	endmenu
+	
+	menu "led"
+	config CONFIG_LED_CONTROL
+		bool 'Support Led control'	
+	config CONFIG_SCHED_LED
+		bool "Support Sched led"
+	config CONFIG_USB_LED_CONTROL
+		depends on CONFIG_USB_SUPPORT&&CONFIG_LED_CONTROL
+		bool 'Support usb Led control'	
+	config CONFIG_2_4G_LED_CONTROL
+		depends on CONFIG_WIFI_2_4G
+		bool 'Support 2.4G led control'
+	config CONFIG_5G_LED_CONTROL
+		depends on CONFIG_WIFI_5G
+		bool 'Support 5G led control'
+	config CONFIG_INTERNET_LED
+		bool 'Support Interner Led'
+	config CONFIG_LED_SHARE_WITH_SYS
+		bool 'Support all led sharing with sys led'
+	config CONFIG_WIFI_LED_TENDA_KERNEL_CONTROL
+		bool 'Support wifi led use tenda kernel module control'
+    config CONFIG_ALEXA_LED_STATE_SET
+        bool 'Support Alexa to set the state of led'
+    config CONFIG_ALEXA_NIGHT_MODE_SET
+    	bool 'Support Alexa to set the night mode of led'
+	endmenu
+
+	menu "service"
+	config CONFIG_CWMPD
+		bool  "Support cwmpd"
+	config CONFIG_CWMP_TR098
+		bool  "Support cwmpd_tr098"		
+	config CONFIG_DEV_COMMUNICATION
+		bool "Support inter device communication"
+	config CONFIG_FASTNAT_SWITCH
+		bool  "Support fastnat switch"
+	config CONFIG_QVLAN
+		bool  "Support QVLAN"
+	config CONFIG_WIRED_QVLAN
+		depends on CONFIG_QVLAN
+		bool  "Support wired QVLAN"
+	config CONFIG_WAN_QVLAN
+		depends on CONFIG_QVLAN
+		bool  "Support wan QVLAN config"
+	config CONFIG_WIFI_QVLAN
+		depends on CONFIG_QVLAN
+		depends on CONFIG_WIFI
+		bool  "Support WiFi QVLAN"
+	config CONFIG_QVLAN_2_4G
+		depends on CONFIG_WIFI_QVLAN
+		bool  "Support QVLAN_2_4G"
+	config CONFIG_QVLAN_5G
+		depends on CONFIG_WIFI_QVLAN
+		bool  "Support QVLAN_5G "
+	config CONFIG_QVLAN_MAX_NUM
+		depends on CONFIG_QVLAN
+		int "Maximum QVLAN num"
+		default 15
+	config CONFIG_ADVANCE_UPNP
+		bool  'Support UPNP'
+	config CONFIG_SYSTEM_SNTP
+		bool 'Support SNTP'
+	comment 'IGMP'
+	config CONFIG_IGMPPROXY_SUPPORT
+		bool 'Support igmp proxy'
+	config CONFIG_IGMP_SNOOPING
+		bool 'Support igmp snooping'
+	config CONFIG_PORT_SNOOPING
+		bool 'Support port snooping'
+	comment 'MLD'
+	config CONFIG_MLDPROXY_SUPPORT
+		bool 'Support mld proxy'
+	comment 'IPTV'
+	config CONFIG_IPTV
+		bool 'Support IPTV'
+	config CONFIG_IPTV_STB
+		depends on CONFIG_IPTV
+		bool 'Support iptv stb'
+	comment 'cloud client'
+	config CONFIG_YUN_CLIENT
+		bool 'Support cloud client'
+	config CONFIG_YUN_URL_UPLOAD
+		depends on CONFIG_YUN_CLIENT
+		bool 'Support Micro marketing url log report'
+	comment 'online upgrade'
+	config CONFIG_UCLOUD
+		bool 'Support upgrade online'
+	config CONFIG_UCLOUD_PASSWORD
+		depends on CONFIG_UCLOUD
+		string "Default password of upgrade online"
+		default "abcdef"	
+	config CONFIG_USB_SUPPORT
+		bool 'Support USB '
+	config CONFIG_USB_PRINT_PRODUCT_NAME
+		depends on CONFIG_USB_SUPPORT
+		string "USB Print Product Name"
+	config CONFIG_TFCARD_HOTPLUG_SUPPORT
+		bool 'Support tfcard hotplug'
+	config CONFIG_NTFS_3G_SUPPORT
+		depends on CONFIG_USB_SUPPORT
+		bool 'use ntfs-3g to mount ntfs type partition other than ufsd.ko'
+	config CONFIG_URL_RCD
+		bool 'Support url record '
+	config CONFIG_USB_URL_RCD
+		depends on CONFIG_USB_SUPPORT&&CONFIG_URL_RCD
+		bool 'Support usb url record'
+		config CONFIG_MAX_CLIENT_NUM
+		int 'Maximum client num(all interfaces)'
+		default   128
+		config CONFIG_DLNA_SERVER
+		bool 'Support Dlna Server'
+	config CONFIG_SAMBA
+		depends on CONFIG_USB_SUPPORT
+		bool 'Support samba Server'
+	config CONFIG_SAMBA_SMALLER
+		depends on CONFIG_SAMBA
+		bool 'make Support samba Server  smaller'
+	config CONFIG_IPPD
+		depends on CONFIG_USB_SUPPORT
+		bool 'Support ippd Server'
+	config CONFIG_UDEV
+		depends on CONFIG_USB_SUPPORT
+		bool 'Support Udev'
+	config CONFIG_FTP_SERVER
+		depends on CONFIG_USB_SUPPORT
+		bool 'Support Ftp Server'
+	config CONFIG_HW_NAT
+		bool "Support Hw Nat"
+	config CONFIG_ADVANCE_WEB_NOTIFICATION
+		bool 'Support Web Notification'
+	config CONFIG_ROUTE_TABLE
+		bool 'Support Route Table'
+	config CONFIG_NET_GMAC
+		bool 'Support GMac'
+	config CONFIG_MAX_SYS_LOG_NUM 
+		default 250
+		int 'max system log num'
+		
+	config CONFIG_SYSTEM_UPDATE_LAYER7_PROTOCOL
+		bool 'Support Upgrade protocol of Layer7'
+	config CONFIG_SNMP_SERVER
+		bool 'Support Snmp Server'
+	config CONFIG_INTERNET_LED
+		bool 'Support Interner Led'
+	config CONFIG_SCHED_REBOOT
+		bool 'Support Schedular Reboot'
+	config CONFIG_WEB_IDLE_TIME
+		bool 'Support Web Idle Time'
+	config CONFIG_DIAG_PING
+		bool 'Support Diagnose Ping'
+	config CONFIG_DIAG_TRACEROUTE
+		bool 'Support Diagnose Traceroute'
+	config CONFIG_UCLOUD_FUNCTION
+		bool "Support ucloud function"
+	config CONFIG_SMART_POWER_MANAGEMENT
+		bool "Support smart power management"
+	config CONFIG_MASS_UPGRADE
+		bool "Support Mass Upgrade"
+	config CONFIG_MIN_FREE_KBYTES
+		int "Min Free Kbytes"
+		default 1024
+	config CONFIG_WLEXE
+		bool "Support wlexe"
+	config CONFIG_COMPATIBILITY
+		bool "Support Compatibility"
+	config CONFIG_LED_CONTROL
+		bool 'Support Led control'    
+	config CONFIG_USB_LED_CONTROL
+		bool 'Support usb Led control'   
+	config  CONFIG_CROP_ENABLE
+		bool 'Enable picture process function'
+	config CONFIG_CROP_PNG
+		depends on CONFIG_CROP_ENABLE
+		bool 'Support png picture process'
+	config CONFIG_CROP_JPG
+		depends on CONFIG_CROP_ENABLE
+		bool 'Support jpg picture process'
+	config CONFIG_CROP_GIF
+		depends on CONFIG_CROP_ENABLE
+		bool 'Support gif picture process'
+	config CONFIG_WEB_COMPILE_SWITCH
+		bool 'Support web compile switch'	
+	config CONFIG_CONSOLE_SWITCH
+		bool 'System console switch'
+	config CONFIG_WATCHDOG_SWITCH
+		bool 'System watchdog switch'
+	endmenu
+	
+	menu 'FireWall ,QOS'
+	config CONFIG_KM
+		bool "Support Kernel Modules"
+	comment 'FireWall'
+	config CONFIG_BEHAVIOR_MANAGER
+		depends on CONFIG_KM
+		bool 'Support Filter'
+	if CONFIG_BEHAVIOR_MANAGER
+		config CONFIG_GROUP_IP_NUMBER
+			int "group ip num"
+			default 30
+		config CONFIG_GROUP_TIMER_NUMBER
+			int "group time num"
+			default 30
+		config CONFIG_DEFAULT_IP_GROUP_NUMBER
+			int "default group ip num"
+			default 1
+		config CONFIG_DEFAULT_TIME_GROUP_NUMBER
+			int "group time num"
+			default 1
+		comment 'FILTER  Advanced Configurations'
+		config CONFIG_FILTER_MAC
+			bool 'Support Mac Filter'
+		config CONFIG_FILTER_MAC_NUMBER
+			int 'Maximum Mac Filter  Entries'
+			depends on CONFIG_FILTER_MAC
+			default 100   
+		config CONFIG_FILTER_IPMAC
+			bool 'Support Ip-Mac Filter'
+		config CONFIG_BIND_IPMAC_NUMBER
+			int 'Maximum IP-MAC Bind Filter Entries'
+			default 100   
+		config CONFIG_CONNECT_LIMIT
+			bool 'Support connect limit'
+		config CONFIG_IP_FILTER
+			bool 'Support ip in ip group filter  '
+		config CONFIG_FILTER_IP_NUMBER 
+			int 'Maximum Ip Filter Entries'
+			default 20
+		config CONFIG_PRIVILEGE_IP
+			bool 'Support Privilege Ip'
+		config CONFIG_FILTER_IPPORT 
+			bool 'Support Port Filter'
+		config CONFIG_FILTER_IPPORT_NUMBER 
+			int 'Maximum Port Filter Entries'
+			default 20
+		config CONFIG_FILTER_URL
+			bool 'Support URL Filter'
+		config CONFIG_FILTER_URL_NUMBER
+			depends on CONFIG_FILTER_URL
+			int 'Maximum Url Filter Entries'
+			default 20   
+		config  CONFIG_URL_GROUP_NUMBER 
+			depends on CONFIG_FILTER_URL
+			default 10
+			int 'Maximum User Url Group Entries'
+		config  CONFIG_GROUP_URL_NUMBER
+			depends on CONFIG_FILTER_URL
+			default 20
+			int 'Maximum Url Entries Per User Url Group'
+		config  CONFIG_URL_FILTER_SYSTEM_CLASSES_SUPPORT
+			depends on CONFIG_FILTER_URL
+			default n
+			bool 'Support System Url Filter Classes'
+		config CONFIG_ONLINE_IP
+			bool 'Support Ip Filter'
+		config CONFIG_ONLINE_IP_NUMBER
+			depends on CONFIG_ONLINE_IP
+			default 384
+			int 'Maximum Online Ip Recorded'
+		config CONFIG_APP_IDENTIFY
+			bool 'Support APP Identy'
+		config CONFIG_FILTER_APP
+			bool 'Support App Filter'
+		config CONFIG_FILTER_LAYER7_NUMBER 
+			default 20
+			depends on CONFIG_APP_IDENTIFY
+			int 'Maximum App Filter Entries'
+		config CONFIG_ACCOUNT_MANAGE   
+			bool 'Support QQ Acount Filter'
+		config CONFIG_FILTER_QQ_NUMBER 
+			depends on CONFIG_ACCOUNT_MANAGE
+			default 20
+			int 'Maximum QQ Filter Entries'
+		config CONFIG_FILTER_QQ_ADD_NUMBER 
+			depends on CONFIG_ACCOUNT_MANAGE
+			default 5
+			int 'The maximum number of QQ that can be added at a time.'
+		config CONFIG_WAN_POLICY_NUMBER
+			default 20
+			int 'Maximum Wan Policy Routing Entries'
+			depends on CONFIG_NET_MULTI_WAN 
+	endif
+	comment 'QOS'
+	config CONFIG_QOS
+		depends on CONFIG_KM
+		bool 'Support Qos'
+	config CONFIG_QOS_RULE_NUMBER 
+		default 20
+		depends on CONFIG_QOS
+		int 'Maximum qos rule number'
+	config CONFIG_PORTAL_QOS
+		depends on CONFIG_KM
+		bool 'Support portal qos rule diffrent from qos rule'
+	comment 'NOS Control'
+	config CONFIG_NOS_CONTROL
+		depends on CONFIG_KM
+		bool 'Support NOS control, include qos flow statistics' 
+	config CONFIG_QOS_RULE_NUMBER 
+		default 20
+		depends on CONFIG_NOS_CONTROL
+		int 'Maximum nos rule number'
+	comment 'Safe'
+	config CONFIG_SAFE_ATTACK
+		depends on CONFIG_KM
+		bool 'Support safe ATTack'
+	config CONFIG_SAFE_ARP
+		depends on CONFIG_KM
+		bool 'Support arp ATTack'
+	config CONFIG_WAN_ICMP_DROP
+		depends on CONFIG_KM
+		bool 'Support wan icmp drop'
+	config CONFIG_HW_NAT
+		depends on CONFIG_KM
+		bool "Enable HW_NAT"
+		default y
+	config CONFIG_DNS_REDIRECT
+		depends on CONFIG_KM
+		bool 'Support dns_redirect'  
+	endmenu
+	
+	menu "ac_management"
+	config CONFIG_AP_MANAGE
+		bool 'Support AC Management'
+	config CONFIG_AC_MANAGEMENT_V2
+		depends on CONFIG_AP_MANAGE
+		bool 'Support AC Management version2'
+	config CONFIG_MAX_CLI_AP_NUM
+		depends on CONFIG_AP_MANAGE
+		default 32
+		int 'Maximum ap can be managed'
+	config CONFIG_AC_MANAGE_VERSION
+		depends on CONFIG_AP_MANAGE
+		string "ac manage version"
+		default "old"
+	config AC_SQL_BLOCK_MTD
+		depends on CONFIG_AP_MANAGE&&CONFIG_BOOT_FROM_SPIFLASH
+		string "AC sqlite mtd block"
+		default "/dev/mtdblock10"
+	config AC_POLICY_BLOCK_MTD
+		depends on CONFIG_AP_MANAGE&&CONFIG_BOOT_FROM_SPIFLASH
+		string "AC policy  mtd block"
+		default "/dev/mtdblock11"
+	endmenu
+	menu "ate"
+	config CONFIG_ATE_AES_CBC_ENCRYPT
+		bool "Enable CONFIG_ATE_AES_CBC_ENCRYPT"
+	endmenu
+	menu "mac vendor"
+	config CONFIG_SCHED_MAC_VENDOR
+		bool "Enable CONFIG_SCHED_MAC_VENDOR"
+	endmenu 
+	menu "offline log"
+	config CONFIG_SCHED_OFFLINE_LOG
+		bool "Enable CONFIG_SCHED_OFFLINE_LOG"
+	endmenu
+	menu "select ISP"
+	config CONFIG_SELECT_ISP
+		bool "Enable CONFIG_SELECT_ISP"
+	endmenu
+	menu "force upgrade"
+	config CONFIG_SCHED_FORCE_UPGRADE
+		bool "Enable CONFIG_SCHED_FORCE_UPGRADE"
+	endmenu
+	menu "daylight saving time"
+	config CONFIG_DAYLIGHTSAVINGTIME
+		bool 'Support daylight saving time'
+	endmenu
+	config CONFIG_AP_MODE
+		bool "Enable AP_MODE"
+		default y
+
+	comment 'Tenda Easymesh'
+	config CONFIG_TENDA_EASYMESH
+		bool "Support Tenda Easymesh"
+		default n 
+	comment 'Tenda Easymesh'
+	config CONFIG_TENDA_XMESH
+		bool "Support Tenda Xmesh"
+		default n
+	config CONFIG_PLATFORM_MSG
+		bool "Support PLATFORM MSG "
+		default n
+	config CONFIG_CBRR
+		bool "Support CBRR "
+		default n
+	comment 'Syschk'
+	config CONFIG_TENDA_SYSCHK
+		bool "Support Tenda Syschk"
+		default y
+	config CONFIG_WIFI_SUPPORT_APCLIENT
+		bool "Web Support APCLIENT"
+		default n
+	config CONFIG_WIFI_SUPPORT_WISP
+		bool "Web Support WISP"
+		default n
+endmenu
+

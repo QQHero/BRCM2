@@ -1,0 +1,11 @@
+!<thin>
+//                                              440       `
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/bp_funcs.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/boardparms_chip.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/pinmux_table_6756.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/boardparms/bcm963xx/boardparms_6756.o/
+
+/0              0           0     0     644     49180     `
+/104            0           0     0     644     984       `
+/215            0           0     0     644     1040      `
+/328            0           0     0     644     2216      `

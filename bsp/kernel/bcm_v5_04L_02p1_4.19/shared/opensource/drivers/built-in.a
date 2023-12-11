@@ -1,0 +1,18 @@
+!<thin>
+//                                              798       `
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_gpio_impl1.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_led_impl4.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_swled_impl2.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_otp_impl1.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_pinmux_impl1.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_misc_hw_init_impl6.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_ubus_impl1.o/
+/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/drivers/bcm_nvram_data_impl.o/
+/0              0           0     0     644     3536      `
+/98            /0           0     0     644     5140      `
+/195            0           0     0     644     2460      `
+/294           /0           0     0     644     7124      `
+/391            0           0     0     644     3640      `
+/491            0           0     0     644     2584      `
+/597            0           0     0     644     9220      `
+/695            0           0     0     644     11268     `

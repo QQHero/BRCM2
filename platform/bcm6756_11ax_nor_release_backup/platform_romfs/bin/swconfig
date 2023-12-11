@@ -1,0 +1,352 @@
+#! /bin/sh
+
+IPTV_VLAN_DEFAULT=3
+
+# $1: vlan enable  
+# $2: hw support enable
+vlan_init() 
+{
+	echo "not do"
+}
+
+# $1: vlan_id  
+# $2: vlan members, port bitmap  
+# $3 vlan tagged members, port bitmap 
+# $4:fid value
+vlan_set() 
+{
+	untag=$((~$3))
+	untag=$(($2 & $untag))
+
+## eth0 为wan口，eth1\2\3为lan口 eth的子设备想up，需要原设备先up才可以 ##
+	#for i in 1 2 3 4 5
+	for i in 2 3 4 5
+	do
+		if [ $(($(($3 >> $i))& 1)) = 1 ]
+		then
+			vlanctl --mcast --if-create-name  eth$((i-1)) eth$((i-1)).$1
+			vlanctl --rule-remove-all eth$((i-1)).$1
+			vlanctl --if eth$((i-1)) --rx --tags 1 --filter-vid $1 0 --pop-tag --set-rxif eth$((i-1)).$1 --rule-append 
+			vlanctl --if eth$((i-1)) --tx --tags 0 --filter-txif eth$((i-1)).$1 --push-tag --set-vid $1 0 --rule-append
+			
+			ifconfig eth$((i-1)) up
+			ifconfig eth$((i-1)).$1 up
+		fi
+		if [ $(($(($untag >> $i))& 1)) = 1 ]
+		then
+			vlanctl --mcast --if-create-name eth$((i-1)) eth$((i-1)).$1
+			vlanctl --rule-remove-all eth$((i-1)).$1 
+			vlanctl --filter-txif eth$((i-1)).$1 --if eth$((i-1)) --tx --tags 0 --rule-append 
+			vlanctl --set-rxif eth$((i-1)).$1 --if eth$((i-1)) --rx --tags 0 --rule-append
+			
+			ifconfig eth$((i-1)) up
+			ifconfig eth$((i-1)).$1 up
+		fi
+	done
+}
+
+# del or clear a vlanGroup
+# $1: vlan_id  
+vlan_del()
+{
+	for i in 1 2 3 4 5
+	do
+		vlanctl --rule-remove-all eth$((i-1)).$1
+	done
+}
+
+vlan_show()
+{
+	echo " swconfig vlan_show " >> /tmp/swconfig.log
+	cat /proc/rtl_8367r_vlan
+}
+
+# $1: phyid  - witch port to set
+# $2: pvid   - the pvid value for set
+# $3: pri    - priority value for this port
+pvid_set() 
+{
+	#echo "$1,$2,$3 > /proc/pvid" 
+	echo "$1,$2,$3" > /proc/pvid
+}
+
+# $1: port0's pvid
+# $2: port1's pvid
+# $3: port2's pvid
+# $4: port3's pvid
+# $5: port4's pvid
+pvid_all_set()
+{
+	pvid_set 0 $1 0
+	pvid_set 1 $2 0
+	pvid_set 2 $3 0
+	pvid_set 3 $4 0
+	pvid_set 4 $5 0
+}
+
+# $1:igmp_pbmp $2: tag_pbmp
+igmp_config() {
+	echo "argc:$#"
+	echo "$1 $2 $3 $4 $5 $6 $7 $8 $9"
+	echo "enable 1" >/proc/br_igmpsnoop
+	
+	if [ $# -gt 7 ]
+	then
+		echo "Custom IPTV mode config vlan"
+		vids=$8
+		vids=${vids//,/ }
+		for v in $vids
+		do
+			echo $v > /proc/net/vlan/groupIndex
+			echo "1,$1,$2,$v,1" > /proc/net/vlan/vlanGroup
+		done
+	else
+		echo "Default IPTV mode config vlan"
+		echo 3 > /proc/net/vlan/groupIndex
+		echo 1,$1,$2,3,1 > /proc/net/vlan/vlanGroup
+	fi
+	
+	echo "$3,$4,$5,$6,$7" > /proc/net/vlan/pvid
+	
+	vconfig set_name_type VLAN_PLUS_VID_NO_PAD
+	brctl addbr br2
+	echo "0" > /proc/mCastVlanLeakyInfo
+	
+	if [ $# -gt 7 ]
+	then
+		echo "Custom IPTV mode config interface"
+		vconfig add eth1 $9
+		ifconfig vlan$9 up
+		brctl addif br2 vlan$9
+		
+		echo "1 2 $9" > /proc/mCastVlanLeakyInfo
+	else
+		echo "Default IPTV mode config interface"
+		vconfig add eth1 3
+		ifconfig vlan3 up
+		brctl addif br2 vlan3
+		
+		echo "1 2 3" > /proc/mCastVlanLeakyInfo
+	fi
+	
+	ifconfig br2 up
+}
+
+# clean all vlanctl rules on a vlanctl nic
+# $1 : the nicname 
+vlanctl_del()
+{
+	vlanctl --rule-remove-all $1
+	vlanctl --if-delete $1
+}
+
+#show vlanctl rules 
+# $1 : nic name
+# $2 : tags number
+vlanctl_show()
+{
+	vlanctl --if $1 --rx --tags $2 --show-table
+	vlanctl --if $1 --tx --tags $2 --show-table
+}
+
+# $1 : iptv vlan's vid
+# $2 : wan port's nicname
+# $3 : iptv port's nicname
+iptv_set()
+{
+	
+	local vid=$1
+	local wan=$2
+	local iptv=$3
+	
+	ifconfig $wan up
+	#sleep 1
+
+	#create bridge,and config multicast snooping
+	brctl addbr br3
+	bcmmcastctl mode -i br3 -p 1 -m 1
+	bcmmcastctl mode -i br3 -p 2 -m 1
+
+	#lan,side 
+	vlanctl --mcast --if-create-name $iptv $iptv.$vid
+	
+	vlanctl --rule-remove-all $iptv.$vid
+	
+	#lan side ,RX rule
+	vlanctl --if $iptv --rx --tags 0 --set-rxif $iptv.$vid --rule-append
+	vlanctl --if $iptv --rx --tags 1 --set-rxif $iptv.$vid  --filter-vid $vid 0 --rule-append
+
+	#wan side ,RX rule
+	vlanctl --if-create-name $wan $wan.2 --if $wan --set-if-mode-rg
+	#vlanctl --if $wan --rx --tags 0 --set-rxif $wan.1 --filter-vlan-dev-mac-addr 1 --rule-append
+	vlanctl --if $wan --rx --tags 1 --set-rxif $wan.2 --filter-vid $vid 0 --pop-tag --rule-append
+	#wan side ,TX rule
+	vlanctl --if $wan --tx --tags 0 --filter-txif $wan.2 --push-tag --set-vid $vid 0 --rule-append
+	vlanctl --if $wan --tx --tags 1 --filter-txif $wan.2 --push-tag --set-vid $vid 0 --rule-append
+
+	#add wan port and iptv port to bridge
+	ifconfig $iptv.$vid up
+	ifconfig $wan.2 up
+	brctl addif br3 $wan.2
+	brctl addif br3 $iptv.$vid
+	ifconfig br3 up
+}
+
+iptv_init()
+{
+	local vid=$1
+	local wan=$2
+	local untag=$3
+	
+	ifconfig $wan up
+	#create bridge,and config multicast snooping
+	brctl addbr br3
+	bcmmcastctl mode -i br3 -p 1 -m 1
+	bcmmcastctl mode -i br3 -p 2 -m 1
+	ifconfig br3 169.254.254.254
+
+	if [ "wan" != "null" ]; then
+		#wan side ,RX rule
+		vlanctl --if-create-name $wan $wan.2 --if $wan --set-if-mode-rg
+		#vlanctl --if $wan --rx --tags 0 --set-rxif $wan.1 --filter-vlan-dev-mac-addr 1 --rule-append
+		if [ "$3" == "1" ]; then
+			vlanctl --if $wan --rx --tags 1 --set-rxif $wan.2 --filter-vid $vid 0 --pop-tag --rule-append
+		elif [ "$3" == "0" ]; then
+			vlanctl --if $wan --rx --tags 1 --set-rxif $wan.2 --filter-vid $vid 0 --rule-append
+		fi
+		
+		#wan side ,TX rule
+		vlanctl --if $wan --tx --tags 0 --filter-txif $wan.2 --push-tag --set-vid $vid 0 --rule-append
+		vlanctl --if $wan --tx --tags 1 --filter-txif $wan.2 --push-tag --set-vid $vid 0 --rule-append
+
+		#add wan port to bridge
+		ifconfig $wan.2 up
+		brctl addif br3 $wan.2
+	fi
+}
+
+iptv_exit()
+{
+	local vid=$1
+	local wan=$2
+
+	#remove port wan of iptv
+	vlanctl --rule-remove-all $wan.2
+	brctl delif br3 $wan.2
+	vlanctl --if-delete $wan.2
+}
+
+iptv_setport()
+{
+	local vid=$1
+	local iptv=${2:0:4}
+	local untag=$3
+		
+
+	#lan,side 
+	vlanctl --mcast --if-create-name $iptv $iptv.$vid
+	if [ "$untag" == "0" ]; then 
+		brctl addif br0 $2
+		vlanctl --rule-remove-all $2
+		vlanctl --filter-txif $2 --if $iptv --tx --tags 0 --rule-append 
+		vlanctl --set-rxif $2 --if $iptv --rx --tags 0 --rule-append
+		vlanctl --if $iptv --tx --tags 0 --filter-txif $iptv.$vid --set-vid $vid 0 --rule-append
+
+		#lan side ,RX rule
+#		vlanctl --if $iptv --rx --tags 0 --set-rxif $iptv.$vid --rule-append
+		vlanctl --if $iptv --rx --tags 1 --set-rxif $iptv.$vid  --filter-vid $vid 0 --rule-append
+	else
+		brctl delif br0 $2
+		vlanctl --rule-remove-all $2
+		vlanctl --if $iptv --rx --tags 0 --set-rxif $iptv.$vid --rule-append
+		vlanctl --if $iptv --rx --tags 1 --set-rxif $iptv.$vid  --filter-vid $vid 0 --rule-append
+	fi
+	
+	
+	#and iptv port to bridge
+	ifconfig $iptv.$vid up
+	brctl addif br3 $iptv.$vid
+}
+
+iptv_removeport()
+{
+	local vid=$1
+	local br0_iptv=$2
+	local iptv=${2:0:4}
+	
+	#remove port iptv
+	vlanctl --rule-remove-all $iptv.$vid
+	brctl delif br3 $iptv.$vid
+	vlanctl --if-delete $iptv.$vid
+	brctl addif br0 $br0_iptv
+	vlanctl --rule-remove-all $br0_iptv
+	vlanctl --filter-txif $br0_iptv --if $iptv --tx --tags 0 --rule-append 
+	vlanctl --set-rxif $br0_iptv --if $iptv --rx --tags 0 --rule-append
+}
+
+#设置switch转发功能
+forward_set()
+{
+    local isEnable=$1
+    
+    if [ $isEnable -eq 1 ]; then
+        ethswctl -c hw-switching -o enable
+    else
+        ethswctl -c hw-switching -o disable
+    fi
+}
+
+help()
+{
+cat << EOF
+	swconfig vlan_init 0 0
+	swconfig vlan_set <vid> <members> <tagmembers>
+	swconfig vlan_del <vid>
+	swconfig vlan_show
+	swconfig pvid_set <portid> <pvid> <pri>
+	swconfig pvid_all_set <pvid0> <pvid1> <pvid2> <pvid3> <pvid4>
+	swconfig vlanctl_del <nicname> <tags> eg : eth0
+	swconfig vlanctl_show <nicname> <tagsnum> eg : eth0
+	swconfig iptv_set <vid> <wan nicname> <iptv nicname>
+	swconfig iptv_init <vid> <wan nicname> <untag>
+	swconfig iptv_exit <vid> <wan nicname>
+	swconfig iptv_setport <vid> <iptv nicname>
+	swconfig iptv_removeport <vid> <iptv nicname>
+	swconfig forward_set <0|1>
+EOF
+}
+
+case $1 in
+vlan_init)
+	vlan_init $2 $3;;
+vlan_set)
+	vlan_set $2 $3 $4;;
+vlan_del)
+	vlan_del $2 ;;
+vlan_show)
+	vlan_show;;
+pvid_set)
+	pvid_set $2 $3 $4 $5 $6;;
+pvid_all_set)
+	pvid_all_set $2 $3 $4 $5 $6;;
+igmp_config)
+	igmp_config $2 $3 $4 $5 $6 $7 $8 $9 $10;;
+vlanctl_del)
+	vlanctl_del $2 $3;;
+vlanctl_show)
+	vlanctl_show $2 $3;;
+iptv_set)
+	iptv_set $2 $3 $4;;
+iptv_init)
+	iptv_init $2 $3 $4;;
+iptv_exit)
+	iptv_exit $2 $3;;
+iptv_setport)
+	iptv_setport $2 $3 $4;;
+iptv_removeport)
+	iptv_removeport $2 $3;;
+forward_set)
+	forward_set $2;;
+*)
+	help;;
+esac

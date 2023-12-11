@@ -1,0 +1,69 @@
+#!/bin/sh
+
+######################
+# AUTHOR: zengfanfan #
+######################
+
+def_db_file=/cfg/database/kv.db
+fixed_db_file=/cfg/database/kv.fixed
+mem_db_file=/var/kv.db
+all=0
+
+help()
+{
+    echo
+    echo "Usage: ${0##*/} [option] <key>"
+    echo
+    echo 'Note that */% and ? are wildcards in <key>, */% matchs zero or more characters while ? matchs one.'
+    echo
+    echo 'Available options:'
+    echo '  -h        Display this information.'
+    echo '  -n        Normal value (in flash).'
+    echo '  -f        Fixed value (used when reset).'
+    echo '  -m        Temporary value (in memory).'
+    echo '  -a        Show all values.'
+    echo
+    exit 1
+}
+
+while getopts 'hfma' opt; do
+    case $opt in
+        f) db_file=$fixed_db_file;;
+        m) db_file=$mem_db_file;;
+        n) db_file=$def_db_file;;
+        a) all=1;;
+        *) help;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
+if [ $all -eq 0 ] && [ $# -lt 1 ]; then
+    help
+else
+    key=$1
+fi
+
+query()
+{
+    if [ $all -ne 0 ]; then
+        sqlcmd="SELECT '$1',key,' = ',value FROM kv ORDER BY key;"
+    elif echo "$key"|grep -q '\*\|?\|%'; then
+        # * -> %  AND  ? -> _
+        tkey=${key//\*/%}
+        tkey=${tkey//\?/_}
+        sqlcmd="SELECT '$1',key,' = ',value FROM kv WHERE(key like '$tkey') ORDER BY key;"
+    else
+        sqlcmd="SELECT '$1',value FROM kv WHERE(key = '$key');"
+    fi
+
+    sqlite3 -separator '' "$2" "$sqlcmd" -cmd ".timeout 2000"
+}
+
+if [ -z "$db_file" ]; then
+    query '[D]    ' $def_db_file
+    query '[F]    ' $fixed_db_file
+    query '[M]    ' $mem_db_file
+else
+    query '' $db_file
+fi

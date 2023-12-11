@@ -1,0 +1,124 @@
+#!/bin/sh
+
+######################
+# AUTHOR: zengfanfan #
+######################
+
+db_dir=/cfg/database
+db_name=default
+sqlopts=
+tm='.timeout 2000'
+line_mode=0
+full_path=0
+mem_db_file=/var/mem.db
+
+if [ ! "${1:0:1}" == "-" ]; then
+    table_name=$1
+    shift
+fi
+
+#
+# table_exists: check if table exists
+#
+
+table_exists()
+{
+    for i in $(sqlite3 "$db_file" "SELECT name FROM sqlite_master WHERE type='table';" -cmd "$tm"); do
+        if [ $i == $1 ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+#
+# set_db_file: choose main or backup database
+#
+
+set_db_file()
+{
+    if [ $full_path == 0 ]; then
+        db_file=$db_dir/$db_name.db
+    fi
+}
+
+help()
+{
+    echo -e "Usage: ${0##*/} <table-name> [option]"
+    echo
+    echo 'Available options:'
+    echo '  -h        Display this information.'
+    echo '  -d        Specify database name.'
+    echo '  -f        Specify database file (full path).'
+    echo '  -m        Use memory database.'
+    echo "  -w        Widths of columns, separate by comma(,)"
+    echo '  -c        Show one value per line.'
+    echo '  -A        Append sqlite3 options.'
+    echo
+    set_db_file
+    if [ ! -z "$db_file" ] && [ -f "$db_file" ]; then
+        echo 'Available tables:'
+        i=0 # 3 columns each row
+        maxwidth=10 # for text align
+        tables=$(sqlite3 "$db_file" -cmd "$tm" \
+"SELECT 'sqlite_master' UNION SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
+        for t in $tables;
+        do [ ${#t} -gt $maxwidth ] && maxwidth=${#t}
+        done
+        for t in $tables;
+        do
+            printf "    %-${maxwidth}s" "$t" && i=$((i+1))
+            [ $i -ge 3 ] && i=0 && echo
+        done
+        echo
+    fi
+    exit 1
+}
+
+while getopts 'd:D:f:w:A:hmMkKc' opt; do
+    case $opt in
+        d) db_name=$OPTARG;;
+        f) db_file=$OPTARG; full_path=1;;
+        m) db_file=$mem_db_file; full_path=1;;
+        A) sqlopts=$OPTARG;;
+        w) width=`echo $OPTARG|sed 's/,/ /g'`;;
+        h) help;;
+        c) line_mode=1;;
+        *) help;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+if [ $# -gt 0 ]; then
+    table_name=$1
+fi
+
+if [ -z $db_name ] || [ -z $table_name ]; then
+    help
+fi
+
+#
+# execute sql statement
+#
+
+set_db_file
+
+table_exists $table_name && echo -n "Found: "
+table_exists $table_name && sqlite3 "$db_file" -cmd "$tm" "SELECT COUNT(*) FROM \`$table_name\`;"
+
+if [ "$table_name" = "kv" ]; then
+    [ "$db_file" = "$mem_db_file" ] && db_file=/var/kv.db
+    sqlcmd="SELECT key,value FROM '$table_name';"
+    [ -z "$width" ] && width="40 30"
+elif [ "${table_name::6}" = "sqlite" ]; then
+    sqlcmd="SELECT * FROM '$table_name';"
+    [ -z "$width" ] && width="0 0"
+else
+    sqlcmd="SELECT * FROM '$table_name';"
+    [ -z "$width" ] && width="4 1 0 15"
+fi
+if [ $line_mode -eq 0 ]; then
+    sqlite3 "$db_file" "$sqlcmd" $sqlopts -header -column -cmd ".width $width" -cmd "$tm"
+else
+    echo && sqlite3 "$db_file" "$sqlcmd" $sqlopts -line -cmd "$tm"|grep -v 'ref = 0'
+fi

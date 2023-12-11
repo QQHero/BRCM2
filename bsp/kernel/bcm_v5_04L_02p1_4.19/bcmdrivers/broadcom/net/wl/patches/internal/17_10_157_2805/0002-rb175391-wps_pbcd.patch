@@ -1,0 +1,64 @@
+Index: /components/products/router/trunk/rc/Makefile
+===================================================================
+--- ./main/components/router/rc/Makefile
++++ ./main/components/router/rc/Makefile
+@@ -56,6 +56,9 @@
+ ifeq ($(BCA_HND_EAP),y)
+ CFLAGS += -DBCA_HND_EAP
+ endif
++ifneq ($(RDK_BUILD),)
++CFLAGS += -DBCA_CPEROUTER_RDK
++endif
+ 
+ CFLAGS += -I. -I$(TOP)/shared -I$(SRCBASE)/include ${WLAN_StdIncPathA} -I$(SRCBASE)/../components/shared -I$(SRCBASE)/../components/wlioctl/include -I$(SRCBASE)/../components/proto/include -I$(SRCBASE)/common/include -Wall -Werror
+ else # 2.4
+Index: /components/products/router/trunk/rc/wps_pbcd.c
+===================================================================
+--- ./main/components/router/rc/wps_pbcd.c
++++ ./main/components/router/rc/wps_pbcd.c
+@@ -3046,14 +3046,14 @@
+ 	return 0;
+ }
+ 
+-#ifdef CMWIFI
++#if defined(CMWIFI) || defined(BCA_CPEROUTER_RDK)
+ static void
+ wps_pbcd_usr_signal_handler(int signum)
+ {
+ 	if (g_wps_pbcd_info_list)
+ 		bcm_usched_stop(g_wps_pbcd_info_list->usched_hdl);
+ }
+-#endif /* CMWIFI */
++#endif /* CMWIFI || BCA_CPEROUTER_RDK */
+ 
+ // Function to free the pbcd_info object data
+ static void
+@@ -3461,10 +3461,12 @@
+ 	signal(SIGINT, wps_pbcd_exit_signal_handler);
+ 	signal(SIGTERM, wps_pbcd_exit_signal_handler);
+ #ifdef CMWIFI
+-	signal(SIGUSR1, wps_pbcd_usr_signal_handler);
+ 	wps_pbcd_gpio_led_init_handler();
+-	while (1) {
+ #endif	/* CMWIFI */
++#if defined(CMWIFI) || defined(BCA_CPEROUTER_RDK)
++	signal(SIGUSR1, wps_pbcd_usr_signal_handler);
++	while (1) {
++#endif	/* CMWIFI || BCA_CPEROUTER_RDK */
+ 		memset(&g_wps_data, 0, sizeof(g_wps_data));
+ 		g_wps_pbcd_info_list = (wps_pbcd_info_list_t *)calloc(1,
+ 			sizeof(*g_wps_pbcd_info_list));
+@@ -3495,11 +3497,11 @@
+ 		wps_pbcd_add_timers(g_wps_pbcd_info_list->usched_hdl, NULL, PBCD_SEC_MICROSEC(5),
+ 			wps_pbcd_dpp_init_tm_cb, 0);
+ 		wps_pbcd_run(g_wps_pbcd_info_list->usched_hdl);
+-#ifdef	CMWIFI
++#if defined(CMWIFI) || defined(BCA_CPEROUTER_RDK)
+ 		PBCD_ERR("wps_pbcd reloaded\n");
+ 		wps_pbcd_free_info_objects_list(g_wps_pbcd_info_list);
+ 	}
+-#endif	/* CMWIFI */
++#endif	/* CMWIFI || BCA_CPEROUTER_RDK */
+ 
+ fail:
+ 	wps_pbcd_gpio_board_cleanup();
