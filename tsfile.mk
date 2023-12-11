@@ -1,1 +1,0 @@
-TARGETS_FILE=ax12_pro_nor

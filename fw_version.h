@@ -1,1 +1,0 @@
-/Mline/waiyong/UGW6.0_HomeCoverage/targets/ax12_pro_nor/product_version.h

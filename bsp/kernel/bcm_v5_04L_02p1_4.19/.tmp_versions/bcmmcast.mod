@@ -1,3 +1,0 @@
-bcmdrivers/opensource/char/mcast/bcm96756/bcmmcast.ko
-bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_netlink.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_if.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_igmp.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_igmpsnp.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_mld.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_mldsnp.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_blog.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_blogrule.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_fc.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_whitelist.o bcmdrivers/opensource/char/mcast/bcm96756/bcm_mcast_sysfs.o
-

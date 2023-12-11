@@ -1,3 +1,0 @@
-bcmdrivers/broadcom/net/wl/bcm96756/main/components/router/hnd_igs//igs.ko
-bcmdrivers/broadcom/net/wl/bcm96756/main/components/router/hnd_igs//../../../../main/components/emf/igs/igsc.o bcmdrivers/broadcom/net/wl/bcm96756/main/components/router/hnd_igs//../../../../main/components/emf/igs/igsc_sdb.o bcmdrivers/broadcom/net/wl/bcm96756/main/components/router/hnd_igs//../emf/igs/igs_linux.o bcmdrivers/broadcom/net/wl/bcm96756/main/components/router/hnd_igs//../../../../main/components/emf/igs/osl_linux.o bcmdrivers/broadcom/net/wl/bcm96756/main/components/router/hnd_igs//../../../../main/components/emf/igs/igsc_ipv6.o bcmdrivers/broadcom/net/wl/bcm96756/main/components/router/hnd_igs//../../../../main/components/emf/igs/igsc_sdb_ipv6.o
-
