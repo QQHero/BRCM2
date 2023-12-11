@@ -13,15 +13,15 @@
 @	compiled by GNU C version 4.8.1, GMP version 6.1.2, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.18-GMP
 
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-@ 传递的选项：  -nostdinc -I ./arch/arm/include
+@ options passed:  -nostdinc -I ./arch/arm/include
 @ -I ./arch/arm/include/generated -I ./include -I ./bcmkernel/include
 @ -I ./arch/arm/include/uapi -I ./arch/arm/include/generated/uapi
 @ -I ./include/uapi -I ./include/generated/uapi
 @ -I bcmdrivers/opensource/include/bcm963xx/
-@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include
-@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/include/bcm963xx
-@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include/uapi
-@ -I /media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/net/bridge
+@ -I /HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include
+@ -I /HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/shared/opensource/include/bcm963xx
+@ -I /HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/bcmkernel/include/uapi
+@ -I /HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/net/bridge
 @ -iprefix /projects/hnd/tools/bcm/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/bin/../lib/gcc/arm-buildroot-linux-gnueabi/9.2.0/
 @ -isysroot /projects/hnd/tools/bcm/crosstools-arm-gcc-9.2-linux-4.19-glibc-2.30-binutils-2.32/arm-buildroot-linux-gnueabi/sysroot
 @ -D __KERNEL__ -D __LINUX_ARM_ARCH__=7 -U arm -D BCA_HNDROUTER
@@ -51,7 +51,7 @@
 @ -fno-merge-all-constants -fmerge-constants -fstack-check=no
 @ -fconserve-stack -fmacro-prefix-map=./= -fverbose-asm
 @ --param allow-store-data-races=0
-@ 启用的选项：  -faggressive-loop-optimizations -falign-functions
+@ options enabled:  -faggressive-loop-optimizations -falign-functions
 @ -falign-jumps -falign-labels -falign-loops -fassume-phsa -fauto-inc-dec
 @ -fbranch-count-reg -fcaller-saves -fcode-hoisting
 @ -fcombine-stack-adjustments -fcompare-elim -fcprop-registers

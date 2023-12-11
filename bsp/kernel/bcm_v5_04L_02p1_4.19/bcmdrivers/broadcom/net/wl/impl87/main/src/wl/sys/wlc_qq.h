@@ -1816,6 +1816,15 @@ struct phy_rssi_info {
 /* module private states */
 typedef struct phy_rssi_info phy_rssi_info_t;
 //copy from phy_rssi.c up
+
+/* handy macros to access bsscfg cubby & data */
+#define BSS_LQ_INFO_LOC(lqi, cfg)    (bss_lq_info_t **)BSSCFG_CUBBY(cfg, (lqi)->cfgh)
+#define BSS_LQ_INFO(lqi, cfg)        *BSS_LQ_INFO_LOC(lqi, cfg)
+
+/* handy macros to access scb cubby & data */
+#define SCB_LQ_INFO_LOC(lqi, scb)    (scb_lq_info_t **)SCB_CUBBY(scb, (lqi)->scbh)
+#define SCB_LQ_INFO(lqi, scb)        *SCB_LQ_INFO_LOC(lqi, scb)
+
 void get_and_print_rssi_from_ant(wlc_info_t *wlc){
     if(start_game_is_on && qq_pi_is_set && qq_scb_is_set){
         phy_rssi_info_t *info = qq_pi.rssii;
@@ -1823,6 +1832,38 @@ void get_and_print_rssi_from_ant(wlc_info_t *wlc){
 	    int8 int8_rxpwr_core[WL_RSSI_ANT_MAX-WL_ANT_IDX_1];
 	    int16 rxpwr_core[WL_RSSI_ANT_MAX-WL_ANT_IDX_1];
         for (int8 i = WL_ANT_IDX_1 - WL_ANT_IDX_1; i < WL_RSSI_ANT_MAX - WL_ANT_IDX_1; i++){
+            if(qq_scb == NULL)
+            {
+                printk("###############qq_scb == NULL##################");
+                return;
+            }
+            if(wlc->lqi == NULL)
+            {
+                printk("###############wlc->lqi == NULL##################");
+                return;
+            }
+            if(SCB_BSSCFG(qq_scb) == NULL)
+            {
+                printk("###############SCB_BSSCFG(qq_scb) == NULL##################");
+                return;
+            }
+            wlc_lq_info_t *lqi = wlc->lqi;
+            wlc_bsscfg_t *cfg = SCB_BSSCFG(qq_scb);
+            if(BSS_LQ_INFO(lqi, cfg) == NULL)
+            {
+                printk("###############BSS_LQ_INFO(lqi, cfg) == NULL##################");
+                return;
+            }
+            if(SCB_LQ_INFO(lqi, qq_scb) == NULL)
+            {
+                printk("###############SCB_LQ_INFO(lqi, qq_scb) == NULL##################");
+                return;
+            }
+            if(qq_scb == NULL)
+            {
+                printk("###############qq_scb == NULL##################");
+                return;
+            }
 
             int8_rxpwr_core[i] = wlc_lq_ant_rssi_last_get(wlc, SCB_BSSCFG(qq_scb), qq_scb, i+WL_ANT_IDX_1);
             if (int8_rxpwr_core[i] == PHYHW_MEAS_RSSI_FOR_INACTIVE) {

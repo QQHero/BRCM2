@@ -5,3 +5,4 @@
 *.bin
 *.mod
 targets/ax12_pro_nor/bin/
+!targets/ax12_pro_nor/bin/*US_AX12*.bin.bin

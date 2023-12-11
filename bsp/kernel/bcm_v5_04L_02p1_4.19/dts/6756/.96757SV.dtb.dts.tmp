@@ -1,18 +1,18 @@
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts"
 # 1 "<built-in>"
 # 1 "<command-line>"
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts"
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 1
 /dts-v1/;
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/linux_autoconf.h" 1
-# 4 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/linux_autoconf.h" 1
+# 4 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../boot_rsvdmem.dtsi" 1
-# 46 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../boot_rsvdmem.dtsi"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../boot_rsvdmem.dtsi" 1
+# 46 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../boot_rsvdmem.dtsi"
 /memreserve/ 0x00000000 (0x100000 + 0x0 + 0x8000);
-# 7 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 7 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
 / {
 
@@ -21,13 +21,13 @@
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi" 1
 # 1 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/arm-gic.h" 1
 # 9 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/arm-gic.h"
 # 1 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/irq.h" 1
 # 10 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/arm-gic.h" 2
-# 2 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi" 2
-# 11 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi"
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi" 2
+# 11 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi"
 model = "Broadcom BCM96756";
 compatible = "brcm,bcm96756";
 interrupt-parent = <&gic>;
@@ -41,7 +41,7 @@ psci {
  cpu_off = <1>;
  cpu_on = <2>;
 };
-# 39 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi"
+# 39 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cortexA7_quad.dtsi"
 cpus {
  #address-cells = <1>;
  #size-cells = <0>;
@@ -116,11 +116,11 @@ memory@00000000 {
  device_type = "memory";
  reg = <0x0 0x8000000>;
 };
-# 16 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 16 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi" 1
-# 145 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi" 1
+# 145 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
 reserved-memory {
  #address-cells = <1>;
  #size-cells = <1>;
@@ -138,13 +138,13 @@ plat_rsvmem_cached_device {
  compatible = "brcm,plat-rsvmem";
  dma-coherent;
  memory-region = <&dt_reserved_cma>;
-# 187 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
+# 187 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
 };
 
 plat_rsvmem_uncached_device {
  compatible = "brcm,plat-rsvmem";
  memory-region = <&dt_reserved_cma>;
-# 228 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
+# 228 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_rsvdmem.dtsi"
   dt_reserved_dhd0:dt_reserved_dhd0 {
   rsvd-size = <0x0B00000>;
  };
@@ -157,12 +157,12 @@ plat_rsvmem_uncached_device {
 
 
 };
-# 19 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 19 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_clocks.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_clocks.dtsi" 1
 clocks: clocks {
  compatible = "simple-bus";
  #address-cells = <1>;
@@ -188,15 +188,15 @@ clocks: clocks {
   u-boot,dm-pre-reloc;
  };
 };
-# 24 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 24 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/memc.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/memc.dtsi" 1
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcmbca_memc_dt_bindings.h" 1
-# 3 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/memc.dtsi" 2
-# 28 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcmbca_memc_dt_bindings.h" 1
+# 3 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/memc.dtsi" 2
+# 28 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
  aliases {
   serial0 = &uart0;
@@ -224,7 +224,7 @@ clocks: clocks {
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_nand7_1.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_nand7_1.dtsi" 1
 #address-cells = <1>;
 #size-cells = <0>;
 compatible = "brcm,nand-bcm63xx", "brcm,nand-bcmbca", "brcm,brcmnand-v7.1";
@@ -239,13 +239,13 @@ nandcs@0 {
  reg = <0>;
  nand-on-flash-bbt;
 };
-# 56 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 56 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
 
  sdhci: sdhci {
-# 69 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_sdhci.dtsi" 1
+# 69 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_sdhci.dtsi" 1
 u-boot,dm-pre-reloc;
 compatible = "brcm,bcm63xx-sdhci";
 reg-names = "sdhci-base", "sdhci-topcfg", "sdhci-boot", "sdhci-ahbss-ctrl";
@@ -257,7 +257,7 @@ interrupts = <0 86 4>;
 bus-width = <8>;
 no-1-8-v;
 status = "disabled";
-# 70 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 70 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  hs_uart0: hs_serial0 {
@@ -266,7 +266,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_hs_uart.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_hs_uart.dtsi" 1
 compatible = "brcm,bcm63xx-hs-uart";
 
 
@@ -279,23 +279,23 @@ interrupts = <0 34 4>;
 clocks = <&periph_osc>;
 u-boot,dm-pre-reloc;
 status = "disabled";
-# 79 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 79 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
 
  rng: rng {
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_rng200.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_rng200.dtsi" 1
 compatible = "brcm,iproc-rng200";
 reg = <0xff800b80 0x30>;
-# 86 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 86 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
 
  pmc: pmc {
-# 98 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_pmc_3_2.dtsi" 1
+# 98 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_pmc_3_2.dtsi" 1
 compatible = "brcm,bca-pmc-3-2";
 
 reg = <0x80301018 0x5080>,
@@ -303,20 +303,20 @@ reg = <0x80301018 0x5080>,
     <0x80300400 0x5d0>,
     <0x80380000 0x1000>;
 reg-names = "pmc", "procmon", "maestro", "dtcm";
-# 99 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 99 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
-# 115 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+# 115 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
  boot_state: boot_state {
 
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_boot_state_v2.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_boot_state_v2.dtsi" 1
 u-boot,dm-pre-reloc;
 compatible = "brcm,bcmbca-bootstate-v2";
 reg = <0xff802628 0x4>, <0xff85a03c 0x4>;
 reg-names = "reset_reason", "reset_status";
-# 121 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 121 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  sysport: systemport@0x80490000 {
@@ -340,21 +340,21 @@ reg-names = "reset_reason", "reset_status";
  usb_ctrl: usb_ctrl {
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ctrl.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ctrl.dtsi" 1
 compatible = "brcm,bcmbca-usb-ctrl";
 
 reg-names = "usb-ctrl";
 reg = <0x8000c200 0x100>;
 
 status = "disabled";
-# 145 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 145 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  usb0_xhci: usb0_xhci {
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_xhci.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_xhci.dtsi" 1
 compatible = "brcm,bcmbca-xhci";
 
 
@@ -367,7 +367,7 @@ reg = <0x8000d000 0x8c7>;
 interrupts = <0 74 4>;
 usb3-lpm-capable;
 status = "disabled";
-# 152 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 152 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  usb0_ehci: usb0_ehci {
@@ -375,7 +375,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ehci.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ehci.dtsi" 1
 compatible = "brcm,bcmbca-ehci";
 
 reg-names = "usb-ehci";
@@ -383,7 +383,7 @@ reg = <0x8000c300 0x100>;
 usb_port-id = <0>;
 interrupts = <0 73 4>;
 status = "disabled";
-# 160 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 160 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  usb1_ehci: usb1_ehci {
@@ -391,7 +391,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ehci.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ehci.dtsi" 1
 compatible = "brcm,bcmbca-ehci";
 
 reg-names = "usb-ehci";
@@ -399,7 +399,7 @@ reg = <0x8000c500 0x100>;
 usb_port-id = <1>;
 interrupts = <0 73 4>;
 status = "disabled";
-# 168 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 168 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  usb0_ohci: usb0_ohci {
@@ -407,7 +407,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ohci.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ohci.dtsi" 1
 compatible = "brcm,bcmbca-ohci";
 
 reg-names = "usb-ohci";
@@ -415,7 +415,7 @@ reg = <0x8000c400 0x100>;
 interrupts = <0 72 4>;
 usb_port-id = <0>;
 status = "disabled";
-# 176 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 176 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  usb1_ohci: usb1_ohci {
@@ -423,7 +423,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ohci.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_usb_ohci.dtsi" 1
 compatible = "brcm,bcmbca-ohci";
 
 reg-names = "usb-ohci";
@@ -431,7 +431,7 @@ reg = <0x8000c600 0x100>;
 interrupts = <0 72 4>;
 usb_port-id = <1>;
 status = "disabled";
-# 184 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 184 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
  periph {
@@ -443,25 +443,25 @@ status = "disabled";
   i2c0: i2c0@0xff802100 {
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_i2c_bus.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_i2c_bus.dtsi" 1
 compatible = "brcm,bcm63000-i2c";
 #address-cells = <1>;
 #size-cells = <0>;
 reg = <0x2100 0x60>;
 status = "disabled";
-# 196 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 196 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
   i2c1: i2c1@0xff85a800 {
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_i2c_bus.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_i2c_bus.dtsi" 1
 compatible = "brcm,bcm63000-i2c";
 #address-cells = <1>;
 #size-cells = <0>;
 reg = <0x5a800 0x60>;
 status = "disabled";
-# 202 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 202 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
 
@@ -471,7 +471,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
 #address-cells = <1>;
 #size-cells = <1>;
 compatible = "arm,pl011", "arm,primecell";
@@ -481,7 +481,7 @@ clocks = <&refclk50mhz>, <&refclk50mhz>;
 clock = <50000000>;
 clock-names = "uartclk", "apb_pclk";
 status = "disabled";
-# 212 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 212 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
   uart1: serial1 {
@@ -492,7 +492,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
 #address-cells = <1>;
 #size-cells = <1>;
 compatible = "arm,pl011", "arm,primecell";
@@ -502,7 +502,7 @@ clocks = <&refclk50mhz>, <&refclk50mhz>;
 clock = <50000000>;
 clock-names = "uartclk", "apb_pclk";
 status = "disabled";
-# 223 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 223 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
   uart2: serial2 {
@@ -513,7 +513,7 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_arm_uart.dtsi" 1
 #address-cells = <1>;
 #size-cells = <1>;
 compatible = "arm,pl011", "arm,primecell";
@@ -523,7 +523,7 @@ clocks = <&refclk50mhz>, <&refclk50mhz>;
 clock = <50000000>;
 clock-names = "uartclk", "apb_pclk";
 status = "disabled";
-# 234 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 234 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
 
@@ -534,27 +534,27 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_timer.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_timer.dtsi" 1
 compatible = "brcm,bcm-timers";
 reg = <0x400 0x48>;
 interrupts = <0 11 4>,
    <0 12 4>,
    <0 13 4>,
    <0 14 4>;
-# 245 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 245 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
   wdt1:watchdog@480 {
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_wdt.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_wdt.dtsi" 1
 compatible = "brcm,bcm96xxx-wdt", "brcm,bcm6345-wdt";
 reg = <0x480 0x10>;
 timeout-sec = <80>;
 clocks = <&refclk50mhz>;
 status = "disabled";
-# 252 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 252 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
 
 
@@ -565,13 +565,13 @@ status = "disabled";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_wdt.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_wdt.dtsi" 1
 compatible = "brcm,bcm96xxx-wdt", "brcm,bcm6345-wdt";
 reg = <0x4c0 0x10>;
 timeout-sec = <80>;
 clocks = <&refclk50mhz>;
 status = "disabled";
-# 263 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 263 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
 
 
 
@@ -588,13 +588,13 @@ status = "disabled";
   sotp {
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_sotp.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_sotp.dtsi" 1
 compatible = "brcm,sotp";
 #address-cells = <1>;
 #size-cells = <0>;
 reg = <0xc00 0x84>;
 status = "okay";
-# 280 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 280 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
 
@@ -604,14 +604,14 @@ status = "okay";
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_pinctrl.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_pinctrl.dtsi" 1
 compatible = "brcm,bcmbca-pinctrl";
 reg = <0x554 0xc>;
 pinctrl-npins = < 108 >;
 pinctrl-nfuncs = < 8 >;
 gpio-mux = <4>;
-# 290 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756-pinctrl.dtsi" 1
+# 290 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756-pinctrl.dtsi" 1
 pincontroller-functions {
         spim_group_pins: spim_group_pinmux {
             pins = <72 73 74>;
@@ -1871,7 +1871,7 @@ pincontroller-functions {
         };
 
 };
-# 291 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 291 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
   gpioc: gpioc {
@@ -1880,9 +1880,9 @@ pincontroller-functions {
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_gpio.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_gpio.dtsi" 1
 # 1 "./scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h" 1
-# 2 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_gpio.dtsi" 2
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_gpio.dtsi" 2
 
 compatible = "brcm,bca-gpio";
 gpio-controller;
@@ -1891,7 +1891,7 @@ reg = <0x500 0x20>, <0x520 0x20>;
 reg-names = "gpio-dir", "gpio-data";
 ngpios = <108>;
 gpio-ranges = <&pincontroller 0 0 108>;
-# 300 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 300 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
 
 
@@ -1899,14 +1899,14 @@ gpio-ranges = <&pincontroller 0 0 108>;
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_extintr.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_extintr.dtsi" 1
 # 1 "./scripts/dtc/include-prefixes/../../../bcmdrivers/opensource/include/bcm963xx/bcm_bca_extintr_dt_bindings.h" 1
-# 2 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_extintr.dtsi" 2
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_bca_extintr.dtsi" 2
 
 compatible = "brcm,bca-extintr";
 reg = <0x4 0x48>;
 num_ext_intr = <8>;
-# 308 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 308 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
    external_interrupts = <120 121 122 123 124 125 126 127>;
   };
 
@@ -1916,7 +1916,7 @@ num_ext_intr = <8>;
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_hsspi.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_hsspi.dtsi" 1
 #address-cells = <1>;
 #size-cells = <0>;
 compatible = "brcm,bcm6328-hsspi";
@@ -1928,10 +1928,10 @@ num-cs = <8>;
 cs-gpios = <0>, <0>;
 
 status = "disabled";
-# 318 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 318 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
    spinand: spi-nand@0 {
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_spinand.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_spinand.dtsi" 1
 #address-cells = <1>;
 #size-cells = <0>;
 compatible = "spi-nand";
@@ -1940,7 +1940,7 @@ reg = <0>;
 spi-max-frequency = <100000000>;
 u-boot,dm-pre-reloc;
 status = "disabled";
-# 321 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 321 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
    };
 
    voice7 {
@@ -1954,7 +1954,7 @@ status = "disabled";
 
    spinor: spi-nor@0 {
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_spinor.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_spinor.dtsi" 1
 #address-cells = <1>;
 #size-cells = <0>;
 compatible = "jedec,spi-nor";
@@ -1963,17 +1963,17 @@ spi-max-frequency = <50000000>;
 label = "spi-nor.0";
 u-boot,dm-pre-reloc;
 status = "disabled";
-# 335 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 335 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
    };
    };
 
   led_ctrl: led_ctrl {
-# 367 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+# 367 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
    status = "okay";
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi" 1
 # 1 "./scripts/dtc/include-prefixes/../../../bcmdrivers/opensource/include/bcm963xx/bcm_bca_leds_dt_bindings.h" 1
-# 2 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi" 2
-# 64 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi"
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi" 2
+# 64 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_cled_ctrl.dtsi"
 compatible = "brcm,bca-cleds-ctrl";
 reg = <0x3000 0x4>, <0x3004 0x4>,
     <0x3008 0x4>,<0x300c 0x4>,
@@ -1992,8 +1992,8 @@ reg-names = "glbl_ctrl", "hw_en",
     "par_polarity";
 
 nleds = <32>;
-# 369 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756_leds.dtsi" 1
+# 369 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756_leds.dtsi" 1
 
 port_0-led_0-bit_0 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(0)>; led = <(0)>; bit = <(0)>; status = "disabled"; };
 port_0-led_1-bit_1 { compatible = "brcm,serial-cled"; hardware_led; crossbar; port = <(0)>; led = <(1)>; bit = <(1)>; status = "disabled"; };
@@ -2121,7 +2121,7 @@ sw_led_28 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(2
 sw_led_29 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(29)>; pinctrl-names = "default"; status = "disabled"; };
 sw_led_30 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(30)>; pinctrl-names = "default"; status = "disabled"; };
 sw_led_31 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(31)>; pinctrl-names = "default"; status = "disabled"; };
-# 370 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 370 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
   };
  };
 
@@ -2316,7 +2316,7 @@ sw_led_31 { compatible = "brcm,parallel-cled"; software_led; crossbar; bit = <(3
 
 
 
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_pcie_core.dtsi" 1
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../ip/bcm_pcie_core.dtsi" 1
 compatible = "brcm,bcm963xx-pcie";
 device_type = "pci";
 reg = <0x80040000 0x0000A000>;
@@ -2336,7 +2336,7 @@ interrupt-map = <0 0 0 0 &gic 0 43 4>;
 brcm,coreid = <0>;
 
 status = "disabled";
-# 565 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
+# 565 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi" 2
  };
 
 
@@ -2421,7 +2421,7 @@ status = "disabled";
 &sdhci {
  status = "okay";
 };
-# 662 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
+# 662 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/6756.dtsi"
 &uart0 {
  status = "okay";
 };
@@ -2433,15 +2433,15 @@ status = "disabled";
 &pcie0 {
  status = "okay";
 };
-# 2 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts" 2
-# 1 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_voice.dtsi" 1
-# 65 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_voice.dtsi"
+# 2 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts" 2
+# 1 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_voice.dtsi" 1
+# 65 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/../bcm_voice.dtsi"
 / {
     bcm_voice: bcm_voice {
          sliclist = "NOSLIC";
     };
 };
-# 3 "/media/startlab/软件/HomeCoverage1008/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts" 2
+# 3 "/HomeCoverage20231207/bsp/kernel/bcm_v5_04L_02p1_4.19/dts/6756/96757SV.dts" 2
 
 / {
  memory_controller {

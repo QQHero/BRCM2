@@ -2375,7 +2375,7 @@ static struct platform_driver wl_plat_drv = {
 #include <linux/string.h>
 #include <linux/mutex.h>
 
-static char *class_names[DEBUG_MAX_CLASS] = {"class1", "class2", "class3", "class4", "class5"}; 
+static char *class_names[DEBUG_MAX_CLASS] = {"class1", "class2", "class3", "class4", "class5", "class6"}; 
 //1:超时pkt信息；2：包统计信息；3：物理层信息;4:start云游戏用户部分信息;5:链表遍历情况
 static struct dentry *debugfs_dir = NULL;
 static struct dentry *debugfs_classes[DEBUG_MAX_CLASS] = {NULL};

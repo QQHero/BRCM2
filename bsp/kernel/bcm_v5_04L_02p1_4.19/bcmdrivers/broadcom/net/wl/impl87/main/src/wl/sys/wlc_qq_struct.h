@@ -151,3 +151,182 @@ void timer_callback_start_info_qq(struct timer_list *timer_qq);
 
 
 void get_and_print_rssi_from_ant(wlc_info_t *wlc);
+
+/* special rssi sample window in monitor mode */
+typedef struct {
+    /* raw per antenna rssi - valid when # ants > 1 */
+    uint16    rssi_chain_window_sz;
+    uint8    rssi_chain_index;
+    int8    *rssi_chain_window;    /* int8 [WL_RSSI_ANT_MAX][MA_WINDOW_SZ] */
+} monitor_rssi_win_t;
+/* bss specific data */
+typedef struct {
+    /* rssi & snr sample windows sampling sizes */
+    uint16 rssi_window_sz;        /* rssi window size. apply to all scbs in the bsscfg. */
+    uint16 snr_window_sz;        /* SNR window size. apply to all scbs in the bsscfg. */
+
+/* **** the following fields are all for infra STA only. **** */
+/* For IBSS these are allocated but not used. The reason is we change the cfg->BSS
+ * type in the middle of a connection creation process hence we can't key their alloc
+ * off cfg->BSS in the beginning of a bsscfg creation and their free at the end of
+ * the bsscfg deletion.
+ */
+    /* inline rssi average states */
+    uint8 *rssi_qdb_window;        /* window for rssi fraction in qdb units */
+    int rssi_tot;            /**< rssi samples total, in qdb units */
+    uint8 rssi_count;        /* # of valid samples in the window */
+    bool last_rssi_is_ucast;    /**< last RSSI sample is from unicast frame */
+
+    /* inline snr average states */
+    uint snr_tot;            /* snr samples total */
+    uint8 snr_count;        /**< number of valid values in the window */
+    bool last_snr_is_ucast;        /**< last SNR sample is from unicast frame */
+
+    /* RSSI event notification */
+    wl_rssi_event_t *rssi_event;    /**< RSSI event notification configuration. */
+    struct wl_timer *rssi_event_timer;    /**< timer to limit event notifications */
+    bool rssi_event_timer_active;    /**< flag to indicate timer active */
+    uint8 rssi_level;        /**< current rssi based on notification configuration */
+
+    uint16 rssi_bcn_window_sz;    /* rssi window size. */
+
+    /* RSSI/SNR auto-deduction upon consecutive beacon loss */
+    uint8 rssi_delta;    /* Reduce RSSI by this much upon consecutive beacon loss */
+    uint8 snr_delta;    /* Reduce SNR by this much upon consecutive beacon loss */
+    int32 max_lq_bcn_loss;    /* beacon loss threshold in ms */
+    uint32 lq_last_bcn_time; /* local time for last beacon received */
+} bss_lq_info_t;
+/* scb specific data */
+typedef struct {
+    /* RSSI moving average */
+    int8    *rssi_window;        /* rssi samples buffer - int8 [MA_WINDOW_SZ] */
+    /* raw per antenna rssi - valid when # ants > 1 */
+    int8    *rssi_chain_window;    /* int8 [WL_RSSI_ANT_MAX][MA_WINDOW_SZ] */
+
+/* **** the following fields are all for infra STA only. **** */
+/* For IBSS these are allocated but not used. The reason is we change the cfg->BSS
+ * type in the middle of a connection creation process hence we can't key their alloc
+ * off cfg->BSS in the beginning of a bsscfg creation and their free at the end of
+ * the bsscfg deletion.
+ */
+    /* SNR moving average */
+    uint8    *snr_window;        /**< SNR moving average window - uint8 [MA_WINDOW_SZ] */
+
+    /* raw per antenna bcn-rssi valid when #ants >1 */
+    int8    *rssi_chain_bcn_window;
+
+    uint8    rssi_index;
+    uint8    rssi_chain_index;
+    uint8    snr_index;        /**< SNR moving average window index */
+    uint8    rssi_chain_bcn_index;
+} scb_lq_info_t;
+
+/* size of channel_qa_sample array */
+#define WLC_CHANNEL_QA_NSAMP    2
+/* size of noise_lte_values array */
+#define WLC_NOISE_LTE_SIZE 9
+
+/* module specific data */
+struct wlc_lq_info {
+    /* back pointers */
+    wlc_info_t *wlc;    /* pointer to main wlc structure */
+    osl_t *osh;
+
+    /* cubby handles */
+    int cfgh;
+    int scbh;
+
+    /* noise levels */
+    int8 noise;
+    int8 noise_lte;
+    int noise_lte_values[WLC_NOISE_LTE_SIZE];
+    uint8 noise_lte_val_idx;
+
+    /* rssi & snr sample windows allocation sizes */
+    uint8 sta_ma_window_sz;
+    uint8 def_ma_window_sz;
+
+    /* misc */
+    uint8 ants;        /* # antennas */
+
+    /* channel quality measure */
+    bool channel_qa_active;        /**< true if chan qual measurement in progress */
+    int channel_quality;        /* quality metric(0-3) of last measured channel, or
+                     * -1 if in progress
+                     */
+    uint8 channel_qa_channel;    /**< channel number of channel being evaluated */
+    int8 channel_qa_sample[WLC_CHANNEL_QA_NSAMP];    /**< rssi samples of background
+                             * noise
+                             */
+    uint channel_qa_sample_num;    /**< count of samples in channel_qa_sample array */
+
+    /* phy noise sample requests */
+    uint8 noise_req;
+
+    /* bcn rssi sample window */
+    uint8 sta_bcn_window_sz;
+
+    /* monitor mode rssi window */
+    monitor_rssi_win_t *monitor;
+};
+
+
+
+#include <wlc_musched.h>
+typedef struct musched_ru_stats {
+	uint32	tx_cnt[MUSCHED_RU_TYPE_NUM]; /* total tx cnt per ru size */
+	uint32	txsucc_cnt[MUSCHED_RU_TYPE_NUM]; /* succ tx cnt per ru size */
+	uint8	ru_idx_use_bmap[MUSCHED_RU_BMP_ROW_SZ][MUSCHED_RU_BMP_COL_SZ];
+} musched_ru_stats_t;
+
+/* forward declaration */
+#define MUSCHED_RUCFG_ROW		16
+#define MUSCHED_RUCFG_COL		16
+/* for dl ofdma */
+#define MUSCHED_DLOFDMA_MINUSER_SZ		2	/* 0: <=80 MHz 1: 160MHz */
+#define MUSCHED_DLOFDMA_BW20_MAX_NUM_USERS	8	/* Default DL OFDMA BW20 max clients */
+#define MUSCHED_DLOFDMA_MAX_NUM_USERS		16	/* Default DL OFDMA max clients */
+/* module info */
+struct wlc_muscheduler_info {
+	wlc_info_t *wlc;
+	uint16	flags;
+	int	scbh;
+	int16	dl_policy;
+	int8	dl_schidx; /* decided by dl_policy; internal used by ucode */
+	int8	rualloc; /* rualloc mode */
+	int8	ack_policy;
+	bool	mix_ackp; /* 1: allow mixed ackp0 and ackp1. 0: disallow */
+	uint8	lowat[D11_REV128_BW_SZ];
+	uint8	maxn[D11_REV128_BW_SZ];
+	uint8	rucfg[D11_REV128_BW_SZ][MUSCHED_RUCFG_ROW][MUSCHED_RUCFG_COL];
+	uint8	rucfg_ack[D11_REV128_BW_SZ][MUSCHED_RUCFG_ROW][MUSCHED_RUCFG_COL];
+	bool	rucfg_fixed; /* = TRUE: fixed/set by iovar */
+	uint8	use_murts;
+	bool	dyn_sigbmcs;
+	uint16	tmout;
+	int16	num_scb_stats;
+	musched_ru_stats_t ru_stats;
+	int16	num_dlofdma_users;
+	uint16	min_dlofdma_users[MUSCHED_DLOFDMA_MINUSER_SZ]; /* min users to enable dlofdma */
+	bool	mixbw;		/* TRUE: enabled; FALSE: disabled */
+	bool	wfa20in80;	/* fixed RU alloc WAR for WFA test (HE-4.69.1) */
+	bool	omutafwin;
+	bool	aggx;		/* aggx feature */
+	uint16	txdur_thresh_mu;	/* threshold to enforce dl ofdma */
+	uint16	txdur_thresh_su;	/* threshold to fall back to SU */
+};
+/*musched info*/
+struct musched_info_qq {
+    wlc_muscheduler_info_t musched;
+    bool wlc_fifo_isMU;
+    bool wlc_fifo_is_ulofdma;
+    //mu_type_t mu_type;
+    uint16 mch;
+    uint16 mcl;
+    uint16 mch2;
+};
+
+
+
+
+
